@@ -19,7 +19,16 @@ class MessageObject():
     
 
     def __init__(self, folder, path, email):
-        """ Sets instance attributes. """
+        """ Sets instance attributes. 
+        
+        Args:
+            - folder (lib.folder_object.FolderObject): ???
+            - path (str): ???
+            - email (email.message.Message): ???
+            
+        Attributes:
+            - ???
+        """
 
         # set logger; suppress logging by default.
         self.logger = logging.getLogger(__name__)
