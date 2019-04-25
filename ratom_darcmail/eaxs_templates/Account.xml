@@ -8,7 +8,9 @@ Note: this template (and the others) all have leading whitespace that matches wh
 should be within the context of a rendered EAXS XML file. While indentation isn't required, it's
 a good idea to try having fairly well indented XML.
 
-Also: Avoid placing JINJA2 comments on the same line as an element that needs to be rendered because
+Note: the custom "cdata" filter is used as needed to wrap the data in a CDATA black.
+
+Note: avoid placing JINJA2 comments on the same line as an element that needs to be rendered because
 that can create issues in that line breaks will be missing, making the XML harder to read. It might
 be best to so the same for XML comments (which will be rendered in the output).
 
@@ -16,9 +18,7 @@ TODO:
     * Add EAXS XSD and namespace URIs to XML header.
 #-->
 
-<!--# Get child elements.
-Note: the "cdata" filter is used as needed to wrap the data in a CDATA black.
-#-->
+<!--# Get child elements. #-->
 {% for email_address in DarcMailObject.account.email_address %}
     <EmailAddress>{{ email_address | cdata }}</EmailAddress>
 {% endfor %}
