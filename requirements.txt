@@ -1,0 +1,5 @@
+Jinja2>=2.8
+plac>=0.9.6
+PyYAML>=3.12
+setuptools>=36
+#TODO: What else?

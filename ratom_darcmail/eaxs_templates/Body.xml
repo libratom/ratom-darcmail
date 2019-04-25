@@ -1,0 +1,105 @@
+
+
+      <ContentType>{{ message.get_content_type() }}</ContentType>
+      <!--# If there is no Content-Type, this fallsback to message.get_default_type() or "text/plain" as required. #-->
+      <Charset>{{ message..get_content_charset(failobj="us-ascii") }}</Charset>
+      <ContentName>{{ message.get_params("", "content-description") }} | cdata</ContentName> <!-- ??? check RFC-4021. DarcMail equates this to Content-Description. -->
+      <element name="ContentTypeComments" type="string" minOccurs="0"/>
+      <!-- ??? check RFC-4021 -->
+      <element name="ContentTypeParam" type="xm:parameter-type" minOccurs="0" maxOccurs="unbounded">
+        <annotation>
+          <documentation>Any other parameter found in the Content-Type header field except for id and name.</documentation>
+        </annotation>
+      </element>
+      <!--     
+      params = Account().folders[0].messages[0].get_params()
+      if params is None:
+        ???
+      for param in params:
+        n, v = param
+        if n.lower() in ["id", "name"]: # not sure "id" will ever exist; but trying to comply with XSD.
+          continue
+        if "/" in n and v == "":
+          continue
+        <Name>, <Value> = n, v
+       -->
+      <element name="TransferEncoding" type="string" minOccurs="0">
+        <annotation>
+          <documentation>If not present, "7-bit" is assumed.</documentation>
+        </annotation>
+      </element>
+      <!-- DarcMail: Account().folders[0].messages[0]["content-transfer-encoding"]
+      
+      This is where you'd get quopri etc.
+      -->
+      <element name="TransferEncodingComments" type="string" minOccurs="0"/>
+      <!-- ??? check RFC-4021 -->
+      <element name="ContentId" type="string" minOccurs="0"/>
+      <!-- DarcMail: Account().folders[0].messages[0]["content-id"] -->
+      <element name="ContentIdComments" type="string" minOccurs="0"/>
+      <!-- ??? check RFC-4021 -->
+      <element name="Description" type="string" minOccurs="0"/>
+      <!-- DarcMail: Account().folders[0].messages[0]["content-description"]
+      
+      still check RFC-4021 because this isn't clear
+      -->
+      <element name="DescriptionComments" type="string" minOccurs="0"/>
+      <!-- ??? check RFC-4021 -->
+      <element name="Disposition" type="string" minOccurs="0"/>
+      <!-- DarcMail: Account().folders[0].messages[0].get_content_disposition() -->
+      <element name="DispositionFileName" type="string" minOccurs="0"/>
+      <!-- DarcMail: Account().folders[0].messages[0].get_filename() -->
+      <element name="DispositionComments" type="string" minOccurs="0"/>
+      <!-- ??? check RFC-4021 -->
+      <element name="DispositionParams" type="xm:parameter-type" minOccurs="0" maxOccurs="unbounded">
+        <annotation>
+          <documentation>Any other parameter found in the Content-Disposition header field except for filename.</documentation>
+        </annotation>
+      </element>
+      <!-- DarcMail: 
+      
+      params = Account().folders[0].messages[0].get_params(header="content-disposition")
+      if params is None:
+        ???
+      for param in params:
+        n, v = param
+        if n.lower() in ["filename"]:
+          continue
+        if "/" in n and v == "":
+          continue
+        <Name>, <Value> = n, v
+        
+      Note: This is unique to SingleBody becuase it's plural: "paraMS".
+      This is a mistake in MultiBody because it should be plural there as well. This is noted in the tomes-eaxs repo.
+      -->
+      <element name="OtherMimeHeader" type="xm:header-type" minOccurs="0" maxOccurs="unbounded"/>
+      <!-- Skip. This is completely unclear.
+      Not currently implemented either.
+      -->
+      <choice minOccurs="0" maxOccurs="1">
+        <element name="BodyContent" type="xm:int-body-content-type">
+          <annotation>
+            <documentation>This is textual or binary data that is stored in-line in this XML document that makes up the body of this entity. Along with the character set and transfer encoding used.</documentation>
+          </annotation>
+        </element>
+        <element name="ExtBodyContent" type="xm:ext-body-content-type">
+          <annotation>
+            <documentation>This is a pointer to a file that contains the text or binary data that makes up the body of this entity. Along with the character set and transfer encoding used.</documentation>
+          </annotation>
+        </element>
+        <element name="ChildMessage" type="xm:child-message-type"/>
+        <!-- This doesn't appear to be implemented at all in current DarcMail.
+        It's not clear from EAXS XSD what this is even supposed to mean.
+        -->
+      </choice>
+      <element name="PhantomBody" type="string" minOccurs="0">
+        <annotation>
+          <documentation>Used for Content-Type message/external-body. US-ASCII character set is assumed.</documentation>
+        </annotation>
+      </element>
+      <!-- Not currently implemented.
+      Skip ???
+      This is unclear.
+      -->
+    </sequence>
+  </complexType>

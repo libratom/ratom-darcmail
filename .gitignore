@@ -1,0 +1,9 @@
+*~
+.*.sw*
+*.pyc
+.vscode/
+*.code-workspace
+_scratchpad
+eaxs_schema_v1_1.DRAFT
+reset_git.bat
+TEST_EAXS.XML

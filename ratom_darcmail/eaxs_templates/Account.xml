@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="{{ DarcMailObject.charset.upper() }}"?>
+<Account>
+<!--# TODO: 
+    * add EAXS XSD and namespace URIs ...
+    * DO NOT put comments at the end of a line: can add whitespace
+#-->
+
+
+<!--# ??? #-->
+{% for email_address in DarcMailObject.account.email_address %}
+    <EmailAddress>{{ email_address | cdata }}</EmailAddress>
+{% endfor %}
+
+
+<!--# ??? #-->
+    <GlobalId>{{ DarcMailObject.account.global_id | cdata }}</GlobalId>
+
+
+<!--# ??? #-->
+{% if DarcMailObject.account.kwargs.references_account is defined %}
+    <ReferencesAccount>
+        <Href>{{ DarcMailObject.account.kwargs.references_account["href"] }}</Href>
+
+        {% for email_address in DarcMailObject.account.kwargs.references_account["email_address"] %}
+        <EmailAddress>{{ email_address }}</EmailAddress>
+        {% endfor %}
+
+        <RefType>{{ DarcMailObject.account.kwargs.references_account["ref_type"] }}</RefType>
+    </ReferencesAccount>
+{% endif %}
+
+
+<!--# ??? #-->
+{% include "Folder.xml" %}
+</Account>

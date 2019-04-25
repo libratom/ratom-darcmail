@@ -1,0 +1,28 @@
+<!--# Need to see if I can appliy WS() globally. #-->
+
+<!--# ??? #-->
+{% set OPENED_FOLDERS = [] %}
+{% for folder in DarcMailObject.account.folders %}
+    {% for open_folder in DarcMailObject.eaxs.close_folders(folder, OPENED_FOLDERS) %}
+    </Folder>
+    {% endfor %}
+    <Folder>
+        <Name>{{ folder.basename }}</Name>
+        {% for message in folder.get_messages() %}
+            {% include "Message.xml" %}
+        {% endfor %}
+        {% if not DarcMailObject.account.is_eml %}
+        {% for mbox in folder.get_files() %}
+        <Mbox>
+            <RelPath>{{ mbox["relpath"] }}</RelPath>
+            <Eol>{{ mbox["eol"] }}</Eol>
+            <!--# HASH not implemented because ??? ... #-->
+        </Mbox>
+        {% endfor %}
+        {% endif %}
+{% endfor%}
+
+<!--# #-->
+{% for folder in OPENED_FOLDERS | reverse %}
+    </Folder>
+{% endfor %}

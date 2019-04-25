@@ -1,0 +1,63 @@
+        <Message>
+        
+            <!--# ??? #-->
+            <RelPath>{{ message.rel_path }}</RelPath>
+            <LocalId>{{ message.local_id }}</LocalId>
+            <MessageId>{{ message.get("message-id") | cdata }}</MessageId>
+            <MimeVersion>{{ message.get("mime-version") }}</MimeVersion>
+
+            <!--# <group name="message-headers"> #-->
+            <!--# TODO: CHECK ALL .get() string request values!
+            TODO: Need to be repeatable: TO, CC, BCC, IN REPLY TO, REFERENCES, COMMENTS, KEYWORDS #-->
+            <OrigDate>{{ message.get("orig-date") | skipnull }}</OrigDate>
+            <From>{{ message.get("from") | cdata }}</From>
+            
+            <!--# TODO: Is this always returned? If it's xs:string does it matter? #-->
+            <Sender>{{ message.get("sender") | cdata }}</Sender>
+            
+            <!--# ??? #-->
+            <To>{{ message.get("to") | cdata }}</To>
+            <Cc>{{ message.get("cc") | skipnull | cdata }}</Cc>
+            <Bcc>{{ message.get("bcc") | skipnull | cdata }}</Bcc>
+            <InReplyTo>{{ message.get("in-reply-to") | skipnull | cdata }}</InReplyTo>
+            <References>{{ message.get("references") | skipnull | cdata }}</References>
+            <Subject>{{ message.get("subject") | cdata }}</Subject>
+            <Comments>{{ message.get("comments") | skipnull | cdata }}</Comments>
+            <Keywords>{{ message.get("keywords") | skipnull | cdata }}</Keywords> 
+
+            <!--# xm:header-type #-->
+            <!--# TODO: OPTIONAL. What's the source for COMMENTS ? #-->
+            {% for name, value in message._headers %}
+            <Header>
+                <Name>{{ name | cdata }}</Name>
+                <Value>{{ value | cdata }}</Value>
+                <Comments></Comments>
+            </Header>
+            {% endfor %}
+
+            <!--# per: https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
+            Is there support for "Draft" or "Recent" in other DarcMail packages ??? 
+            TODO: Maybe put this in a Python script. Anything that requires looping, look-ups, etc. should go into external logic, yes?
+            #-->
+            {% set status = message.get("status", failobj="") + message.get("x-status", failobj="") %}
+            {% set status_dict = {"R": "Seen", "A": "Answered", "F": "Flagged", "D": "Deleted"} %}
+            {% for status_item in status | trim %}
+            <StatusFlag>{{ status_dict.get(status_item) | skipnull }}</StatusFlag>
+            {% endfor %}
+
+            <!--# {% include "Body.xml" %} #-->
+
+            <!--# ??? #-->
+            {% for type, location in message.parse_errors %}
+            <Incomplete>
+                <ErrorType>Python: {{ type }}</ErrorType>
+                <ErrorLocation>{{ location }}</ErrorLocation>
+            </Incomplete>
+            {% endfor %}
+
+            <!--# ??? #-->
+            <Eol>{{ message.get_eol() }}</Eol>
+
+        </Message>
+        {% raw %}{% endraw %}
+        
