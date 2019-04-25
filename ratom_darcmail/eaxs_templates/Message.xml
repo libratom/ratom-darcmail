@@ -1,21 +1,25 @@
+<!--# 
+This template represents the EAXS <Message> element.
+It is related to the lib.message_object.MessageObject module.
+#-->
+
         <Message>
         
-            <!--# ??? #-->
+            <!--# Get the initial child elements. #-->
             <RelPath>{{ message.rel_path }}</RelPath>
             <LocalId>{{ message.local_id }}</LocalId>
             <MessageId>{{ message.get("message-id") | cdata }}</MessageId>
             <MimeVersion>{{ message.get("mime-version") }}</MimeVersion>
 
-            <!--# <group name="message-headers"> #-->
-            <!--# TODO: CHECK ALL .get() string request values!
-            TODO: Need to be repeatable: TO, CC, BCC, IN REPLY TO, REFERENCES, COMMENTS, KEYWORDS #-->
+            <!--# Get elements per the EAXS "message-headers" group. #-->
+            <!--# 
+            TODO: CHECK ALL .get() string request values!
+            TODO: Need to be repeatable: TO, CC, BCC, IN REPLY TO, REFERENCES, COMMENTS, KEYWORDS.
+            TODO: Is Sender always returned? If it's xs:string does it matter since blanks are OK?
+            #-->
             <OrigDate>{{ message.get("orig-date") | skipnull }}</OrigDate>
             <From>{{ message.get("from") | cdata }}</From>
-            
-            <!--# TODO: Is this always returned? If it's xs:string does it matter? #-->
             <Sender>{{ message.get("sender") | cdata }}</Sender>
-            
-            <!--# ??? #-->
             <To>{{ message.get("to") | cdata }}</To>
             <Cc>{{ message.get("cc") | skipnull | cdata }}</Cc>
             <Bcc>{{ message.get("bcc") | skipnull | cdata }}</Bcc>
@@ -25,8 +29,11 @@
             <Comments>{{ message.get("comments") | skipnull | cdata }}</Comments>
             <Keywords>{{ message.get("keywords") | skipnull | cdata }}</Keywords> 
 
-            <!--# xm:header-type #-->
-            <!--# TODO: OPTIONAL. What's the source for COMMENTS ? #-->
+            <!--# Get elements per the EAXS "header-type". #-->
+            <!--#
+            TODO: What's the source for the optinal <Comments> element? I can't find anything
+            in RFC 4021 (at least I think that's the correct spec to look at).
+            #-->
             {% for name, value in message._headers %}
             <Header>
                 <Name>{{ name | cdata }}</Name>
@@ -35,8 +42,11 @@
             </Header>
             {% endfor %}
 
-            <!--# per: https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
-            Is there support for "Draft" or "Recent" in other DarcMail packages ??? 
+            <!--# Get the element showing the message status (read, answered, etc.).
+            Note: this logic is based on https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
+            #-->
+            <!--#
+            TODO: Is there support for "Draft" or "Recent" in other DarcMail packages ??? 
             TODO: Maybe put this in a Python script. Anything that requires looping, look-ups, etc. should go into external logic, yes?
             #-->
             {% set status = message.get("status", failobj="") + message.get("x-status", failobj="") %}
@@ -45,9 +55,10 @@
             <StatusFlag>{{ status_dict.get(status_item) | skipnull }}</StatusFlag>
             {% endfor %}
 
+            <!--# ??? if multibody then include Multibody.xml ... otherwise nclude Body.xml ... or something like that ... #-->
             <!--# {% include "Body.xml" %} #-->
 
-            <!--# ??? #-->
+            <!--# Get the element showing parse errors. #-->
             {% for type, location in message.parse_errors %}
             <Incomplete>
                 <ErrorType>Python: {{ type }}</ErrorType>
@@ -55,9 +66,10 @@
             </Incomplete>
             {% endfor %}
 
-            <!--# ??? #-->
+            <!--# Get the end-of-line element. #-->
             <Eol>{{ message.get_eol() }}</Eol>
 
         </Message>
+        <!--# The "raw" block below forces a line break. #-->
         {% raw %}{% endraw %}
         

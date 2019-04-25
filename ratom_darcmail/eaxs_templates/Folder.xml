@@ -1,28 +1,43 @@
-<!--# Need to see if I can appliy WS() globally. #-->
+<!--# 
+This template represents the EAXS <Folder> element.
+It is related to the lib.folder_object.FolderObject module.
+#-->
 
-<!--# ??? #-->
+<!--# Create a list to track open <Folder> elements. #-->
 {% set OPENED_FOLDERS = [] %}
+
+<!--# Loop through each folder object and create <Folder> elements. #-->
 {% for folder in DarcMailObject.account.folders %}
+
+    <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
     {% for open_folder in DarcMailObject.eaxs.close_folders(folder, OPENED_FOLDERS) %}
     </Folder>
     {% endfor %}
+
+    <!--# Add in child and <Message> elements including <Message>. #-->
     <Folder>
         <Name>{{ folder.basename }}</Name>
         {% for message in folder.get_messages() %}
             {% include "Message.xml" %}
         {% endfor %}
+
+        <!--# If the account is an MBOX (i.e. not EML) add in the <Mbox> element. #-->
         {% if not DarcMailObject.account.is_eml %}
         {% for mbox in folder.get_files() %}
         <Mbox>
             <RelPath>{{ mbox["relpath"] }}</RelPath>
             <Eol>{{ mbox["eol"] }}</Eol>
-            <!--# HASH not implemented because ??? ... #-->
+            <!--# 
+            The <Hash> element is not implemented.
+            It seems METS, Bagger, etc. would be better options for storing file checksums.
+            #-->
         </Mbox>
         {% endfor %}
         {% endif %}
+
 {% endfor%}
 
-<!--# #-->
+<!--# Close remaining <Folder> elements. #-->
 {% for folder in OPENED_FOLDERS | reverse %}
     </Folder>
 {% endfor %}

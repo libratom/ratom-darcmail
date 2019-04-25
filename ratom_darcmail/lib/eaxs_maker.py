@@ -128,7 +128,7 @@ class EAXSMaker():
         # add custom filters to @self.env.
         self.env.filters["skipnull"] = (lambda text: text if text is not None else self._skip_hash)
         self.env.filters["cdata"] = (lambda text: "<![CDATA[{}]]>".format(text.strip()) if
-            text is not None else "")
+            text is not None else "") #TODO: Is stripping the text going to create any issues w/ quoted-printable text?
 
 
     @staticmethod
@@ -173,9 +173,9 @@ class EAXSMaker():
         eaxs_stream = eaxs_template.stream(*args, **kwargs)
         
         # render the template.
-        i = 0
         with open(eaxs_path, "w", encoding=self.charset, errors="xmlcharrefreplace") as xfile:
             
+            i = 0
             for text in eaxs_stream:
 
                 # remove any lines with @self._skip_hash in them per the "skipnull" filter.

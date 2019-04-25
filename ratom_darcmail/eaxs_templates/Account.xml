@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="{{ DarcMailObject.charset.upper() }}"?>
 <Account>
-<!--# TODO: 
-    * add EAXS XSD and namespace URIs ...
-    * DO NOT put comments at the end of a line: can add whitespace
+<!--# 
+This template represents the EAXS <Account> element.
+It is related to the lib.account_object.AccountObject module.
+
+Note: this template (and the others) all have leading whitespace that matches what their indenation
+should be within the context of a rendered EAXS XML file. While indentation isn't required, it's
+a good idea to try having fairly well indented XML.
+
+Also: Avoid placing JINJA2 comments on the same line as an element that needs to be rendered because
+that can create issues in that line breaks will be missing, making the XML harder to read. It might
+be best to so the same for XML comments (which will be rendered in the output).
+
+TODO: 
+    * Add EAXS XSD and namespace URIs to XML header.
 #-->
 
-
-<!--# ??? #-->
+<!--# Get child elements.
+Note: the "cdata" filter is used as needed to wrap the data in a CDATA black.
+#-->
 {% for email_address in DarcMailObject.account.email_address %}
     <EmailAddress>{{ email_address | cdata }}</EmailAddress>
 {% endfor %}
 
-
-<!--# ??? #-->
     <GlobalId>{{ DarcMailObject.account.global_id | cdata }}</GlobalId>
 
 
-<!--# ??? #-->
 {% if DarcMailObject.account.kwargs.references_account is defined %}
     <ReferencesAccount>
         <Href>{{ DarcMailObject.account.kwargs.references_account["href"] }}</Href>
@@ -30,6 +39,6 @@
 {% endif %}
 
 
-<!--# ??? #-->
+<!--# Add in <Folder> elements. #-->
 {% include "Folder.xml" %}
 </Account>

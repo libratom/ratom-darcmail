@@ -13,6 +13,7 @@ from lib.folder_object import FolderObject
 class AccountObject():
     """ A class that represents an Account element within the EAXS context."""
 
+
     def __init__(self, path, email_address, is_eml, global_id=None, *args, **kwargs):
         """ Sets instance attributes. 
         
