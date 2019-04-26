@@ -70,7 +70,7 @@ class AccountObject():
         id_bytes = id_str.encode(errors="ignore")
         
         # hash @id_bytes and prepend a string to it.
-        global_id = "eaxs_gid__" + hashlib.sha256(id_bytes).hexdigest()[:7]
+        global_id = "eaxs_" + hashlib.sha256(id_bytes).hexdigest()[:7]
 
         return global_id
 

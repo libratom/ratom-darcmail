@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="{{ DarcMailObject.charset.upper() }}"?>
-<Account>
+<Account
+xmlns="https://github.com/StateArchivesOfNorthCarolina/tomes-eaxs" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <!--# 
 This template represents the EAXS <Account> element.
 It is related to the lib.account_object.AccountObject module.
@@ -23,7 +25,7 @@ and element that needs to be rendered.
         <myElement>{{ some_object }}</myElement> # But not here.
     
 TODO: 
-    * Add EAXS XSD and namespace URIs to XML header.
+    * Add EAXS XSD URI back to XML header. Remember: It's still on GitHub!
 #-->
 
 <!--# Add in child elements. #-->

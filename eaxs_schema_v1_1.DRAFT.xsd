@@ -242,6 +242,9 @@
       </extension>
     </simpleContent>
   </complexType>
+  <!-- It's actually unclear what Supplied means in terms of who's supplying it.
+  I think it means that it DarcMail makes it, then Supplied=True.
+  But "supplied" could mean that it's supplied by the message itself. -->
   <complexType name="single-body-type">
     <sequence>
       <annotation>

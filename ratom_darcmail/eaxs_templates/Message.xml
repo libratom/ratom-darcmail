@@ -11,7 +11,13 @@ rendered EAXS file.
             <!--# Add in the initial child elements. #-->
             <RelPath>{{ message.rel_path }}</RelPath>
             <LocalId>{{ message.local_id }}</LocalId>
-            <MessageId>{{ message.get("message-id", "<!-- No ID found. -->") | cdata }}</MessageId>
+
+            <!--# If the message id doesn't exists, then create one and set @Supplied to True. #-->
+            {% set message_id = message.get("message-id") %}
+            {% set message_el = (message_id, "false") if message_id else ("{}_{}".format(
+                message.account.global_id, message.local_id), "true") %}
+            <MessageId Supplied="{{ message_el[1] }}">{{ message_el[0] | cdata }}</MessageId>
+
             <MimeVersion>{{ message.get("mime-version") }}</MimeVersion>
 
             <!--# Add in elements per the EAXS "message-headers" group. #-->
@@ -51,6 +57,8 @@ rendered EAXS file.
             <!--#
             TODO: Is there support for "Draft" or "Recent" in other DarcMail packages ??? 
             TODO: Maybe put this in a Python script. Anything that requires looping, look-ups, etc. should go into external logic, yes?
+                Well, the problem is that makes it harder to see how the element is constructed.
+                It might be better to leave the external Python stuff for things that are too complex to put in the template itself.
             #-->
             {% set status = message.get("status", failobj="") + message.get("x-status", failobj="") %}
             {% set status_dict = {"R": "Seen", "A": "Answered", "F": "Flagged", "D": "Deleted"} %}
