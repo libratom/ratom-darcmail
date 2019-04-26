@@ -34,15 +34,15 @@ TODO:
     <GlobalId>{{ DarcMailObject.account.global_id | cdata }}</GlobalId>
 
 
-{% if DarcMailObject.account.kwargs.references_account is defined %}
+{% if DarcMailObject.account.references_account is defined %}
     <ReferencesAccount>
-        <Href>{{ DarcMailObject.account.kwargs.references_account["href"] }}</Href>
+        <Href>{{ DarcMailObject.account.references_account["href"] }}</Href>
 
-        {% for email_address in DarcMailObject.account.kwargs.references_account["email_address"] %}
+        {% for email_address in DarcMailObject.account.references_account["email_address"] %}
         <EmailAddress>{{ email_address }}</EmailAddress>
         {% endfor %}
 
-        <RefType>{{ DarcMailObject.account.kwargs.references_account["ref_type"] }}</RefType>
+        <RefType>{{ DarcMailObject.account.references_account["ref_type"] }}</RefType>
     </ReferencesAccount>
 {% endif %}
 

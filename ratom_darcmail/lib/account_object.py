@@ -14,7 +14,8 @@ class AccountObject():
     """ A class that represents an Account element within the EAXS context. """
 
 
-    def __init__(self, path, email_address, is_eml, global_id=None, *args, **kwargs):
+    def __init__(self, path, email_address, is_eml, global_id=None, references_account=None, 
+        *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -26,6 +27,10 @@ class AccountObject():
             MBOX.
             - global_id (str): The unique identifier for the account. This value must be an
             identifier per the xsd:anyURI restriction. If None, this will be auto-generated.
+            - references_account (dict): This represents the ReferencesAccount element within the
+            EAXS context. It should contain the lowercase keys: "href" (str), 
+            "email_address" (list), and "ref_type" (str). Values must be compliant with the EAXS
+            XSD.
 
         Attributes:
             ???
@@ -49,6 +54,7 @@ class AccountObject():
         self.email_address = ([email_address] if not isinstance(email_address, list) else
             email_address)
         self.global_id = global_id if global_id is not None else self._get_global_id()
+        self.references_account = references_account
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
