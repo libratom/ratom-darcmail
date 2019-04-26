@@ -22,9 +22,10 @@ class MessageObject():
         """ Sets instance attributes. 
         
         Args:
-            - folder (lib.folder_object.FolderObject): ???
-            - path (str): ???
-            - email (email.message.Message): ???
+            - folder (lib.folder_object.FolderObject): The FolderObject to which this MessageObject
+            belongs.
+            - path (str): The path to this message's source EML or MBOX file.
+            - email (email.message.Message): The message data.
             
         Attributes:
             - ???
@@ -86,7 +87,7 @@ class MessageObject():
         # assume default EOL.
         eol = "LF"
         
-        # walk through one iteration of @self.email.
+        # walk through one iteration of @self.email; read the last two bytes of it to get the EOL.
         # bytes() is used so the actual content can be inspected for the EOL even if the "blob" is
         # itself an email.message.Message object within a multi-part email.
         blob = None

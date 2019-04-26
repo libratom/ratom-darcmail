@@ -29,7 +29,7 @@ class FolderObject():
         Args:
             - account (lib.account_object.AccountObject): The AccountObject to which this 
             FolderObject belongs.
-            - path (str): The path to an account folder.
+            - path (str): The path to this folder.
             - file_extension (str): The file extension that EML or MBOX files must have in order for
             messages to be extracted. Pass in an empty string to ignore testing for a given file
             extension.

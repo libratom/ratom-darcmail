@@ -11,14 +11,14 @@ from lib.folder_object import FolderObject
 
 
 class AccountObject():
-    """ A class that represents an Account element within the EAXS context."""
+    """ A class that represents an Account element within the EAXS context. """
 
 
     def __init__(self, path, email_address, is_eml, global_id=None, *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
-            - path (str): The path to the MBOX or EML account data.
+            - path (str): The path to the EML or MBOX account data.
             - email_address (list): Each item is an email address for the account in question.
             Because an account will typically only consist of one address, a string may be passed in
             instead of a list.

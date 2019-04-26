@@ -8,7 +8,7 @@ Todo:
     * Need to add CLI interface.
     * Add YAML log file.
     * You need a main/API method - I think this is where to check if the account path exists.
-    * ReferencesAccount needs to be loadable via JSON file or something ... 
+    * ReferencesAccount needs to be loadable via JSON file or another EAXS file or something ... 
 """
 
 # import logging.
