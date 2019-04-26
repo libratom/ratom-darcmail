@@ -67,7 +67,7 @@ rendered EAXS file.
             {% endfor %}
 
             <!--# ??? if multibody then include Multibody.xml ... otherwise include Body.xml ... or something like that? ... #-->
-            <!--# {% include "Body.xml" %} #-->
+            {% include "Body.xml" %}
 
             <!--# Add in the element that shows parse errors. #-->
             {% for type, location in message.parse_errors %}

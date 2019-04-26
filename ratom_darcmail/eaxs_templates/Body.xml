@@ -1,28 +1,36 @@
 
 
+      <!--# Get content type. If there is no Content-Type, this falls back to 
+      message.get_default_type() aka "text/plain" as required by EAXS. #-->
       <ContentType>{{ message.get_content_type() }}</ContentType>
-      <!--# If there is no Content-Type, this fallsback to message.get_default_type() or "text/plain" as required. #-->
-      <Charset>{{ message..get_content_charset(failobj="us-ascii") }}</Charset>
-      <ContentName>{{ message.get_params("", "content-description") }} | cdata</ContentName> <!-- ??? check RFC-4021. DarcMail equates this to Content-Description. -->
-      <element name="ContentTypeComments" type="string" minOccurs="0"/>
-      <!-- ??? check RFC-4021 -->
-      <element name="ContentTypeParam" type="xm:parameter-type" minOccurs="0" maxOccurs="unbounded">
-        <annotation>
-          <documentation>Any other parameter found in the Content-Type header field except for id and name.</documentation>
-        </annotation>
-      </element>
-      <!--     
-      params = Account().folders[0].messages[0].get_params()
-      if params is None:
-        ???
-      for param in params:
-        n, v = param
-        if n.lower() in ["id", "name"]: # not sure "id" will ever exist; but trying to comply with XSD.
-          continue
-        if "/" in n and v == "":
-          continue
-        <Name>, <Value> = n, v
-       -->
+      
+      <Charset>{{ message.get_content_charset(failobj="us-ascii") }}</Charset>
+
+      <!--# TODO: check RFC-4021 for the source of this. It's optional BTW.
+      FYI: TOMES DarcMail equates this to Content-Description. #-->
+      <ContentName>{{ message.get_params("", "content-description") }} | cdata</ContentName>
+      
+      <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
+      <ContentTypeComments></ContentTypeComments>
+      
+      <!--# TODO: document this.
+      Need to strip() values.
+      Also: you need to filter out bad items BEFORE writing the ContentTypeParam element so you
+      don't end up with a null element. #-->
+      {% set message_params = message.get_params() %}
+      {% if message_params is defined %}
+      <ContentTypeParam>
+      {% for name, value in message_params %}
+      {% if name.lower() in ["id", "name"] %}
+      {% elif "/" in name and value == "" %}
+      {% else %}
+          <Name>{{ name }} </Name>
+          <Value>{{ value }}</Value>
+      {% endif %}
+      {% endfor %}
+      </ContentTypeParam>
+      {% endif %}
+
       <element name="TransferEncoding" type="string" minOccurs="0">
         <annotation>
           <documentation>If not present, "7-bit" is assumed.</documentation>
