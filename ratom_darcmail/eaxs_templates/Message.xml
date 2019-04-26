@@ -4,6 +4,10 @@ It is related to the lib.message_object.MessageObject module.
 
 Note: the custom "skipnull" filter is used so that elements with null values will not appear in the
 rendered EAXS file.
+
+TODO:
+    * For this and all included templates you need to make sure the correct xs:type will always be
+    present (valid identifiers, etc.).
 #-->
 
         <Message>
