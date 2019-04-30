@@ -66,11 +66,17 @@ TODO:
             </DispositionParams>
             {% endif %}
 
-          <!--#
-            <element name="OtherMimeHeader" type="xm:header-type" minOccurs="0" maxOccurs="unbounded"/>
-            <!-- Skip. This is completely unclear.
-            Not currently implemented either.
-            -->
+          <!--# Skip. This is not clear. Not currently implemented in TOMES DarcMail either.
+          TODO: What about Smithsonian DarcMail?
+          <OtherMimeHeader></OtherMimeHeader>
+          #-->
+
+            <BodyContent><![CDATA[{% for m in message.walk() %}{{ m }}{% endfor %}]]></BodyContent>
+
+            {% set f = DarcMailObject.eaxs_helpers.write_file(["foo", "bar"], "./attachments/foo.txt", suffix="\n_") %}
+
+  <!--# START HERE.
+
             <choice minOccurs="0" maxOccurs="1">
               <element name="BodyContent" type="xm:int-body-content-type">
                 <annotation>
@@ -82,20 +88,14 @@ TODO:
                         <documentation>This is a pointer to a file that contains the text or binary data that makes up the body of this entity. Along with the character set and transfer encoding used.</documentation>
                 </annotation>
               </element>
-              <element name="ChildMessage" type="xm:child-message-type"/>
-              <!-- This doesn't appear to be implemented at all in current DarcMail.
+
+              This doesn't appear to be implemented at all in current DarcMail.
               It's not clear from EAXS XSD what this is even supposed to mean.
-              -->
-            </choice>
-            <element name="PhantomBody" type="string" minOccurs="0">
-              <annotation>
-                <documentation>Used for Content-Type message/external-body. US-ASCII character set is assumed.</documentation>
-              </annotation>
-            </element>
-            <!-- Not currently implemented.
-            Skip ???
-            This is unclear.
-            -->
-    </sequence>
-  </complexType>
+              <ChildMessage></ChildMessage>
+  
+
   #-->
+
+          <!--# Skip??? This is completely unclear. Not currently implemented either.
+          <PhantomBody></PhantomBody>
+          #-->

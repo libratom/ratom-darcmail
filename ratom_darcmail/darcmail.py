@@ -10,6 +10,7 @@ Todo:
     * You need a main/API method - I think this is where to check if the account path exists.
     * Need to add arg that lets user select starting template file.
     * ReferencesAccount needs to be loadable via JSON file or another EAXS file or something ... 
+    * Need to work on "from lib" imports. I think it'll end up being "from .lib"?
 """
 
 # import logging.
@@ -74,5 +75,5 @@ if __name__ == "__main__":
                         global_id=None,
                         references_account=references_account)
     dm = DarcMail(account_args)
-    dm.eaxs.make("TEST_EAXS.XML", DarcMailObject=dm)
+    dm.eaxs.make("TEST_EAXS.XML", DarcMailObject=dm) #TODO: shouldn't self already be passed to "make"? For convenience.
 

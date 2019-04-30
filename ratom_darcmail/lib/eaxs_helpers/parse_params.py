@@ -25,6 +25,7 @@ def main(params, restrictions=["id", "name"]):
         params = []
     
     # remove items in @params as needed.
+    # TODO: Do you also just need a condition to skip it if @value == "" regardless of name? Refer to EAXS to see what's allowed?
     for name, value in params:
         if name.lower() in restrictions or ("/" in name and value == ""):
             params.remove((name, value))
