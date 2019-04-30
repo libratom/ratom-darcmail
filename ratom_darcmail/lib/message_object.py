@@ -6,6 +6,8 @@ Todo:
     * get_eol() needs to support getting the EOL from a file so it can also support the 
     "Folder/Mbox/Eol" element. So it probably needs to go in an external module. It can just get 
     wrapped here for ease of access and usage (i.e. no params).
+    * Probably want to a add documentation here as to why you didn't just sublcass 
+    email.message.Message - because it helps with intercepting, etc.
 """
 
 # import modules.

@@ -10,7 +10,7 @@ It is related to the lib.folder_object.FolderObject module.
 {% for folder in DarcMailObject.account.folders %}
 
     <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
-    {% for open_folder in DarcMailObject.eaxs.close_folders(folder, OPENED_FOLDERS) %}
+    {% for open_folder in DarcMailObject.eaxs_helpers.close_folders(folder, OPENED_FOLDERS) %}
     </Folder>
     {% endfor %}
 

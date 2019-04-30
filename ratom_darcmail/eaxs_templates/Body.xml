@@ -19,16 +19,9 @@ TODO:
             <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
             <ContentTypeComments></ContentTypeComments>
             
-            <!--# TODO: document this. 
-            This is another candidate for external logic. 
-            #-->
-            {% set message_params = message.get_params() %}
-            {% for name, value in message_params %}
-                {% if name.lower() in ["id", "name"] or ("/" in name and value == "") %}
-                    {% set message_params = message_params.remove((name, value)) %}
-                {% endif %}
-            {% endfor %}
-            {% if message_params|length > 0 %}
+            <!--# TODO: document this. #-->
+            {% set message_params = DarcMailObject.eaxs_helpers.parse_params(message.get_params()) %}
+            {% if message_params|length != 0 %}
             <ContentTypeParam>
             {% for name, value in message_params %}
                 <Name>{{ name }}</Name>
@@ -55,34 +48,25 @@ TODO:
             <DescriptionComments></DescriptionComments>
 
             <Disposition>{{message.get_content_disposition() | skipnull }}</Disposition>
+            <DispositionFileName>{{message.get_filename() | skipnull }}</DispositionFileName>
 
+            <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
+            <DispositionComments></DispositionComments>
 
-<!-- START HERE ... -->
-            <element name="DispositionFileName" type="string" minOccurs="0"/>
-            <!-- DarcMail: Account().folders[0].messages[0].get_filename() -->
-            <element name="DispositionComments" type="string" minOccurs="0"/>
-            <!-- ??? check RFC-4021 -->
-            <element name="DispositionParams" type="xm:parameter-type" minOccurs="0" maxOccurs="unbounded">
-              <annotation>
-                <documentation>Any other parameter found in the Content-Disposition header field except for filename.</documentation>
-              </annotation>
-            </element>
-            <!-- DarcMail: 
-            
-            params = Account().folders[0].messages[0].get_params(header="content-disposition")
-            if params is None:
-              ???
-            for param in params:
-              n, v = param
-              if n.lower() in ["filename"]:
-                continue
-              if "/" in n and v == "":
-                continue
-              <Name>, <Value> = n, v
-              
-            Note: This is unique to SingleBody becuase it's plural: "paraMS".
-            This is a mistake in MultiBody because it should be plural there as well. This is noted in the tomes-eaxs repo.
-            -->
+            {% set disposition_params = DarcMailObject.eaxs_helpers.parse_params(
+              message.get_params(header="content-disposition"),
+              ["filename"])
+            %}
+            {% if disposition_params|length != 0 %}
+            <DispositionParams>
+            {% for name, value in disposition_params %}
+                <Name>{{ name }}</Name>
+                <Value>{{ value }}</Value>
+            {% endfor %}
+            </DispositionParams>
+            {% endif %}
+
+          <!--#
             <element name="OtherMimeHeader" type="xm:header-type" minOccurs="0" maxOccurs="unbounded"/>
             <!-- Skip. This is completely unclear.
             Not currently implemented either.
@@ -114,3 +98,4 @@ TODO:
             -->
     </sequence>
   </complexType>
+  #-->

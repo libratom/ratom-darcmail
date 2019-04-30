@@ -8,6 +8,7 @@ Todo:
     * Need to add CLI interface.
     * Add YAML log file.
     * You need a main/API method - I think this is where to check if the account path exists.
+    * Need to add arg that lets user select starting template file.
     * ReferencesAccount needs to be loadable via JSON file or another EAXS file or something ... 
 """
 
@@ -19,6 +20,7 @@ import plac
 import yaml
 from lib.account_object import AccountObject
 from lib.eaxs_maker import EAXSMaker
+from lib.eaxs_helpers import eaxs_helpers
 
 
 class DarcMail():
@@ -56,6 +58,9 @@ class DarcMail():
 
         # create an instance of EAXSMaker.
         self.eaxs = EAXSMaker(template_dir=self.template_dir, charset=self.charset)
+
+        # add EAXS helper functions.
+        self.eaxs_helpers = eaxs_helpers
 
 
 if __name__ == "__main__":

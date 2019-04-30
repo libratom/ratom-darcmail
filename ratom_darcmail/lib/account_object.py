@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-""" This module contains a class that represents an Account element within the EAXS context.
+""" This module contains a class that represents the Account element within the EAXS context.
 
 TODO:
-    * Still not sure about ReferencesAccount - it might need it's own class as originall intended.
+    * Still not sure about ReferencesAccount - it might need it's own class as originally intended.
         - It'll easier to document what it needs to have.
 """
 
@@ -16,7 +16,7 @@ from lib.folder_object import FolderObject
 
 
 class AccountObject():
-    """ A class that represents an Account element within the EAXS context. """
+    """ A class that represents the Account element within the EAXS context. """
 
 
     def __init__(self, path, email_address, is_eml, global_id=None, references_account=None, 
