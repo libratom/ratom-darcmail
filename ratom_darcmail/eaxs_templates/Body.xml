@@ -71,7 +71,11 @@ TODO:
           <OtherMimeHeader></OtherMimeHeader>
           #-->
 
-            <BodyContent><![CDATA[{% for m in message.walk() %}{{ m }}{% endfor %}]]></BodyContent>
+            <BodyContent>
+              <!--#Content><![CDATA[{% for part in message.walk() %}{{ part | escape_cdata }}{% endfor %}]]></Content#-->
+              <Content>{{ message.as_string() | cdata }}</Content>
+              <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
+            </BodyContent>
 
             <!--#{% set f = EAXSHelpers.write_file(["foo", "bar"], "./attachments/foo.txt", suffix="\n_") %}#-->
 

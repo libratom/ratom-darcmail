@@ -49,7 +49,7 @@ TODO:
             #-->
             {% for name, value in message._headers %}
             <Header>
-                <Name>{{ name | cdata }}</Name>
+                <Name>{{ name }}</Name>
                 <Value>{{ value | cdata }}</Value>
                 <Comments></Comments>
             </Header>
