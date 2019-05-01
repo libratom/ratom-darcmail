@@ -9,7 +9,7 @@ close_folders.main().
 
 Todo:
     * Now that you've added filters, you need to rewrite the docstring and maybe update var names
-    and comments, and the name of this folder itself, etc.
+    and comments, and the name of this folder itself, etc. ??? THIS COMMENT IS OUT OF DATA.
 """
 
 # import modules.
@@ -23,7 +23,7 @@ def _load_functions_from_files():
     the key is the module's main() function. """
 
     # create dicts to return. 
-    helpers, filters = {}, {}
+    helpers = {}
 
     # glob all .py module files.
     _here = _os.path.dirname(__file__)
@@ -38,17 +38,16 @@ def _load_functions_from_files():
         
         # get the module name from the module's file name.
         filename = _os.path.basename(file)
-        module, ext = filename.split(".", 1) #TODO: document that module names equal everything before first period.
+        module = _os.path.splitext(filename)[0]
 
         # import the module dynamically per: https://stackoverflow.com/a/31285643.
         imported_module = _importlib.import_module("." + module, __name__)
 
         # update @helpers or @filters as needed.
-        update_dict = helpers if ext != "filter.py" else filters
-        update_dict[module] = getattr(imported_module, "main")
+        helpers[module] = getattr(imported_module, "main")
         
-    return (helpers, filters)
+    return helpers
 
 
 # create an object contaning helper functions.
-EAXSHelpers, JinjaFilters = _load_functions_from_files()
+EAXSHelpers = _load_functions_from_files()
