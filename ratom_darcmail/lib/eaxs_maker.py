@@ -13,6 +13,7 @@ import jinja2
 import logging
 import os
 import time
+from helpers import JinjaFilters
 
 
 class _TemplateLoader(jinja2.BaseLoader):
@@ -129,8 +130,10 @@ class EAXSMaker():
 
         # add custom filters to @self.env.
         self.env.filters["skipnull"] = (lambda text: text if text is not None else self._skip_hash)
-        self.env.filters["cdata"] = (lambda text: "<![CDATA[{}]]>".format(text.strip()) if
-            text is not None else "") #TODO: Is stripping the text going to create any issues w/ quoted-printable text?
+        #self.env.filters["cdata"] = (lambda text: "<![CDATA[{}]]>".format(text.strip()).replace("]]>", "]]&gt;") if
+        #    text is not None else "") #TODO: Is stripping the text going to create any issues w/ quoted-printable text?
+        #                              # this needs to be a standalone 
+        self.env.filters.udpate(JinaFilters)
 
 
     def _write_eaxs(self, eaxs_path, template, *args, **kwargs):
