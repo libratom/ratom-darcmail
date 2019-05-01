@@ -52,6 +52,3 @@ def main(obj, destination, prefix=None, suffix=None, charset="utf-8"):
             fopen.write(suffix)
 
     return
-
-if __name__ == "__main__":
-    pass

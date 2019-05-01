@@ -31,7 +31,3 @@ def main(params, restrictions=["id", "name"]):
             params.remove((name, value))
 
     return params
-
-
-if __name__ == "__main__":
-    pass

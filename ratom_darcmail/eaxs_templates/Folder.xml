@@ -7,22 +7,22 @@ It is related to the lib.folder_object.FolderObject module.
 {% set OPENED_FOLDERS = [] %}
 
 <!--# Loop through each folder object and create <Folder> elements. #-->
-{% for folder in DarcMailObject.account.folders %}
+{% for folder in DarcMail.account.folders %}
 
     <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
-    {% for open_folder in DarcMailObject.eaxs_helpers.close_folders(folder, OPENED_FOLDERS) %}
+    {% for open_folder in EAXSHelpers.close_folders(folder, OPENED_FOLDERS) %}
     </Folder>
     {% endfor %}
 
-    <!--# Add in child and <Message> elements including <Message>. #-->
+    <!--# Add in <Folder> child elements including <Message>. #-->
     <Folder>
         <Name>{{ folder.basename }}</Name>
         {% for message in folder.get_messages() %}
             {% include "Message.xml" %}
         {% endfor %}
 
-        <!--# If the account is an MBOX (i.e. not EML) add in the <Mbox> element. #-->
-        {% if not DarcMailObject.account.is_eml %}
+        <!--# If the account is an MBOX (i.e. not EML), add in the <Mbox> element. #-->
+        {% if not DarcMail.account.is_eml %}
         {% for mbox in folder.get_files() %}
         <Mbox>
             <RelPath>{{ mbox["relpath"] }}</RelPath>

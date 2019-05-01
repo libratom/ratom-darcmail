@@ -19,13 +19,13 @@ class AccountObject():
     """ A class that represents the Account element within the EAXS context. """
 
 
-    def __init__(self, path, email_address, is_eml, global_id=None, references_account=None, 
+    def __init__(self, path, email_addresses, is_eml, global_id=None, references_account=None, 
         *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
             - path (str): The path to the EML or MBOX account data.
-            - email_address (list): Each item is an email address for the account in question.
+            - email_addresses (list): Each item is an email address for the account in question.
             Because an account will typically only consist of one address, a string may be passed in
             instead of a list.
             - is_eml (bool): Use True if the account data is in EML format. Use False to indicate an
@@ -34,7 +34,7 @@ class AccountObject():
             identifier per the xsd:anyURI restriction. If None, this will be auto-generated.
             - references_account (dict): This represents the ReferencesAccount element within the
             EAXS context. It should contain the lowercase keys: "href" (str), 
-            "email_address" (list), and "ref_type" (str). Values must be compliant with the EAXS
+            "email_addresses" (list), and "ref_type" (str). Values must be compliant with the EAXS
             XSD.
 
         Attributes:
@@ -56,8 +56,8 @@ class AccountObject():
         # set attributes.
         self.path = self._normalize_path(path)
         self.is_eml = is_eml
-        self.email_address = ([email_address] if not isinstance(email_address, list) else
-            email_address)
+        self.email_addresses = ([email_addresses] if not isinstance(email_addresses, list) else
+            email_addresses)
         self.global_id = global_id if global_id is not None else self._get_global_id()
         self.references_account = references_account
         self.args, self.kwargs = args, kwargs
@@ -71,11 +71,11 @@ class AccountObject():
         """ Returns an auto-generated account identifier. """
 
         # create string/bytes consisting of the account address and current time.
-        id_str = "{}{}".format(self.email_address, time.time())
+        id_str = "{}{}".format(self.email_addresses, time.time())
         id_bytes = id_str.encode(errors="ignore")
         
         # hash @id_bytes and prepend a string to it.
-        global_id = self.email_address[-1].split("@")[-1] + "_" + hashlib.sha256(
+        global_id = self.email_addresses[-1].split("@")[-1] + "_" + hashlib.sha256(
             id_bytes).hexdigest()[:7]
 
         return global_id

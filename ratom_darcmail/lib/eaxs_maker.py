@@ -95,12 +95,13 @@ class EAXSMaker():
     """ A class that renders EAXS XML files via Jinja2 templates. """
 
 
-    def __init__(self, template_dir, charset="utf-8"):
+    def __init__(self, template_dir, charset="utf-8", *args, **kwargs):
         """ Sets instance attributes.
             
         Args:
             - template_dir (str): The path to a folder that contains Jinja2 template files.
             - charset (str): The encoding to use for writing EAXS files.
+            - args/kwargs: Any optional parameters to pass to @self.make().
 
         Attributes:
             - ???
@@ -116,6 +117,7 @@ class EAXSMaker():
         # set attributes.
         self.template_dir = template_dir
         self.charset = charset
+        self.args, self.kwargs = args, kwargs
         
         # set Jinja2 environment.
         self.env = jinja2.Environment(loader=_TemplateLoader(self.template_dir), trim_blocks=True, 
@@ -178,6 +180,12 @@ class EAXSMaker():
             err = "Can't overwrite existing EAXS file: {}".format(eaxs_path)
             self.logger.error(err)
             raise FileExistsError(err)
+        self.logger.info("Using template '{}' to create file: {}".format(template, eaxs_path))
+
+        # update @args/@kwargs.
+        args = args + self.args
+        kwargs.update(self.kwargs)
+        self.logger.debug("Template will receive args/kwargs: {}/{}".format(args, kwargs))
 
         # create the Jinja renderer.
         try:

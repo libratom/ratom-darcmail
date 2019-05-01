@@ -38,7 +38,3 @@ def main(folder, opened_folders):
     opened_folders.append(folder)
 
     return folders_to_close
-
-
-if __name__ == "__main__":
-    pass

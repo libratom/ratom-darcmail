@@ -11,6 +11,9 @@ Todo:
     * Need to add arg that lets user select starting template file.
     * ReferencesAccount needs to be loadable via JSON file or another EAXS file or something ... 
     * Need to work on "from lib" imports. I think it'll end up being "from .lib"?
+    * Your CDATA function needs to escape existing CDATA blockers in the text.
+        - LXML does NOT do this, so you need a custom function.
+    * Work on passing custom Jinja templates dynamically (see eaxs_helpers/__init__.py).
 """
 
 # import logging.
@@ -21,7 +24,7 @@ import plac
 import yaml
 from lib.account_object import AccountObject
 from lib.eaxs_maker import EAXSMaker
-from lib.eaxs_helpers import eaxs_helpers
+from lib.eaxs_helpers import EAXSHelpers
 
 
 class DarcMail():
@@ -58,10 +61,8 @@ class DarcMail():
             os.path.dirname(__file__), "eaxs_templates")
 
         # create an instance of EAXSMaker.
-        self.eaxs = EAXSMaker(template_dir=self.template_dir, charset=self.charset)
-
-        # add EAXS helper functions.
-        self.eaxs_helpers = eaxs_helpers
+        self.eaxs = EAXSMaker(template_dir=self.template_dir, charset=self.charset, DarcMail=self,
+        EAXSHelpers=EAXSHelpers)
 
 
 if __name__ == "__main__":
@@ -71,9 +72,9 @@ if __name__ == "__main__":
     logging.basicConfig(level=10)
     references_account = {"href": "ref_href_", "email_address": ["foo@ref.com", "bar@ref.com"], "ref_type": "SeeAlso"}
     account_args = dict(path="../tests/sample_files/eml",
-                        email_address="email@email.com", is_eml=True,
+                        email_addresses="email@email.com", is_eml=True,
                         global_id=None,
                         references_account=references_account)
     dm = DarcMail(account_args)
-    dm.eaxs.make("TEST_EAXS.XML", DarcMailObject=dm) #TODO: shouldn't self already be passed to "make"? For convenience.
+    dm.eaxs.make("TEST_EAXS.XML")
 
