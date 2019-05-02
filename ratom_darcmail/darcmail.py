@@ -72,7 +72,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=10)
     references_account = {"href": "ref_href_", "email_address": ["foo@ref.com", "bar@ref.com"], "ref_type": "SeeAlso"}
     account_args = dict(path="../tests/sample_files/eml",
-                        email_addresses="<![CDATA[email@email.com]]>", is_eml=True,
+                        email_addresses="email@email.com", is_eml=True,
                         global_id=None,
                         references_account=references_account)
     dm = DarcMail(account_args)

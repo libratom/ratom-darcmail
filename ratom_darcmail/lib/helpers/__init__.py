@@ -5,11 +5,7 @@ object, "EAXSHelpers". This can be imported with "from lib.eaxs_helpers import E
 
 Each module file in ./eaxs_helpers is expected to have a "main" function that provides the API. 
 For example, EAXSHelpers.close_folders() will be equivalent to the underlying function, 
-close_folders.main(). 
-
-Todo:
-    * Now that you've added filters, you need to rewrite the docstring and maybe update var names
-    and comments, and the name of this folder itself, etc.
+close_folders.main().
 """
 
 # import modules.
@@ -22,8 +18,8 @@ def _load_functions_from_files():
     """ Imports all module files. Returns a dict where each key is the module name and the value of
     the key is the module's main() function. """
 
-    # create dicts to return. 
-    helpers, filters = {}, {}
+    # create dict to return. 
+    helpers = {}
 
     # glob all .py module files.
     _here = _os.path.dirname(__file__)
@@ -43,18 +39,11 @@ def _load_functions_from_files():
         # import the module dynamically per: https://stackoverflow.com/a/31285643.
         imported_module = _importlib.import_module("." + module, __name__)
 
-        # ???
-        filter_prefix  = "filter__"
-        is_filter = True if module.startswith(filter_prefix) else False
-        if is_filter:
-            module = module[len(filter_prefix):]
-
-        # update @helpers or @filters as needed.
-        update_dict = filters if is_filter else helpers
-        update_dict[module] = getattr(imported_module, "main")
+        # update @helpers.
+        helpers[module] = getattr(imported_module, "main")
         
-    return (helpers, filters)
+    return helpers
 
 
 # create an object contaning helper functions.
-EAXSHelpers, JinjaFilters = _load_functions_from_files()
+EAXSHelpers = _load_functions_from_files()
