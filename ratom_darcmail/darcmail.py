@@ -77,4 +77,3 @@ if __name__ == "__main__":
                         references_account=references_account)
     dm = DarcMail(account_args)
     dm.eaxs.make("TEST_EAXS.XML")
-

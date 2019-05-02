@@ -556,6 +556,10 @@
       Should be able to do this and say XMLWrapped is False and be done with it.
       -->
       <element name="LocalId" type="integer"/>
+	  <!-- Notice that this doesn't enforce uniqueness even though that's obviously what's desired. And this is an "integer" not "long" like the others. 
+	  This could theoretically conflict with the long LocalId. But not really: because there is no enforced uniqueness AND they are two diffrently pathed elements albeit with 
+	  the same element basename.
+	  Also see: http://books.xmlschemata.org/relaxng/ch19-77183.html -->
       <element name="XMLWrapped" type="boolean" minOccurs="0">
         <annotation>
           <documentation>If this externally stored body part is wrapped in an XML envelope then this element must be present and have a value of true. If the externally stored body part is stored as a "native" file without any XML wrapper then either this element will not be present or will be present and have a value of false.</documentation>

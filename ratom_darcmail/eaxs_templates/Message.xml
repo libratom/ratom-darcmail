@@ -47,7 +47,7 @@ TODO:
             TODO: What's the source for the optional <Comments> element? I can't find anything
             in RFC 4021 (at least I think that's the correct spec to look at).
             #-->
-            {% for name, value in message._headers %}
+            {% for name, value in message.items() %}
             <Header>
                 <Name>{{ name }}</Name>
                 <Value>{{ value | cdata }}</Value>
@@ -70,8 +70,8 @@ TODO:
             <StatusFlag>{{ status_dict.get(status_item) | skipnull }}</StatusFlag>
             {% endfor %}
 
-            <!--# ??? if multibody then include Multibody.xml ... otherwise include Body.xml ... or something like that? ... #-->
-            {% include "Body.xml" %}
+            <!--# ??? TODO: if multibody then include Multibody.xml ... otherwise include Body.xml ... or something like that? ... #-->
+            {% include "SingleBody.xml" %}
 
             <!--# Add in the element that shows parse errors. #-->
             {% for type, location in message.parse_errors %}

@@ -3,10 +3,13 @@
 """ This module contains a class that represents a Folder element within the EAXS context.
 
 Todo:
-    * Put get_eol() in a new script and let this AND message_object call it.
     * Add mbox() method to get that MBOX metadata.
         - ~mbox_data = {"relpath": filename, "eol": None, "Hash": None}
         - This will need hash and EOL methods that, per above, need to be in another script.
+    * I'm not having success setting the "factory" for MBOX to email.message.EmailMessage so might
+    need to make sure both EML and MBOX use email.message.Message. This needs to be documented big
+    time.
+    * You need to pass the charset down from the account object into the email policy.
 """
 
 # import modules.
@@ -85,7 +88,7 @@ class FolderObject():
         # yield a MessageObject for each EML file.       
         for eml in self.get_files():
             with open(eml, "rb") as eml_bytes:
-                message = email.message_from_binary_file(eml_bytes, policy=policy)
+                message = email.message_from_binary_file(eml_bytes, _class=email.message.Message, policy=policy)
             message_object = MessageObject(self, eml, message)
             yield message_object
         
