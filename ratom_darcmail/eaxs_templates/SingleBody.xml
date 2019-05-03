@@ -85,12 +85,12 @@ TODO:
             <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
                 <ExtBodyContent>
                     {% set ext_path = ("attachments/" + message.folder.rel_path + "/" + 
-                        message.local_id.__str__() + ".foo") %}
+                        message.account.get_new_id().__str__() + ".foo") %}
                     {% set ext_file = EAXSHelpers.write_file("", ext_path) %}
                     <RelPath>{{ ext_path }}</RelPath>
                     <CharSet>{{ message.get_content_charset() }}</CharSet>
                     <TransferEncoding>{{ message.get("content-transfer-encoding") }}</TransferEncoding>
-                    <LocalId></LocalId>
+                    <LocalId>{{ message.account.current_id }}</LocalId>
                     <XMLWrapped>false</XMLWrapped>
                     <Eol>{{ message.get_eol() }}</Eol>
                     <!--# ??? Implement? <Hash></Hash> #-->

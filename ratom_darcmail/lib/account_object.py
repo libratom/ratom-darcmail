@@ -63,7 +63,7 @@ class AccountObject():
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
-        self.current_message_id = 0
+        self.current_id = -9223372036854775808
         self.folders = self._get_folders()
 
 
@@ -98,6 +98,13 @@ class AccountObject():
                 yield folder
 
         return
+
+
+    def get_new_id(self):
+        """ ??? """
+        self.current_id += 1
+        return self.current_id
+
 
 
 if __name__ == "__main__":

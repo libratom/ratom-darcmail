@@ -24,7 +24,7 @@ import plac
 import yaml
 from lib.account_object import AccountObject
 from lib.eaxs_maker import EAXSMaker
-from lib.helpers import EAXSHelpers
+from lib.eaxs_helpers import EAXSHelpers
 
 
 class DarcMail():

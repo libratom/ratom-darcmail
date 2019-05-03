@@ -47,7 +47,7 @@ class MessageObject():
         self._normalize_path = self.account._normalize_path
         self.rel_path = self._normalize_path(os.path.relpath(self.path, self.folder.account.path)) #TODO: Do you need this?
         self.basename = os.path.basename(self.path)
-        self.local_id = self.account.current_message_id = self.account.current_message_id + 1
+        self.local_id = self.account.get_new_id()
         self.parse_errors = []
 
 
