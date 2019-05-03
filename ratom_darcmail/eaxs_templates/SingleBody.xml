@@ -18,7 +18,7 @@ TODO:
                 FYI: TOMES DarcMail equates this to Content-Description. #-->
                 <ContentName>{{ message.get_params(header="content-description") | skipnull | cdata }}</ContentName>
                 
-                <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
+                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <ContentTypeComments></ContentTypeComments>
                 
                 <!--# TODO: document this. #-->
@@ -34,25 +34,25 @@ TODO:
 
                 <TransferEncoding>{{ message.get("content-transfer-encoding") | skipnull }}</TransferEncoding>
                 
-                <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
+                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <TransferEncodingComments></TransferEncodingComments>
 
                 <ContentId>{{ message.get("content-id") | skipnull | cdata }}</ContentId>
     
-                <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
+                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <ContentIdComments></ContentIdComments>
 
-                <!--# TODO: still check RFC-4021 for the souce of this; because it's not clear what this
+                <!--# TODO: still check RFC-4021 for the source of this; because it's not clear what this
                 element is about. It's optional BTW. #-->
                 <Description>{{ message.get("content-description") | skipnull | cdata }}</Description>
                 
-                <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
+                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <DescriptionComments></DescriptionComments>
 
                 <Disposition>{{message.get_content_disposition() | skipnull }}</Disposition>
                 <DispositionFileName>{{message.get_filename() | skipnull }}</DispositionFileName>
 
-                <!--# TODO: check RFC-4021 for the souce of this. It's optional BTW. #-->
+                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <DispositionComments></DispositionComments>
 
                 {% set disposition_params = EAXSHelpers.parse_params(
