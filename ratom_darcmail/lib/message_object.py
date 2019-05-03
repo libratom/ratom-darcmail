@@ -21,7 +21,7 @@ class MessageObject():
     """ A class that represents a Message element within the EAXS context. """
     
 
-    def __init__(self, folder, path, email):
+    def __init__(self, folder, path, email, *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -42,6 +42,7 @@ class MessageObject():
         self.folder = folder
         self.path = path
         self.email = email
+        self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
         self.account = self.folder.account
@@ -83,6 +84,8 @@ class MessageObject():
         for part in self.email.walk():
             if isinstance(part, (email.message.Message, email.message.EmailMessage)):
                 yield MessageObject(self.folder, self.path, part)
+
+        return
 
 
     def get_eol(self):

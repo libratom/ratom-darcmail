@@ -26,7 +26,7 @@ class FolderObject():
     """ A class that represents a Folder element within the EAXS context. """
 
 
-    def __init__(self, account, path, file_extension=".eml"):
+    def __init__(self, account, path, file_extension=".eml", *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -49,6 +49,7 @@ class FolderObject():
         self.account = account
         self.path = self.account._normalize_path(path)
         self.file_extension = file_extension
+        self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
         self.rel_path = self.account._normalize_path(os.path.relpath(self.path, self.account.path))

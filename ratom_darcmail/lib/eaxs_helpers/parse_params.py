@@ -22,12 +22,13 @@ def main(params, restrictions=["id", "name"]):
 
     # if @params is None, fallback to an empty list.
     if params is None:
-        params = []
-    
-    # remove items in @params as needed.
-    # TODO: Do you also just need a condition to skip it if @value == "" regardless of name? Refer to EAXS to see what's allowed?
-    for name, value in params:
-        if name.lower() in restrictions or ("/" in name and value == ""):
-            params.remove((name, value))
+        return []
 
-    return params
+    # ??? items in @params as needed.
+    # TODO: Do you also just need a condition to skip it if @value == "" regardless of name? Refer to EAXS to see what's allowed?
+    filtered_params = []
+    for name, value in params:
+        if name.lower() not in restrictions and "/" not in name and value not in ["", None]:
+            filtered_params.append((name, value))
+
+    return filtered_params
