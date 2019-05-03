@@ -188,7 +188,7 @@ class EAXSMaker():
         # update @args/@kwargs.
         args = args + self.args
         kwargs.update(self.kwargs)
-        self.logger.debug("Template will receive args/kwargs: {}/{}".format(args, kwargs))
+        self.logger.debug("Template will receive (args)|{{kwargs}}: {}|{}".format(args, kwargs))
 
         # create the Jinja renderer.
         try:

@@ -60,7 +60,7 @@ class MessageObject():
         
         # wrap method requests per: https://stackoverflow.com/a/13776530.
         def wrapper(*args, **kwargs):
-            self.logger.debug("Calling @self.email.{} with args/kwargs: {}/{}".format(attr, 
+            self.logger.debug("Calling @self.email.{} with (args)|{{kwargs}}: {}|{}".format(attr, 
                 args, kwargs))
             return getattr(self.email, attr)(*args, **kwargs) 
 
