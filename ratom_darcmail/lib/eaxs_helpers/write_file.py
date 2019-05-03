@@ -26,8 +26,6 @@ def main(obj, destination, prefix=None, suffix=None, charset="utf-8"):
         - FileExistsError ???
     """
 
-    print(locals()) # TODO: remove.
-
     # ???
     if os.path.isfile(destination):
         err = "???"

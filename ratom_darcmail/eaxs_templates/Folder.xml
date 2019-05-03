@@ -17,7 +17,7 @@ It is related to the lib.folder_object.FolderObject module.
     <!--# Add in <Folder> child elements including <Message>. #-->
     <Folder>
         <Name>{{ folder.basename }}</Name>
-        {% for message in folder.get_messages() %}
+        {% for message in folder.messages %}
             {% include "Message.xml" %}
         {% endfor %}
 

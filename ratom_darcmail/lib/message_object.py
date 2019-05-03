@@ -4,13 +4,14 @@
 
 Todo:
     * get_eol() needs to support getting the EOL from a file so it can also support the 
-    "Folder/Mbox/Eol" element. So it probably needs to go in an external module. It can just get 
-    wrapped here for ease of access and usage (i.e. no params).
-    * Probably want to a add documentation here as to why you didn't just sublcass 
+    "Folder/Mbox/Eol" element. So, move it to eaxs_helpers and import it here and send it .walk()'s
+    bytes.
+    * Probably want to add documentation here as to why you didn't just subclass 
     email.message.Message - because it helps with intercepting, etc.
 """
 
 # import modules.
+import email
 import logging
 import os
 #import traceback
@@ -47,7 +48,8 @@ class MessageObject():
         self._normalize_path = self.account._normalize_path
         self.rel_path = self._normalize_path(os.path.relpath(self.path, self.folder.account.path)) #TODO: Do you need this?
         self.basename = os.path.basename(self.path)
-        self.local_id = self.account.get_new_id()
+        self.local_id = self.account.set_current_id()
+        self.email_parts = self._get_email_parts() 
         self.parse_errors = []
 
 
@@ -73,6 +75,14 @@ class MessageObject():
             self.logger.warning("Requested invalid attribute: {}".format(attr))
         
         return
+
+
+    def _get_email_parts(self):
+        """ ??? """
+
+        for part in self.email.walk():
+            if isinstance(part, (email.message.Message, email.message.EmailMessage)):
+                yield MessageObject(self.folder, self.path, part)
 
 
     def get_eol(self):

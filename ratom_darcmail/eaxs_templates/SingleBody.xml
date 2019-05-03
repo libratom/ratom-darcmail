@@ -85,8 +85,8 @@ TODO:
             <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
                 <ExtBodyContent>
                     {% set ext_path = ("attachments/" + message.folder.rel_path + "/" + 
-                        message.account.get_new_id().__str__() + ".foo") %}
-                    {% set ext_file = EAXSHelpers.write_file("", ext_path) %}
+                        message.account.set_current_id().__str__() + ".attachment") %}
+                    {% set ext_file = EAXSHelpers.write_file(message.as_string(), ext_path) %}
                     <RelPath>{{ ext_path }}</RelPath>
                     <CharSet>{{ message.get_content_charset() }}</CharSet>
                     <TransferEncoding>{{ message.get("content-transfer-encoding") }}</TransferEncoding>

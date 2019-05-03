@@ -63,7 +63,7 @@ class AccountObject():
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
-        self.current_id = -9223372036854775808
+        self.current_id = 0 #TODO: should it be this???: -9223372036854775808
         self.folders = self._get_folders()
 
 
@@ -100,7 +100,7 @@ class AccountObject():
         return
 
 
-    def get_new_id(self):
+    def set_current_id(self):
         """ ??? """
         self.current_id += 1
         return self.current_id

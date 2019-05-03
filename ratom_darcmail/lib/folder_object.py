@@ -53,8 +53,8 @@ class FolderObject():
         # set unpassed attributes.
         self.rel_path = self.account._normalize_path(os.path.relpath(self.path, self.account.path))
         self.basename = os.path.basename(self.path)
-        self.get_messages = (self._get_eml_messages if self.account.is_eml else 
-            self._get_mbox_messages)
+        self.messages = (self._get_eml_messages() if self.account.is_eml else 
+            self._get_mbox_messages())
 
 
     def get_files(self):
