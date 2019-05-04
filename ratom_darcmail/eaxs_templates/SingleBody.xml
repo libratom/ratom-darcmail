@@ -4,6 +4,8 @@ TODO:
     * Make sure you use skipnull and cdata wherever needed.
     * Check all elements against schema for what elements are repeatable and make sure you are
     supporting that.
+    * Need to store messages in "/messages" with ".message" extenstion VS attachments:
+        "/attachments/*.attachment".
 #-->
 
             <SingleBody>
@@ -22,7 +24,7 @@ TODO:
                 <ContentTypeComments></ContentTypeComments>
                 
                 <!--# TODO: document this. #-->
-                {% set message_params = EAXSHelpers.parse_params(message_body.get_params()) %}
+                {% set message_params = EAXSHelpers.filter_params(message_body.get_params()) %}
                 {% if message_params|length != 0 %}
                 <ContentTypeParam>
                 {% for name, value in message_params %}
@@ -55,7 +57,7 @@ TODO:
                 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <DispositionComments></DispositionComments>
 
-                {% set disposition_params = EAXSHelpers.parse_params(
+                {% set disposition_params = EAXSHelpers.filter_params(
                     message_body.get_params(header="content-disposition"),
                     ["filename"])
                 %}
