@@ -11,6 +11,10 @@ Todo:
     it up (from a dict in memory, say account.file_dict), if it's a duplicate, return the file path
     that already exists and update the dict with {local_id} = {file path}. If not a duplicate,
     return the path to the new file (and still update that dict).
+    * This function should take either bytes, string, or email.message.Message and write the data
+    to file. The email object is best because that's how it will look up 
+    message.account.duplicate_dict on that item. Bytes/string should just be accepted in cases where
+    you need to write something arbitrary to file.
 """
 
 # import modules.
