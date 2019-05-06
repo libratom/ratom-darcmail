@@ -19,7 +19,7 @@ def _load_functions_from_files():
     the key is the module's main() function. """
 
     # create dict to return. 
-    helpers = {}
+    helpers, filters = {}, {}
 
     # glob all .py module files.
     _here = _os.path.dirname(__file__)
@@ -40,10 +40,11 @@ def _load_functions_from_files():
         imported_module = _importlib.import_module("." + module, __name__)
 
         # update @helpers.
-        helpers[module] = getattr(imported_module, "main")
+        update_dict = helpers if imported_module.IS_HELPER else filters
+        update_dict[module] = imported_module.main#getattr(imported_module, "main")
         
-    return helpers
+    return helpers, filters
 
 
 # create an object contaning helper functions.
-EAXSHelpers = _load_functions_from_files()
+EAXSHelpers, JinjaFilters = _load_functions_from_files()

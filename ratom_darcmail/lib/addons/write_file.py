@@ -20,7 +20,7 @@ Todo:
 # import modules.
 import os
 
-
+IS_HELPER = True
 def main(obj, destination, prefix=None, suffix=None, charset="utf-8"):
     """ ???
 

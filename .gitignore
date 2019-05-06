@@ -1,8 +1,9 @@
 *~
 .*.sw*
 *.pyc
-.vscode/
+*.bat
 *.code-workspace
-_scratchpad
-reset_git.bat
+RUN_TEST.py
+.vscode/
+_scratchpad/
 TEST_EAXS.XML

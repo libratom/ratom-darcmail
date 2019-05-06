@@ -10,10 +10,6 @@ Todo:
     * You need a main/API method - I think this is where to check if the account path exists.
     * Need to add arg that lets user select starting template file.
     * ReferencesAccount needs to be loadable via JSON file or another EAXS file or something ... 
-    * Need to work on "from lib" imports. I think it'll end up being "from .lib"?
-    * Your CDATA function needs to escape existing CDATA blockers in the text.
-        - LXML does NOT do this, so you need a custom function.
-    * Work on passing custom Jinja templates dynamically (see eaxs_helpers/__init__.py).
 """
 
 # import logging.
@@ -22,20 +18,21 @@ import logging
 import os
 import plac
 import yaml
-from lib.account_object import AccountObject
-from lib.eaxs_maker import EAXSMaker
-from lib.eaxs_helpers import EAXSHelpers
+from .lib.account_object import AccountObject
+from .lib.eaxs_maker import EAXSMaker
+from .lib.addons import EAXSHelpers
 
 
 class DarcMail():
     """ A class that creates EAXS files from Jinja2 templates and a source MBOX or EML account. """
 
 
-    def __init__(self, account_args, template_dir=None, charset="utf-8"):
+    def __init__(self, account_args, eaxs_path, template_dir=None, charset="utf-8"):
         """ Sets instance attributes.
         
         Args:
             - account_args (dict): The account values to pass to lib.account_object.AccountObject().
+            - eaxs_path (str): ???
             - template_dir (str): The path to a folder that contains Jinja2 template files. If None,
             this defaults to "eaxs_templates".
             - charset (str): The encoding to use for writing EAXS files.
@@ -56,6 +53,7 @@ class DarcMail():
 
         # set attributes
         self.account = AccountObject(**account_args)
+        self.eaxs_path, self.eaxs_container = self._check_path(eaxs_path)
         self.charset = charset
         self.template_dir = template_dir if template_dir is not None else os.path.join(
             os.path.dirname(__file__), "eaxs_templates")
@@ -65,15 +63,25 @@ class DarcMail():
         EAXSHelpers=EAXSHelpers)
 
 
-if __name__ == "__main__":
-    #pass
+    def _check_path(self, filepath):
+        """ ??? """
+        
+        # ???
+        filepath = os.path.abspath(filepath)
+        if os.path.isfile(filepath):
+            err = "DARCMAIL ERROR HERE???"
+            self.logger.error(err)
+            raise FileExistsError(err)
+            exit(err)
 
-    # simple test ...
-    logging.basicConfig(level=10)
-    references_account = {"href": "ref_href_", "email_address": ["foo@ref.com", "bar@ref.com"], "ref_type": "SeeAlso"}
-    account_args = dict(path="../tests/sample_files/eml",
-                        email_addresses="email@email.com", is_eml=True,
-                        global_id=None,
-                        references_account=references_account)
-    dm = DarcMail(account_args)
-    dm.eaxs.make("TEST_EAXS.XML")
+        # if needed, create the parent directory for @filepath.
+        container = os.path.dirname(filepath)
+        if container != "" and not os.path.isdir(container):
+            self.logger.info("???")
+            os.makedirs(container)
+        
+        return (filepath, container)
+
+
+if __name__ == "__main__":
+    pass

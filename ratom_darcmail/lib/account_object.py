@@ -12,7 +12,7 @@ import hashlib
 import logging
 import os
 import time
-from lib.folder_object import FolderObject
+from ..lib.folder_object import FolderObject
 
 
 class AccountObject():

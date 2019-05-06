@@ -19,7 +19,7 @@ import glob
 import hashlib
 import logging
 import os
-from lib.message_object import MessageObject
+from ..lib.message_object import MessageObject
 
 
 class FolderObject():

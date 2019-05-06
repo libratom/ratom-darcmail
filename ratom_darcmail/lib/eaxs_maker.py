@@ -4,8 +4,7 @@
 contains a private class that contains a custom Jinja2 template loader. 
 
 Todo:
-    * It would be nice to move EAXSMaker.close_folders() into a Jinja macro. I'd rather not have XML 
-    specific stuff be in here. At the least, move them out into a new module ~ "eaxs_helpers.py".
+    * ???
 """
 
 # import logging.
@@ -13,6 +12,7 @@ import jinja2
 import logging
 import os
 import time
+from .addons import JinjaFilters
 
 
 class _TemplateLoader(jinja2.BaseLoader):
@@ -127,15 +127,11 @@ class EAXSMaker():
         # see @self.env.filters["skipnull"], below.
         self._skip_hash = "skip_" + time.time().hex()
 
-        # add custom filters to @self.env.
-        self.jinja_filters = {"skipnull": (lambda text: text if text is not None else self._skip_hash),
-            "escdata": (lambda text: text.replace("]]>", "]]&gt;") if text is not None else ""),
-            "cdata": (lambda text: "<![CDATA[{}]]>".format(
-                self.jinja_filters["escdata"](text.strip())) if text is not None else "")}
-                    #TODO: Is stripping the text going to create any issues w/ quoted-printable text?
-        self.env.filters.update(self.jinja_filters)
+        # add custom filters to @self.env.filters.
+        self.env.filters["skipnull"] = (lambda text: text if text is not None else self._skip_hash) 
+        self.env.filters.update(JinjaFilters)
 
-
+        
     def _write_eaxs(self, eaxs_path, template, *args, **kwargs):
         """ Handles the writing of @eaxs_path from a Jinja2 @template. This method is intended to be
         called exclusively by @self.make(). """
