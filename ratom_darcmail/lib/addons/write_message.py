@@ -12,26 +12,27 @@ import os
 
 IS_HELPER = True
 
-def main(message, darcmail_obj, is_attachment=False,):
-    """ Write @message to @destination.
+def main(message, darcmail_obj, is_attachment=False):
+    """ Writes string value of @message to file.
 
     Args:
-        - message (email.message.Message): ???
-        - darcmail_obj (darcmail.DarcMail): ???
-        - is_attachement (bool): ???
+        - message (email.message.Message): The message to write.
+        - darcmail_obj (darcmail.DarcMail): The DarcMail object to which @message belongs.
+        - is_attachement (bool): Use True to write to @darcmail_obj.message_dir. Otherwise, use
+        False to write to @darcmail_obj.attachment_dir. 
     
     Returns:
         str: The path to the written file.
 
     Raises:
-        - FileExistsError: If @destination already exists.
+        - FileExistsError: If the file to write already exists.
     """
 
-    # ???
+    # determine file path and extension.
     subdir = darcmail_obj.message_dir if not is_attachment else darcmail_obj.attachment_dir
     ext = ".message" if not is_attachment else ".attachment"
 
-    # ???
+    # set file path.
     destination = os.path.join(darcmail_obj.eaxs_container, subdir, message.folder.rel_path, 
         "{}{}".format(message.local_id, ext))
 
@@ -40,13 +41,17 @@ def main(message, darcmail_obj, is_attachment=False,):
         err = "Can't overwrite existing file: {}".format(destination)
         logging.error(err)
         raise FileExistsError(err)
+    else:
+        logging.info("Writing file: {}".format(destination))
     
-    # create diretories as needed.
+    # if needed, create parent directories for file.
     destination_folder = os.path.dirname(destination)
     if not os.path.isdir(destination_folder):
+        logging.debug("Creating parent folders: {}".format(destination_folder))
         os.makedirs(destination_folder)
 
     # write @message to @destination.
+    # TODO: We might need a try/except around this.
     with open(destination, mode="w", encoding=darcmail_obj.charset) as fopen:
 
         for part in message.as_string():
