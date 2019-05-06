@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-""" This dynamically loads all modules in ./eaxs_helpers and adds their API as an attribute to an
-object, "EAXSHelpers". This can be imported with "from lib.eaxs_helpers import EAXSHelpers".
+""" Provides an API for all package files as an attribute to either "lib.addons.EAXSHelpers" or
+"lib.addons.JinjaFilters".
 
-Each module file in ./eaxs_helpers is expected to have a "main" function that provides the API. 
-For example, EAXSHelpers.close_folders() will be equivalent to the underlying function, 
-close_folders.main().
+Each module has an "IS_HELPER" boolean. If True, the module's "main" function will be acessible via
+"lib.addons.EAXSHelpers". Otherwise, it will be accessible via "lib.addons.JinjaFilters".
 """
 
 # import modules.
@@ -15,10 +14,8 @@ import os as _os
 
 
 def _load_functions_from_files():
-    """ Imports all module files. Returns a dict where each key is the module name and the value of
-    the key is the module's main() function. """
 
-    # create dict to return. 
+    # create dicts to return. 
     helpers, filters = {}, {}
 
     # glob all .py module files.
@@ -46,5 +43,5 @@ def _load_functions_from_files():
     return helpers, filters
 
 
-# create an object contaning helper functions.
+# create objects contaning helper functions.
 EAXSHelpers, JinjaFilters = _load_functions_from_files()
