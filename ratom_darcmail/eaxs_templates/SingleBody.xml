@@ -86,9 +86,7 @@ TODO:
             {% else %}
             <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
                 <ExtBodyContent>
-                    {% set ext_path = (DarcMail.eaxs_container + "/attachments/" + message_body.folder.rel_path + "/" + 
-                        message_body.local_id.__str__() + ".attachment") %}
-                    {% set ext_file = EAXSHelpers.write_file(message_body.as_string(), ext_path) %}
+                    {% set ext_file = EAXSHelpers.write_message(message_body, DarcMail, True) %}
                     <RelPath>{{ ext_path }}</RelPath>
                     <CharSet>{{ message_body.get_content_charset() | skipnull }}</CharSet>
                     <TransferEncoding>{{ message_body.get("content-transfer-encoding") }}</TransferEncoding>

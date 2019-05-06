@@ -27,7 +27,8 @@ class DarcMail():
     """ A class that creates EAXS files from Jinja2 templates and a source MBOX or EML account. """
 
 
-    def __init__(self, account_args, eaxs_path, template_dir=None, charset="utf-8"):
+    def __init__(self, account_args, eaxs_path, message_dir="messages", 
+        attachment_dir="attachments", template_dir=None, charset="utf-8"):
         """ Sets instance attributes.
         
         Args:
@@ -54,6 +55,8 @@ class DarcMail():
         # set attributes
         self.account = AccountObject(**account_args)
         self.eaxs_path, self.eaxs_container = self._check_path(eaxs_path)
+        self.message_dir = os.path.join(self.eaxs_container, message_dir)
+        self.attachment_dir = os.path.join(self.eaxs_container, attachment_dir)
         self.charset = charset
         self.template_dir = template_dir if template_dir is not None else os.path.join(
             os.path.dirname(__file__), "eaxs_templates")
@@ -64,7 +67,10 @@ class DarcMail():
 
 
     def _check_path(self, filepath):
-        """ ??? """
+        """ ??? 
+        
+        Raises: ???
+        """
         
         # ???
         filepath = os.path.abspath(filepath)
@@ -72,7 +78,6 @@ class DarcMail():
             err = "DARCMAIL ERROR HERE???"
             self.logger.error(err)
             raise FileExistsError(err)
-            exit(err)
 
         # if needed, create the parent directory for @filepath.
         container = os.path.dirname(filepath)
