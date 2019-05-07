@@ -22,6 +22,11 @@ def main(text):
         return ""
     
     # escape ending CDATA block.
-    text = text.replace("]]>", "]]&gt;")
+    cdata_start = "<![CDATA["
+    if cdata_start in text:
+        text = text.replace("]]>", "]]&gt;")
+    else:
+        logging.info("No '{}' start tags found in text; returning original text.".format(
+            cdata_start))
     
     return text

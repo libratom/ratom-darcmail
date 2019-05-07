@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
-""" This module contains a class that represents the Account element within the EAXS context.
-
-TODO:
-    * Still not sure about ReferencesAccount - it might need it's own class as originally intended.
-        - It'll easier to document what it needs to have.
-"""
+""" This module contains a class that represents the Account element within the EAXS context. """
 
 # import modules.
 import hashlib
@@ -38,10 +33,10 @@ class AccountObject():
             XSD.
 
         Attributes:
-            ???
-
-        Example:
-            ???
+            - current_id (int): The current account identifier. This is used to get unique local
+            identifiers for messages and/or attachments, etc.
+            - folders (generator): Each item is a FolderObject that corresponds to a file folder
+            within @self.path.
         """
 
         # set logger; suppress logging by default.
@@ -55,9 +50,9 @@ class AccountObject():
         
         # set attributes.
         self.path = self._normalize_path(path)
-        self.is_eml = is_eml
         self.email_addresses = ([email_addresses] if not isinstance(email_addresses, list) else
             email_addresses)
+        self.is_eml = is_eml
         self.global_id = global_id if global_id is not None else self._get_global_id()
         self.references_account = references_account
         self.args, self.kwargs = args, kwargs
@@ -67,23 +62,8 @@ class AccountObject():
         self.folders = self._get_folders()
 
 
-    def _get_global_id(self):
-        """ Returns an auto-generated account identifier. """
-
-        # create string/bytes consisting of the account address and current time.
-        id_str = "{}{}".format(self.email_addresses, time.time())
-        id_bytes = id_str.encode(errors="ignore")
-        
-        # hash @id_bytes and prepend a string to it.
-        global_id = self.email_addresses[-1].split("@")[-1] + "_" + hashlib.sha256(
-            id_bytes).hexdigest()[:7]
-
-        return global_id
-
-    
     def _get_folders(self):
-        """ Returns a generator for the folders in @self.path. Each item is a 
-        lib.folder_object.FolderObject. """
+        """ Returns a generator for the folders in @self.path. Each item is a FolderObject. """
 
         # loop through @self.path's folders.
         for dirpath, dirnames, filenames in os.walk(self.path):
@@ -100,11 +80,25 @@ class AccountObject():
         return
 
 
-    def set_current_id(self):
-        """ ??? """
-        self.current_id += 1
-        return self.current_id
+    def _get_global_id(self):
+        """ Returns an auto-generated account identifier. """
 
+        # create string/bytes consisting of the account address and current time.
+        id_str = "{}{}".format(self.email_addresses, time.time())
+        id_bytes = id_str.encode(errors="ignore")
+        
+        # hash @id_bytes and prepend a string to it.
+        global_id = self.email_addresses[-1].split("@")[-1] + "_" + hashlib.sha256(
+            id_bytes).hexdigest()[:7]
+
+        return global_id
+
+
+    def set_current_id(self):
+        """ Increments @self.current_id and returns the new value. """
+        
+        self.current_id += 1        
+        return self.current_id
 
 
 if __name__ == "__main__":

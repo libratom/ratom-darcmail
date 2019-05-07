@@ -61,7 +61,7 @@ class DarcMail():
         self.template_dir = template_dir if template_dir is not None else os.path.join(
             os.path.dirname(__file__), "eaxs_templates")
 
-        # create an instance of EAXSMaker.
+        # create an instance of EAXSMaker; create alias to its @make method.
         self.eaxs = EAXSMaker(template_dir=self.template_dir, charset=self.charset, DarcMail=self,
         EAXSHelpers=EAXSHelpers)
         self.make_eaxs = lambda: self.eaxs.make(self.eaxs_path)
