@@ -12,4 +12,5 @@ account_args = dict(path="tests/sample_files/eml",
                     global_id=None,
                     references_account=references_account)
 dm = DarcMail(account_args, TEST_EAXS)
-dm.eaxs.make(dm.eaxs_path)
+#dm.eaxs.make(dm.eaxs_path)
+dm.make_eaxs() # shorter way of doing the line above.

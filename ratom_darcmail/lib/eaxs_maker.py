@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-""" This module contains a class that renders EAXS XML files via Jinja2 templates. This module also
-contains a private class that contains a custom Jinja2 template loader. 
+""" This module contains a class that renders EAXS or generic XML files via Jinja2 templates. This
+module also contains a private class that contains a custom Jinja2 template loader. 
 
 Todo:
     * ???
@@ -92,7 +92,7 @@ class _TemplateLoader(jinja2.BaseLoader):
 
 
 class EAXSMaker():
-    """ A class that renders EAXS XML files via Jinja2 templates. """
+    """ A class that renders EAXS or generic XML files via Jinja2 templates. """
 
 
     def __init__(self, template_dir, charset="utf-8", *args, **kwargs):
@@ -160,10 +160,14 @@ class EAXSMaker():
 
     def make(self, eaxs_path, template="Account.xml", *args, **kwargs):
         """ Creates an EAXS file at @eaxs_path by rendering the Jinja2 @template.
+        
+        Note that @template doesn't need to be EAXS or XML compatible, it can be a valid template to
+        any type of desired text output. Along these lines, @eaxs_path can end with any extension 
+        you want.
 
         Args:
-            - eaxs_path (str): The filepath for the EAXS file to create.
-            - template (str): The template file to render. This will be the basename of a file
+            - eaxs_path (str): The filepath for the file to create.
+            - template (str): The template file to use. This will be the basename of a file
             in @self.template_dir.
 
         Returns:

@@ -64,6 +64,7 @@ class DarcMail():
         # create an instance of EAXSMaker.
         self.eaxs = EAXSMaker(template_dir=self.template_dir, charset=self.charset, DarcMail=self,
         EAXSHelpers=EAXSHelpers)
+        self.make_eaxs = lambda: self.eaxs.make(self.eaxs_path)
 
 
     def _check_path(self, filepath):
