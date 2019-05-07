@@ -92,7 +92,7 @@ TODO:
                     <TransferEncoding>{{ message_body.get("content-transfer-encoding") }}</TransferEncoding>
                     <LocalId>{{ message_body.account.current_id }}</LocalId>
                     <XMLWrapped>false</XMLWrapped>
-                    <Eol>{{ message_body.get_eol() }}</Eol>
+                    <Eol>{{ EAXSHelpers.get_eol(message_body) }}</Eol>
                     <!--# ??? Implement? <Hash></Hash> #-->
                 </ExtBodyContent>
                 <!--# Skip Childmessage_body. EAXS XSD does not describe this well enough to implement.

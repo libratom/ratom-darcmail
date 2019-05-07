@@ -3,7 +3,6 @@
 *.pyc
 *.bat
 *.code-workspace
-RUN_TEST.py
 .vscode/
 _scratchpad/
 TEST_EAXS.XML

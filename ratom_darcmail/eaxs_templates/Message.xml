@@ -84,7 +84,7 @@ TODO:
             {% endfor %}
 
             <!--# Add in the end-of-line element. #-->
-            <Eol>{{ message.get_eol() }}</Eol>
+            <Eol>{{ EAXSHelpers.get_eol(message) }}</Eol>
 
         </Message>
         <!--# The "raw" block below forces a line break. #-->

@@ -3,8 +3,9 @@
 """ Provides an API for all package files as an attribute to either "lib.addons.EAXSHelpers" or
 "lib.addons.JinjaFilters".
 
-Each module has an "IS_HELPER" boolean. If True, the module's "main" function will be acessible via
-"lib.addons.EAXSHelpers". Otherwise, it will be accessible via "lib.addons.JinjaFilters".
+Each module MUST have an "IS_HELPER" boolean and a "main" function that provides the API. If 
+@IS_HELPER is True, the module's @main function will be acessible via "lib.addons.EAXSHelpers".
+Otherwise, it will be accessible via "lib.addons.JinjaFilters".
 """
 
 # import modules.
@@ -35,10 +36,10 @@ def _load_functions_from_files():
 
         # import the module dynamically per: https://stackoverflow.com/a/31285643.
         imported_module = _importlib.import_module("." + module, __name__)
-
+ 
         # update @helpers.
         update_dict = helpers if imported_module.IS_HELPER else filters
-        update_dict[module] = imported_module.main#getattr(imported_module, "main")
+        update_dict[module] = imported_module.main
         
     return helpers, filters
 

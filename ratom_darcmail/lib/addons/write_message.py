@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Todo:
     * If you want to deal with duplicates, this is where to do it: first hash the data, then look
@@ -51,7 +52,7 @@ def main(message, darcmail_obj, is_attachment=False):
         os.makedirs(destination_folder)
 
     # write @message to @destination.
-    # TODO: We might need a try/except around this.
+    # TODO: Might need a try/except around this: You can update the message's @parse_errors list if needed.
     with open(destination, mode="w", encoding=darcmail_obj.charset) as fopen:
 
         for part in message.as_string():
