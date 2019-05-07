@@ -11,6 +11,12 @@ account_args = dict(path="tests/sample_files/eml",
                     email_addresses="email@email.com", is_eml=True,
                     global_id=None,
                     references_account=references_account)
-dm = DarcMail(account_args, TEST_EAXS)
-#dm.eaxs.make(dm.eaxs_path)
-dm.make_eaxs() # shorter way of doing the line above.
+dm_eml = DarcMail(account_args, TEST_EAXS)
+#dm_eml.eaxs.make(dm_eml.eaxs_path)
+dm_eml.make_eaxs() # shorter way of doing the line above.
+
+#mbox_args = account_args
+#mbox_args["path"] = mbox_args["path"].replace("eml", "mbox")
+#mbox_args["is_eml"] = False
+#dm_mbox = DarcMail(mbox_args, TEST_EAXS)
+#dm_mbox.make_eaxs()

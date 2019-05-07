@@ -25,18 +25,18 @@ class AccountObject():
             instead of a list.
             - is_eml (bool): Use True if the account data is in EML format. Use False to indicate an
             MBOX.
-            - global_id (str): The unique identifier for the account. This value must be an
+            - global_id (str): The unique identifier for the account. This value should be an
             identifier per the xsd:anyURI restriction. If None, this will be auto-generated.
             - references_account (dict): This represents the ReferencesAccount element within the
             EAXS context. It should contain the lowercase keys: "href" (str), 
-            "email_addresses" (list), and "ref_type" (str). Values must be compliant with the EAXS
+            "email_addresses" (list), and "ref_type" (str). Values should be compliant with the EAXS
             XSD.
 
         Attributes:
             - current_id (int): The current account identifier. This is used to get unique local
             identifiers for messages and/or attachments, etc.
-            - folders (generator): Each item is a FolderObject that corresponds to a file folder
-            within @self.path.
+            - folders (generator): Each item is a lib.folder_object.FolderObject that corresponds to
+            a folder within @self.path.
         """
 
         # set logger; suppress logging by default.

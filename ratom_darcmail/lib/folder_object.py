@@ -3,13 +3,10 @@
 """ This module contains a class that represents a Folder element within the EAXS context.
 
 Todo:
-    * Add mbox() method to get that MBOX metadata.
-        - ~mbox_data = {"relpath": filename, "eol": None, "Hash": None}
-        - This will need hash and EOL methods that, per above, need to be in another script.
     * I'm not having success setting the "factory" for MBOX to email.message.EmailMessage so might
     need to make sure both EML and MBOX use email.message.Message. This needs to be documented big
     time.
-    * You need to pass the charset down from the account object into the email policy.
+    * You might want to pass the charset down from the DarcMail object into the email policy.
 """
 
 # import modules.
@@ -18,6 +15,7 @@ import email.policy
 import glob
 import hashlib
 import logging
+import mailbox
 import os
 from ..lib.message_object import MessageObject
 
@@ -26,7 +24,8 @@ class FolderObject():
     """ A class that represents a Folder element within the EAXS context. """
 
 
-    def __init__(self, account, path, file_extension=".eml", *args, **kwargs):
+    def __init__(self, account, path, file_extension=None, message_policy=email.policy.Compat32(),
+        *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -38,7 +37,11 @@ class FolderObject():
             extension.
         
         Attributes:
-            - ???
+            - rel_path (str): The relative path of this folder's @path attribute to its 
+            @account.path attribute.
+            - basename (str): The basename of @path.
+            - messages (generator): Each item is a lib.message_object.MessageObject that corresponds
+            to each message within this
         """
 
         # set logger; suppress logging by default.
@@ -49,6 +52,7 @@ class FolderObject():
         self.account = account
         self.path = self.account._normalize_path(path)
         self.file_extension = file_extension
+        self.message_policy = message_policy
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
@@ -59,7 +63,7 @@ class FolderObject():
 
 
     def get_files(self):
-        """ Returns a generator for each file within @self.path provided the file ends with
+        """ Returns a generator for each file path within @self.path provided the file ends with
         @self.file_extension. """
 
         # loop through files in @self.path.
@@ -80,16 +84,15 @@ class FolderObject():
         return
         
 
-    def _get_eml_messages(self, policy=email.policy.Compat32()):
+    def _get_eml_messages(self):
         """ Returns a generator for each EML file in @self.path. Each item is a 
         lib.message_object.MessageObject. """
         
-        # TODO: add try/except.
-
         # yield a MessageObject for each EML file.       
         for eml in self.get_files():
             with open(eml, "rb") as eml_bytes:
-                message = email.message_from_binary_file(eml_bytes, _class=email.message.Message, policy=policy)
+                message = email.message_from_binary_file(eml_bytes, _class=email.message.Message,
+                policy=self.message_policy)
             message_object = MessageObject(self, eml, message)
             yield message_object
         
@@ -100,8 +103,17 @@ class FolderObject():
         """ Returns a generator for each message in each MBOX file in @self.path. Each item is a 
         lib.message_object.MessageObject. """
         
-        #TODO: make this do something!
-        pass
+        # yield a MessageObject for each MBOX file's messages. 
+        for mbox in self.get_files():
+            
+            mbox_obj = mailbox.mbox(mbox, factory=email.message.Message(
+                policy=self.message_policy))
+      
+            for message in mbox_obj.values():
+                message_object = MessageObject(self, mbox, message)
+                yield message_object
+        
+        return
 
 
 if __name__ == "__main__":

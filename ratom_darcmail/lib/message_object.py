@@ -3,9 +3,6 @@
 """ This module contains a class that represents a Message element within the EAXS context. 
 
 Todo:
-    * get_eol() needs to support getting the EOL from a file so it can also support the 
-    "Folder/Mbox/Eol" element. So, move it to eaxs_helpers and import it here and send it .walk()'s
-    bytes.
     * Probably want to add documentation here as to why you didn't just subclass 
     email.message.Message - because it helps with intercepting, etc.
 """
