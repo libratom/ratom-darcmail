@@ -41,7 +41,8 @@ class FolderObject():
             @account.path attribute.
             - basename (str): The basename of @path.
             - messages (generator): Each item is a lib.message_object.MessageObject that corresponds
-            to each message within this
+            to each message within this folder. This is an alias to either @_get_eml_messages() if 
+            @account.is_eml is True or @_get_mbox_messages() is it's False.
         """
 
         # set logger; suppress logging by default.
@@ -58,31 +59,8 @@ class FolderObject():
         # set unpassed attributes.
         self.rel_path = self.account._normalize_path(os.path.relpath(self.path, self.account.path))
         self.basename = os.path.basename(self.path)
-        self.messages = (self._get_eml_messages() if self.account.is_eml else 
-            self._get_mbox_messages())
+        self.messages = self._get_eml_messages if self.account.is_eml else self._get_mbox_messages
 
-
-    def get_files(self):
-        """ Returns a generator for each file path within @self.path provided the file ends with
-        @self.file_extension. """
-
-        # loop through files in @self.path.
-        for filename in glob.iglob(self.path + "/*.*"):
-
-            # skip non-files.
-            if not os.path.isfile(filename):
-                continue
-
-            # if needed, skip files with the wrong extension.
-            if self.file_extension is not None:
-                if not filename.endswith(self.file_extension):
-                    continue
-            
-            filename = self.account._normalize_path(filename)
-            yield filename
-
-        return
-        
 
     def _get_eml_messages(self):
         """ Returns a generator for each EML file in @self.path. Each item is a 
@@ -113,6 +91,28 @@ class FolderObject():
                 message_object = MessageObject(self, mbox, message)
                 yield message_object
         
+        return
+
+
+    def get_files(self):
+        """ Returns a generator for each file path within @self.path provided the file ends with
+        @self.file_extension. """
+
+        # loop through files in @self.path.
+        for filename in glob.iglob(self.path + "/*.*"):
+
+            # skip non-files.
+            if not os.path.isfile(filename):
+                continue
+
+            # if needed, skip files with the wrong extension.
+            if self.file_extension is not None:
+                if not filename.endswith(self.file_extension):
+                    continue
+            
+            filename = self.account._normalize_path(filename)
+            yield filename
+
         return
 
 

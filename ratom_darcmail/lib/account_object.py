@@ -35,8 +35,6 @@ class AccountObject():
         Attributes:
             - current_id (int): The current account identifier. This is used to get unique local
             identifiers for messages and/or attachments, etc.
-            - folders (generator): Each item is a lib.folder_object.FolderObject that corresponds to
-            a folder within @self.path.
         """
 
         # set logger; suppress logging by default.
@@ -59,10 +57,9 @@ class AccountObject():
 
         # set unpassed attributes.
         self.current_id = 0 #TODO: should it be this???: -9223372036854775808
-        self.folders = self._get_folders()
 
 
-    def _get_folders(self):
+    def folders(self):
         """ Returns a generator for the folders in @self.path. Each item is a FolderObject. """
 
         # loop through @self.path's folders.

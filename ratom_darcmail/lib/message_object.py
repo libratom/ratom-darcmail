@@ -47,7 +47,6 @@ class MessageObject():
         self.rel_path = self._normalize_path(os.path.relpath(self.path, self.folder.account.path)) #TODO: Do you need this?
         self.basename = os.path.basename(self.path)
         self.local_id = self.account.set_current_id()
-        self.email_parts = self._get_email_parts() 
         self.parse_errors = []
 
 
@@ -75,7 +74,7 @@ class MessageObject():
         return
 
 
-    def _get_email_parts(self):
+    def email_parts(self):
         """ ??? """
 
         for part in self.email.walk():
