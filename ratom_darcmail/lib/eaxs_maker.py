@@ -102,7 +102,7 @@ class EAXSMaker():
 
         Attributes:
             - env (jinja2.environment.Environment): The Jinja2 environment to which custom filters
-            are added to its "filter" key.
+            are added to its @filters attribute.
         """
 
         # set logger; suppress logging by default.
