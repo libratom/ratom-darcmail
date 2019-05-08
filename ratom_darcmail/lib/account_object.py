@@ -14,8 +14,8 @@ class AccountObject():
     """ A class that represents the Account element within the EAXS context. """
 
 
-    def __init__(self, path, email_addresses, is_eml, global_id=None, references_account=None, 
-        *args, **kwargs):
+    def __init__(self, path, email_addresses, is_eml=True, global_id=None, references_account=None,
+        darcmail=None, *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -27,6 +27,7 @@ class AccountObject():
             MBOX.
             - global_id (str): The unique identifier for the account. This value should be an
             identifier per the xsd:anyURI restriction. If None, this will be auto-generated.
+            - darcmail (darcmail.DarcMail): The DarcMail object to which this AccountObject belongs.
             - references_account (dict): This represents the ReferencesAccount element within the
             EAXS context. It should contain the lowercase keys: "href" (str), 
             "email_addresses" (list), and "ref_type" (str). Values should be compliant with the EAXS
@@ -53,14 +54,15 @@ class AccountObject():
         self.is_eml = is_eml
         self.global_id = global_id if global_id is not None else self._get_global_id()
         self.references_account = references_account
+        self.darcmail = darcmail
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
         self.current_id = 0 #TODO: should it be this???: -9223372036854775808
 
 
-    def folders(self):
-        """ Returns a generator for the folders in @self.path. Each item is a FolderObject. """
+    def get_folders(self):
+        """ Generator for the folders in @self.path. Each item is a FolderObject. """
 
         # loop through @self.path's folders.
         for dirpath, dirnames, filenames in os.walk(self.path):
@@ -78,15 +80,18 @@ class AccountObject():
 
 
     def _get_global_id(self):
-        """ Returns an auto-generated account identifier. """
+        """ Returns a unique account identifier. """
 
         # create string/bytes consisting of the account address and current time.
         id_str = "{}{}".format(self.email_addresses, time.time())
-        id_bytes = id_str.encode(errors="ignore")
+        id_bytes = id_str.encode(errors="replace")
         
-        # hash @id_bytes and prepend a string to it.
-        global_id = self.email_addresses[-1].split("@")[-1] + "_" + hashlib.sha256(
-            id_bytes).hexdigest()[:7]
+        # get an email address without "@" signs, etc.
+        email_prefix = self.email_addresses[0].replace("@", "AT").replace(".", "DOT")
+        email_prefix = "".join([c if c.isidentifier() else "_" for c in email_prefix])
+
+        # hash @id_bytes and prepend @email_prefix to it.
+        global_id = email_prefix + "_" + hashlib.sha256(id_bytes).hexdigest()[:7]
 
         return global_id
 

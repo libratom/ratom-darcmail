@@ -13,12 +13,11 @@ import os
 
 IS_HELPER = True
 
-def main(message, darcmail_obj, is_attachment=False):
+def main(message, is_attachment=False):
     """ Writes string value of @message to file.
 
     Args:
         - message (email.message.Message): The message to write.
-        - darcmail_obj (darcmail.DarcMail): The DarcMail object to which @message belongs.
         - is_attachement (bool): Use True to write to @darcmail_obj.message_dir. Otherwise, use
         False to write to @darcmail_obj.attachment_dir. 
     
@@ -30,12 +29,14 @@ def main(message, darcmail_obj, is_attachment=False):
     """
 
     # determine file path and extension.
-    subdir = darcmail_obj.message_dir if not is_attachment else darcmail_obj.attachment_dir
-    ext = ".message" if not is_attachment else ".attachment"
+    subdir = (message.account.darcmail.message_dir if not is_attachment else 
+        message.account.darcmail.attachment_dir)
+    ext = "msg" if not is_attachment else "att"
 
     # set file path.
-    destination = os.path.join(darcmail_obj.eaxs_container, subdir, message.folder.rel_path, 
-        "{}{}".format(message.local_id, ext))
+    destination = os.path.join(message.account.darcmail.eaxs_container, subdir,
+        message.folder.rel_path, "{}_{}.{}".format(message.account.global_id, message.local_id, 
+            ext))
 
     # make sure @destination doesn't exist.
     if os.path.isfile(destination):
@@ -53,9 +54,12 @@ def main(message, darcmail_obj, is_attachment=False):
 
     # write @message to @destination.
     # TODO: Might need a try/except around this: You can update the message's @parse_errors list if needed.
-    with open(destination, mode="w", encoding=darcmail_obj.charset) as fopen:
+    # TODO: Are you sure about using xmlcharrefreplace for the @errors? What should it be? Optional?
+    with open(destination, mode="w", encoding=message.account.darcmail.charset, 
+        errors="xmlcharrefreplace") as fopen:
 
-        for part in message.as_string():
+        for part in message.walk():
+            part = part.as_string()
             fopen.write(part)
 
     return destination

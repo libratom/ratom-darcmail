@@ -158,7 +158,7 @@ class EAXSMaker():
         return
 
 
-    def make(self, eaxs_path, template="Account.xml", *args, **kwargs):
+    def make(self, eaxs_path, template, *args, **kwargs):
         """ Creates an EAXS file at @eaxs_path by rendering the Jinja2 @template.
         
         Note that @template doesn't need to be EAXS or XML compatible, it can be a valid template to
@@ -185,6 +185,12 @@ class EAXSMaker():
             raise FileExistsError(err)
         self.logger.info("Using template '{}' to create file: {}".format(template, eaxs_path))
 
+        # if needed, create the parent directory for @eaxs_path.
+        eaxs_container = os.path.dirname(eaxs_path)
+        if eaxs_container != "" and not os.path.isdir(eaxs_container):
+            self.logger.info("Creating output folder: {}".format(eaxs_container))
+            os.makedirs(eaxs_container)
+        
         # update @args/@kwargs.
         args = args + self.args
         kwargs.update(self.kwargs)

@@ -40,9 +40,9 @@ class FolderObject():
             - rel_path (str): The relative path of this folder's @path attribute to its 
             @account.path attribute.
             - basename (str): The basename of @path.
-            - messages (generator): Each item is a lib.message_object.MessageObject that corresponds
-            to each message within this folder. This is an alias to either @_get_eml_messages() if 
-            @account.is_eml is True or @_get_mbox_messages() is it's False.
+            - get_messages (generator): Each item is a lib.message_object.MessageObject that
+            corresponds to each message within this folder. This is an alias to either 
+            @_get_eml_messages() if @account.is_eml is True or @_get_mbox_messages() is it's False.
         """
 
         # set logger; suppress logging by default.
@@ -59,11 +59,12 @@ class FolderObject():
         # set unpassed attributes.
         self.rel_path = self.account._normalize_path(os.path.relpath(self.path, self.account.path))
         self.basename = os.path.basename(self.path)
-        self.messages = self._get_eml_messages if self.account.is_eml else self._get_mbox_messages
+        self.get_messages = (self._get_eml_messages if self.account.is_eml else 
+            self._get_mbox_messages)
 
 
     def _get_eml_messages(self):
-        """ Returns a generator for each EML file in @self.path. Each item is a 
+        """ Generator for each EML file in @self.path. Each item is a 
         lib.message_object.MessageObject. """
         
         # yield a MessageObject for each EML file.       
@@ -78,7 +79,7 @@ class FolderObject():
     
 
     def _get_mbox_messages(self):
-        """ Returns a generator for each message in each MBOX file in @self.path. Each item is a 
+        """ Generator for each message in each MBOX file in @self.path. Each item is a 
         lib.message_object.MessageObject. """
         
         # yield a MessageObject for each MBOX file's messages. 
@@ -95,7 +96,7 @@ class FolderObject():
 
 
     def get_files(self):
-        """ Returns a generator for each file path within @self.path provided the file ends with
+        """ Generator for each file path within @self.path provided the file ends with 
         @self.file_extension. """
 
         # loop through files in @self.path.

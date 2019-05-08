@@ -71,7 +71,7 @@ TODO:
             {% endfor %}
 
             <!--# ??? TODO: if multibody then include Multibody.xml ... otherwise include Body.xml ... or something like that? ... #-->
-            {% for message_body in message.email_parts() %}
+            {% for message_body in message.get_parts() %}
             {% include "SingleBody.xml" %}
             {% endfor %}
 

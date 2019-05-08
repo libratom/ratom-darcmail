@@ -4,7 +4,8 @@
 
 Todo:
     * Probably want to add documentation here as to why you didn't just subclass 
-    email.message.Message - because it helps with intercepting, etc.
+    email.message.Message - because it helps with intercepting via __getattr__ through which we'll
+    update @self.parse_errors.
 """
 
 # import modules.
@@ -28,7 +29,14 @@ class MessageObject():
             - email (email.message.Message): The message data.
             
         Attributes:
-            - ???
+            - account (lib.account_object.AccountObject): The AccountObject to which this 
+            MessageObject belongs.
+            - rel_path (str): The relative path of this messages's @path attribute to its 
+            @account.path attribute.
+            - basename (str): The basename of @path.
+            - local_id (int): The current @account.current_id after its been incremented by 1.
+            - parse_errors (list): Each item is a tuple in which the first item is a Python 
+            exception class and the second item is the exception message.
         """
 
         # set logger; suppress logging by default.
@@ -43,8 +51,8 @@ class MessageObject():
 
         # set unpassed attributes.
         self.account = self.folder.account
-        self._normalize_path = self.account._normalize_path
-        self.rel_path = self._normalize_path(os.path.relpath(self.path, self.folder.account.path)) #TODO: Do you need this?
+        self.rel_path = self.account._normalize_path(os.path.relpath(self.path, 
+            self.folder.account.path))
         self.basename = os.path.basename(self.path)
         self.local_id = self.account.set_current_id()
         self.parse_errors = []
@@ -53,19 +61,27 @@ class MessageObject():
     def __getattr__(self, attr, *args, **kwargs):
         """ This intercepts non-attributes and assumes that the request is for @self.email. This
         allows requests to @self.email to be logged.
-        TODO: You need to catch errors and append traceback.format_exc() to @self.parse_errors. """
-        
+
+        TODO: You need to catch errors and append traceback.format_exc() to @self.parse_errors.
+            - BTW: requesting an invalid attribute is NOT a parse error: it's user error/
+            - You only need to concern yourself with failed calls to VALID attributes.
+        """
+
         # wrap method requests per: https://stackoverflow.com/a/13776530.
         def wrapper(*args, **kwargs):
             self.logger.debug("Calling @self.email.{} with (args)|{{kwargs}}: {}|{}".format(attr, 
                 args, kwargs))
-            return getattr(self.email, attr)(*args, **kwargs) 
+            try:
+                return getattr(self.email, attr)(*args, **kwargs) 
+            except Exception as err:
+                parse_err = err.__class__.__name__, str(err)
+                self.parse_errors.append(parse_err)
 
         # if @attr belongs to @self.email, request the attribute or method. 
         if hasattr(self.email, attr):
             if not callable(getattr(self.email, attr)):
                 self.logger.debug("Getting: @self.email.{}".format(attr))
-                return getattr(self.email, attr)
+                getattr(self.email, attr)
             else: 
                 return wrapper
         else:
@@ -74,8 +90,9 @@ class MessageObject():
         return
 
 
-    def email_parts(self):
-        """ ??? """
+    def get_parts(self):
+        """ Generator for each part in self.email.walk(). Each yielded part is itself a 
+        MessageObject. Note: that will increment @self.account.current_id for every yield. """
 
         for part in self.email.walk():
             if isinstance(part, (email.message.Message, email.message.EmailMessage)):

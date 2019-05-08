@@ -7,7 +7,7 @@ It is related to the lib.folder_object.FolderObject module.
 {% set OPENED_FOLDERS = [] %}
 
 <!--# Loop through each folder object and create <Folder> elements. #-->
-{% for folder in DarcMail.account.folders() %}
+{% for folder in DarcMail.account.get_folders() %}
 
     <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
     {% for open_folder in EAXSHelpers.close_folders(folder, OPENED_FOLDERS) %}
@@ -17,7 +17,7 @@ It is related to the lib.folder_object.FolderObject module.
     <!--# Add in <Folder> child elements including <Message>. #-->
     <Folder>
         <Name>{{ folder.basename }}</Name>
-        {% for message in folder.messages() %}
+        {% for message in folder.get_messages() %}
             {% include "Message.xml" %}
         {% endfor %}
 

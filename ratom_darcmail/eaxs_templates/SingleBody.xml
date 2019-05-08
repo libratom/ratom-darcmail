@@ -86,7 +86,7 @@ TODO:
             {% else %}
             <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
                 <ExtBodyContent>
-                    {% set ext_file = EAXSHelpers.write_message(message_body, DarcMail, True) %}
+                    {% set ext_file = EAXSHelpers.write_message(message_body, True) %}
                     <RelPath>{{ ext_path }}</RelPath>
                     <CharSet>{{ message_body.get_content_charset() | skipnull }}</CharSet>
                     <TransferEncoding>{{ message_body.get("content-transfer-encoding") }}</TransferEncoding>

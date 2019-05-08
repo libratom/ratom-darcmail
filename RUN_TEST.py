@@ -13,7 +13,11 @@ account_args = dict(path="tests/sample_files/eml",
                     references_account=references_account)
 dm_eml = DarcMail(account_args, TEST_EAXS)
 #dm_eml.eaxs.make(dm_eml.eaxs_path)
-dm_eml.make_eaxs() # shorter way of doing the line above.
+#dm_eml.make_eaxs() # shorter way of doing the line above.
+msg = next(dm_eml.account.get_folders())
+msg = next(msg.get_messages())
+def _hell(): raise Exception("hell")
+msg.email._hell = _hell 
 
 #mbox_args = account_args
 #mbox_args["path"] = mbox_args["path"].replace("eml", "mbox")
