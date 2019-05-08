@@ -36,7 +36,7 @@ class MessageObject():
             - basename (str): The basename of @path.
             - local_id (int): The current @account.current_id after its been incremented by 1.
             - parse_errors (list): Each item is a tuple in which the first item is a Python 
-            exception class and the second item is the exception message.
+            exception class and the second item is the exception traceback.
         """
 
         # set logger; suppress logging by default.
@@ -61,8 +61,7 @@ class MessageObject():
     def __getattr__(self, attr, *args, **kwargs):
         """ This intercepts non-attributes, assumes that the request is for @self.email, logs the
         request, and makes the request. If @attr is a method call and raises an exception, then
-        @self.parse_errors is updated with a tuple: the exception type and the traceback.
-        """
+        @self.parse_errors is updated with a tuple: the exception type and the traceback. """
 
         # wrap requests per: https://stackoverflow.com/a/13776530.
         def wrapper(*args, **kwargs):
