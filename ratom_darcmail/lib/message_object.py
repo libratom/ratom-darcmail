@@ -36,7 +36,7 @@ class MessageObject():
             - basename (str): The basename of @path.
             - local_id (int): The current @account.current_id after its been incremented by 1.
             - parse_errors (list): Each item is a tuple in which the first item is a Python 
-            exception class and the second item is the exception traceback.
+            exception type and the second item is the exception traceback.
         """
 
         # set logger; suppress logging by default.
