@@ -12,7 +12,7 @@ Todo:
 import email
 import logging
 import os
-#import traceback
+import traceback
 
 
 class MessageObject():
@@ -59,30 +59,28 @@ class MessageObject():
 
 
     def __getattr__(self, attr, *args, **kwargs):
-        """ This intercepts non-attributes and assumes that the request is for @self.email. This
-        allows requests to @self.email to be logged.
-
-        TODO: You need to catch errors and append traceback.format_exc() to @self.parse_errors.
-            - BTW: requesting an invalid attribute is NOT a parse error: it's user error/
-            - You only need to concern yourself with failed calls to VALID attributes.
+        """ This intercepts non-attributes, assumes that the request is for @self.email, logs the
+        request, and makes the request. If @attr is a method call and raises an exception, then
+        @self.parse_errors is updated with a tuple: the exception type and the traceback.
         """
 
-        # wrap method requests per: https://stackoverflow.com/a/13776530.
+        # wrap requests per: https://stackoverflow.com/a/13776530.
         def wrapper(*args, **kwargs):
-            self.logger.debug("Calling @self.email.{} with (args)|{{kwargs}}: {}|{}".format(attr, 
+            self.logger.debug("Calling @self.email.{}() with (args)|{{kwargs}}: {}|{}".format(attr,
                 args, kwargs))
             try:
-                return getattr(self.email, attr)(*args, **kwargs) 
+                return getattr(self.email, attr)(*args, **kwargs)
             except Exception as err:
-                parse_err = err.__class__.__name__, str(err)
+                self.logger.error(err)
+                parse_err = err.__class__.__name__, traceback.format_exc()
                 self.parse_errors.append(parse_err)
 
-        # if @attr belongs to @self.email, request the attribute or method. 
+        # if @attr belongs to @self.email, request it. 
         if hasattr(self.email, attr):
             if not callable(getattr(self.email, attr)):
-                self.logger.debug("Getting: @self.email.{}".format(attr))
-                getattr(self.email, attr)
-            else: 
+                self.logger.debug("Requesting: @self.email.{}".format(attr))
+                return getattr(self.email, attr)
+            else:
                 return wrapper
         else:
             self.logger.warning("Requested invalid attribute: {}".format(attr))
@@ -92,7 +90,7 @@ class MessageObject():
 
     def get_parts(self):
         """ Generator for each part in self.email.walk(). Each yielded part is itself a 
-        MessageObject. Note: that will increment @self.account.current_id for every yield. """
+        MessageObject. """
 
         for part in self.email.walk():
             if isinstance(part, (email.message.Message, email.message.EmailMessage)):

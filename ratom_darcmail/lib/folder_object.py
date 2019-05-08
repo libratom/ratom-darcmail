@@ -80,7 +80,8 @@ class FolderObject():
 
     def _get_mbox_messages(self):
         """ Generator for each message in each MBOX file in @self.path. Each item is a 
-        lib.message_object.MessageObject. """
+        lib.message_object.MessageObject. Note: this wil increment @self.account.current_id with
+        every yield. """
         
         # yield a MessageObject for each MBOX file's messages. 
         for mbox in self.get_files():

@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 
 """ This module contains a class that renders EAXS or generic XML files via Jinja2 templates. This
-module also contains a private class that contains a custom Jinja2 template loader. 
-
-Todo:
-    * ???
-"""
+module also contains a private class that contains a custom Jinja2 template loader. """
 
 # import logging.
 import jinja2
@@ -22,7 +18,8 @@ class _TemplateLoader(jinja2.BaseLoader):
     rendered files. It also removes blank lines in templates, allowing one to makes clean looking
     templates without affecting output.
     
-    For more information on the jinja2.BaseLoader class, see: http://code.nabla.net/doc/jinja2/api/jinja2/loaders/jinja2.loaders.BaseLoader.html
+    For more information on the jinja2.BaseLoader class, see: 
+    http://code.nabla.net/doc/jinja2/api/jinja2/loaders/jinja2.loaders.BaseLoader.html
     """
 
 
@@ -104,10 +101,8 @@ class EAXSMaker():
             - args/kwargs: Any optional parameters to pass to @self.make().
 
         Attributes:
-            - ???
-
-        Example:
-            ???
+            - env (jinja2.environment.Environment): The Jinja2 environment to which custom filters
+            are added to its "filter" key.
         """
 
         # set logger; suppress logging by default.

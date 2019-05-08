@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
-""" This module contains a class that represents the Account element within the EAXS context. """
+""" This module contains a class that represents the Account element within the EAXS context.
+
+Todo:
+    * I think we need internal tracking of current_message_id so that a new id doesn't get assigned
+    to a message that's already been yielded via repeated called to get_messages(). OR ... there
+    needs to be an understanding that one had better do everything they need to with a message
+    as soon as it's yielded and store it in their own data structure if they need to re-refer to it.
+"""
 
 # import modules.
 import hashlib
@@ -58,7 +65,7 @@ class AccountObject():
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
-        self.current_id = 0 #TODO: should it be this???: -9223372036854775808
+        self.current_id = 0
 
 
     def get_folders(self):
