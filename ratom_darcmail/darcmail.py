@@ -28,8 +28,7 @@ class DarcMail():
 
 
     def __init__(self, account_args, eaxs_path, template="Account.xml", template_dir=None,
-        message_dir="messages", attachment_dir="attachments", 
-        charset="utf-8"):
+        message_dir="messages", attachment_dir="attachments", charset="utf-8"):
         """ Sets instance attributes.
         
         Args:

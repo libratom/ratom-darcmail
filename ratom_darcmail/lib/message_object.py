@@ -26,16 +26,20 @@ class MessageObject():
             - folder (lib.folder_object.FolderObject): The FolderObject to which this MessageObject
             belongs.
             - path (str): The path to this message's source EML or MBOX file.
-            - email (email.message.Message): The message data.
+            - email (email.message.Message): The message data. Instead of accessing this directly,
+            it's better to make the same request via @self. For example, 'self.get("subject")' will 
+            equal 'self.email.get("subject")'. The difference is that the request to @self.get() 
+            adds some logging statements. Also, this lets @self.parse_errors be updated if the 
+            request raises an exception.
             
         Attributes:
             - rel_path (str): The relative path of this messages's @path attribute to its 
             @folder.account.path attribute.
             - basename (str): The basename of @path.
-            - local_id (int): The current @folder.account.current_id after its been incremented by 
-            1.
-            - parse_errors (list): Each item is a tuple in which the first item is a Python 
-            exception type and the second item is the exception traceback.
+            - local_id (int): The @folder.account.current_id after it's been incremented by 1.
+            - parse_errors (list): Requests from @self.email that raised an exception. Each
+            item is a tuple in which the first item is a Python exception type and the second item
+            is the exception traceback.
         """
 
         # set logger; suppress logging by default.
@@ -58,12 +62,22 @@ class MessageObject():
 
     def __getattr__(self, attr, *args, **kwargs):
         """ This intercepts non-attributes, assumes that the request is for @self.email, logs the
-        request, and makes the request. If @attr is a method call and raises an exception, then
-        @self.parse_errors is updated with a tuple: the exception type and the traceback. """
+        request, and makes the request. If the request raises an exception, then @self.parse_errors
+        is updated and None is returned. """
 
-        # wrap requests per: https://stackoverflow.com/a/13776530.
-        def wrapper(*args, **kwargs):
-            self.logger.debug("Calling @self.email.{}() with (args)|{{kwargs}}: {}|{}".format(attr,
+        # wrap attribute requests.
+        def wrap_attr():
+            self.logger.debug("Getting attribute @self.email.{}".format(attr))
+            try:
+                return getattr(self.email, attr)
+            except Exception as err:
+                self.logger.error(err)
+                parse_err = err.__class__.__name__, traceback.format_exc()
+                self.parse_errors.append(parse_err)
+
+        # wrap method requests per: https://stackoverflow.com/a/13776530.
+        def wrap_method(*args, **kwargs):
+            self.logger.debug("Calling method @self.email.{}() with (args)|{{kwargs}}: {}|{}".format(attr,
                 args, kwargs))
             try:
                 return getattr(self.email, attr)(*args, **kwargs)
@@ -75,12 +89,11 @@ class MessageObject():
         # if @attr belongs to @self.email, request it. 
         if hasattr(self.email, attr):
             if not callable(getattr(self.email, attr)):
-                self.logger.debug("Requesting: @self.email.{}".format(attr))
-                return getattr(self.email, attr)
+                return wrap_attr()
             else:
-                return wrapper
+                return wrap_method
         else:
-            self.logger.warning("Requested invalid attribute: {}".format(attr))
+            self.logger.warning("@self.email has no attribute: {}".format(attr))
         
         return
 
