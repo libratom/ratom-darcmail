@@ -29,14 +29,14 @@ def main(message, is_attachment=False):
     """
 
     # determine file path and extension.
-    subdir = (message.account.darcmail.message_dir if not is_attachment else 
-        message.account.darcmail.attachment_dir)
+    subdir = (message.folder.account.darcmail.message_dir if not is_attachment else 
+        message.folder.account.darcmail.attachment_dir)
     ext = "msg" if not is_attachment else "att"
 
     # set file path.
-    destination = os.path.join(message.account.darcmail.eaxs_container, subdir,
-        message.folder.rel_path, "{}_{}.{}".format(message.account.global_id, message.local_id, 
-            ext))
+    destination = os.path.join(message.folder.account.darcmail.eaxs_container, subdir,
+        message.folder.rel_path, "{}_{}.{}".format(message.folder.account.global_id, 
+        message.local_id, ext))
 
     # make sure @destination doesn't exist.
     if os.path.isfile(destination):
@@ -55,7 +55,7 @@ def main(message, is_attachment=False):
     # write @message to @destination.
     # TODO: Might need a try/except around this: You can update the message's @parse_errors list if needed.
     # TODO: Are you sure about using xmlcharrefreplace for the @errors? What should it be? Optional?
-    with open(destination, mode="w", encoding=message.account.darcmail.charset, 
+    with open(destination, mode="w", encoding=message.folder.account.darcmail.charset, 
         errors="xmlcharrefreplace") as fopen:
 
         for part in message.walk():

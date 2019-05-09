@@ -67,7 +67,7 @@ class DarcMail():
         self.event_logger.addHandler(logging.NullHandler())
 
         # set attributes
-        self.account = AccountObject(**account_args, darcmail=locals().get("self"))
+        self.account = AccountObject(**account_args, darcmail=self)
         self.eaxs_path = os.path.abspath(eaxs_path)
         self.eaxs_container = os.path.dirname(self.eaxs_path)
         self.template = template

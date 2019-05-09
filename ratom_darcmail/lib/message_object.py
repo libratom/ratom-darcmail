@@ -29,12 +29,11 @@ class MessageObject():
             - email (email.message.Message): The message data.
             
         Attributes:
-            - account (lib.account_object.AccountObject): The AccountObject to which this 
-            MessageObject belongs.
             - rel_path (str): The relative path of this messages's @path attribute to its 
-            @account.path attribute.
+            @folder.account.path attribute.
             - basename (str): The basename of @path.
-            - local_id (int): The current @account.current_id after its been incremented by 1.
+            - local_id (int): The current @folder.account.current_id after its been incremented by 
+            1.
             - parse_errors (list): Each item is a tuple in which the first item is a Python 
             exception type and the second item is the exception traceback.
         """
@@ -50,11 +49,10 @@ class MessageObject():
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
-        self.account = self.folder.account
-        self.rel_path = self.account._normalize_path(os.path.relpath(self.path, 
+        self.rel_path = self.folder.account._normalize_path(os.path.relpath(self.path, 
             self.folder.account.path))
         self.basename = os.path.basename(self.path)
-        self.local_id = self.account.set_current_id()
+        self.local_id = self.folder.account.set_current_id()
         self.parse_errors = []
 
 
