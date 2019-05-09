@@ -51,13 +51,14 @@ class FolderObject():
 
         # set attributes
         self.account = account
-        self.path = self.account._normalize_path(path)
+        self.path = self.account.darcmail._normalize_path(path)
         self.file_extension = file_extension
         self.message_policy = message_policy
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
-        self.rel_path = self.account._normalize_path(os.path.relpath(self.path, self.account.path))
+        self.rel_path = self.account.darcmail._normalize_path(os.path.relpath(self.path, 
+            self.account.path))
         self.basename = os.path.basename(self.path)
         self.get_messages = (self._get_eml_messages if self.account.is_eml else 
             self._get_mbox_messages)
@@ -112,7 +113,7 @@ class FolderObject():
                 if not filename.endswith(self.file_extension):
                     continue
             
-            filename = self.account._normalize_path(filename)
+            filename = self.account.darcmail._normalize_path(filename)
             yield filename
 
         return

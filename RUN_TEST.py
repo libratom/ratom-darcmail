@@ -14,8 +14,9 @@ account_args = dict(path="tests/sample_files/eml",
 dm_eml = DarcMail(account_args, TEST_EAXS)
 #dm_eml.eaxs.make(dm_eml.eaxs_path)
 dm_eml.make_eaxs() # shorter way of doing the line above.
-#msg = next(dm_eml.account.get_folders())
-#msg = next(msg.get_messages())
+#fol = next(dm_eml.account.get_folders())
+#msg = next(fol.get_messages())
+#dm_eml.account == fol.account == msg.folder.account # True
 #def _fail(): raise Exception("hell")
 #msg.email.fail = _fail # should update parse_errors.
 

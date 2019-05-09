@@ -49,7 +49,7 @@ class MessageObject():
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
-        self.rel_path = self.folder.account._normalize_path(os.path.relpath(self.path, 
+        self.rel_path = self.folder.account.darcmail._normalize_path(os.path.relpath(self.path, 
             self.folder.account.path))
         self.basename = os.path.basename(self.path)
         self.local_id = self.folder.account.set_current_id()
