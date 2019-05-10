@@ -13,6 +13,7 @@ import email
 import logging
 import os
 import traceback
+from datetime import datetime
 
 
 class MessageObject():
@@ -27,19 +28,19 @@ class MessageObject():
             belongs.
             - path (str): The path to this message's source EML or MBOX file.
             - email (email.message.Message): The message data. Instead of accessing this directly,
-            it's better to make the same request via @self. For example, 'self.get("subject")' will 
-            equal 'self.email.get("subject")'. The difference is that the request to @self.get() 
-            adds some logging statements. Also, this lets @self.parse_errors be updated if the 
-            request raises an exception.
+            it's better to make the same request via the MessageObject itself. For example,
+            '.get("subject")' will equal '.email.get("subject")'. The difference is that the request
+            to '.get()' adds some logging statements. Also, this lets @parse_errors be updated if
+            the request raises an exception.
             
         Attributes:
             - rel_path (str): The relative path of this messages's @path attribute to its 
             @folder.account.path attribute.
             - basename (str): The basename of @path.
             - local_id (int): The @folder.account.current_id after it's been incremented by 1.
-            - parse_errors (list): Requests from @self.email that raised an exception. Each
-            item is a tuple in which the first item is a Python exception type and the second item
-            is the exception traceback.
+            - parse_errors (list): Requests from @email that raised an exception. Each item is a 
+            dict with the keys: "exception_obj" (Exception), "timestamp" (str), 
+            "traceback_obj" (traceback), and "traceback_lines" (list of strings).
         """
 
         # set logger; suppress logging by default.
@@ -60,38 +61,59 @@ class MessageObject():
         self.parse_errors = []
 
 
+    @staticmethod
+    def __get_parse_error(err):
+        """ Formats @err so that it can be appended to @self.parse_errors.
+        
+        Args:
+            - err (Exception): The error to format.
+            
+        Returns:
+            dict: The return value.
+        """
+        
+        # get traceback from @err; create list of lines in traceback message.
+        traceback_obj = err.__traceback__
+        traceback_lines = [l.strip() for l in traceback.format_tb(traceback_obj)]
+        
+        # create dict to return.
+        parse_err = {"error_obj": err, 
+                "timestamp": datetime.now().isoformat(), 
+                "traceback_obj": traceback_obj,
+                "traceback_lines": traceback_lines}
+       
+        return parse_err
+
+
     def __getattr__(self, attr, *args, **kwargs):
         """ This intercepts non-attributes, assumes that the request is for @self.email, logs the
         request, and makes the request. If the request raises an exception, then @self.parse_errors
         is updated and None is returned. """
 
         # wrap attribute requests.
-        def wrap_attr():
+        def _wrap_attr():
             self.logger.debug("Getting attribute @self.email.{}".format(attr))
             try:
                 return getattr(self.email, attr)
             except Exception as err:
                 self.logger.error(err)
-                parse_err = err.__class__.__name__, traceback.format_exc()
-                self.parse_errors.append(parse_err)
+                self.parse_errors.append(self.__get_parse_error(err))
 
         # wrap method requests per: https://stackoverflow.com/a/13776530.
-        def wrap_method(*args, **kwargs):
-            self.logger.debug("Calling method @self.email.{}() with (args)|{{kwargs}}: {}|{}".format(attr,
-                args, kwargs))
+        def _wrap_method(*args, **kwargs):
+            self.logger.debug("Calling method @self.email.{}({},{})".format(attr, args, kwargs))
             try:
                 return getattr(self.email, attr)(*args, **kwargs)
             except Exception as err:
                 self.logger.error(err)
-                parse_err = err.__class__.__name__, traceback.format_exc()
-                self.parse_errors.append(parse_err)
+                self.parse_errors.append(self.__get_parse_error(err))
 
         # if @attr belongs to @self.email, request it. 
         if hasattr(self.email, attr):
             if not callable(getattr(self.email, attr)):
-                return wrap_attr()
+                return _wrap_attr()
             else:
-                return wrap_method
+                return _wrap_method
         else:
             self.logger.warning("@self.email has no attribute: {}".format(attr))
         
