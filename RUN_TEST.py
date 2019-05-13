@@ -13,7 +13,7 @@ account_args = dict(path="tests/sample_files/eml",
                     references_account=references_account)
 dm_eml = DarcMail(account_args, TEST_EAXS)
 #dm_eml.eaxs.make(dm_eml.eaxs_path)
-#dm_eml.make_eaxs() # shorter way of doing the line above.
+dm_eml.make_eaxs() # shorter way of doing the line above.
 fol = next(dm_eml.account.get_folders())
 msg = next(fol.get_messages())
 #dm_eml.account == fol.account == msg.folder.account # True

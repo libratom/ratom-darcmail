@@ -10,6 +10,7 @@ Todo:
     * Add YAML log file.
     * Work on docstrings: the first line is showing up as the module name.
         - This is somewhat related to Todo blocks in the docstrings.
+    * Create test data to test single and multipart emails.
 """
 
 # import logging.

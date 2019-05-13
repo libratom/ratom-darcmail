@@ -13,7 +13,7 @@ def _get_string(data):
     # as needed, get string from a message or a file.
     if isinstance(data, message_object.MessageObject):
         blob = next(data.walk())
-        blob = blob.decode(errors="replace")
+        blob = blob.as_string() #TODO: Are you sure you can call as_string() or do you need to check first? Maybe it's already a string!
     elif os.path.isfile(data): #TODO: Are you sure that Python will split the line regardless of line ending?   
         with open(data, "r", newline="") as f:
             for line in f:
