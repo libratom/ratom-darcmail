@@ -124,6 +124,11 @@ class MessageObject():
         """ Generator for each part in self.email.walk(). Each yielded part is itself a 
         MessageObject. """
 
+        # TODO: Look at _scratchpad/body_closer.py. This should probably return a list.
+        # And the "path" needs to be done in the manner of body_closer.py.
+        # Update the main docstring to explain that each part will have a TEMPORARY directory like
+        # pseudo path. Might want @self.path and/or @local_id to be the root path. So use
+        # @self.folder.account.darcmail._join_paths() to build the path.
         for part in self.email.walk():
             if isinstance(part, (email.message.Message, email.message.EmailMessage)):
                 yield MessageObject(self.folder, self.path, part)
