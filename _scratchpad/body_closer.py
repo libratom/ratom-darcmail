@@ -1,4 +1,8 @@
-from test_eml import mess
+import email
+import email.policy
+
+with open("../tests/sample_files/eml/inbox/1_.eml", "rb") as eml:
+    mess = email.message_from_binary_file(eml, policy=email.policy.Compat32())
 
 ### Look familiar? This is the folder closer with different var names!
 ### So it can be re-used.
@@ -39,8 +43,8 @@ split_msg(mess)
 opened_parts = []
 for part in parts:
         for closed_part in close_parts(part, opened_parts):
-                print("close: ", closed_part.path)
-        print("open: ", part.path)
+                print("close:", closed_part.path)
+        print("open:", part.path)
 print("\n*** close leftovers\n")
 for opened_part in reversed(opened_parts):
-        print("close: ", opened_part.path)
+        print("close:", opened_part.path)

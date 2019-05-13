@@ -6,13 +6,14 @@ IS_HELPER = True
 
 def main(folder, opened_folders):
     """ Looks at the current @folder depth in the context of previously @opened_folders and 
-    returns a list of folders to close. Designed to accomodate EAXS' use of recursive <Folder>
-    elements.
+    returns a list of folders to close. This module is designed to accomodate EAXS' use of recursive
+    <Folder> elements.
 
     Args:
         - folder (folder_object.FolderObject): The most recently opened folder within the
         EAXS context.
-        - opened_folders (list): The list of non-closed folders within the EAXS context.
+        - opened_folders (list): The list of non-closed folders within the EAXS context. Note: this
+        must be intially passed in as an empty list and it *will* be mutated over time.
     
     Returns:
         list: The return value.
