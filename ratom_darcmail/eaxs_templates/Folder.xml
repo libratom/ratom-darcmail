@@ -37,7 +37,8 @@ It is related to the lib.folder_object.FolderObject module.
 
 {% endfor%}
 
-<!--# Close remaining <Folder> elements. #-->
+<!--# Close remaining <Folder> elements. It's more proper to use "reverse" because each @folder.path
+attribute in @OPENED_FOLDERS is a child of the item that precedes it. #-->
 {% for folder in OPENED_FOLDERS | reverse %}
     </Folder>
 {% endfor %}
