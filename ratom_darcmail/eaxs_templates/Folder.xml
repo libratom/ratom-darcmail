@@ -10,8 +10,7 @@ It is related to the lib.folder_object.FolderObject module.
 {% for folder in DarcMail.account.get_folders() %}
 
     <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
-    <!--#TODO: I think for correctness, the returned list needs to be reversed. -->
-    {% for open_folder in EAXSHelpers.close_folders(folder, OPENED_FOLDERS) | reverse %}
+    {% for open_folder in EAXSHelpers.close_folders(folder, OPENED_FOLDERS) %}
     </Folder>
     {% endfor %}
 
