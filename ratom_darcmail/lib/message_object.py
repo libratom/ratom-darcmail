@@ -20,7 +20,7 @@ class MessageObject():
     """ A class that represents a Message element within the EAXS context. """
     
 
-    def __init__(self, folder, path, email, *args, **kwargs):
+    def __init__(self, folder, path, email, mpath=None, *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -57,7 +57,7 @@ class MessageObject():
         self.rel_path = os.path.relpath(self.path, self.folder.account.path)
         self.basename = os.path.basename(self.path)
         self.local_id = self.folder.account.set_current_id()
-        self.mock_path = os.path.split  
+        self.mock_path = self._get_mock_path()
         self.parse_errors = []
 
 
@@ -120,24 +120,42 @@ class MessageObject():
         return
 
 
-    def get_parts(self):
-        """ Generator for each part in self.email.walk(). Each yielded part is itself a 
-        MessageObject. """
+    def _get_mock_path(self):
+        """ ??? """
+    
+        # ???
+        if self.email.is_multipart():
+            sep, tail = "_", self.email.get_content_subtype()
+        else:
+            sep, tail = ".", "msg"
+            disposition =  self.email.get_content_disposition() 
+            if disposition not in [None, ""]:
+                tail = disposition[:3]
+        
+        # ???
+        tail = "{}{}{}".format(self.local_id, sep, tail)
+        mock_path = os.path.join(os.path.split(self.rel_path)[0], tail)
 
-        # TODO: Look at _scratchpad/body_closer.py. This should probably return a list.
-        # And the "path" needs to be done in the manner of body_closer.py.
-        # Update the main docstring to explain that each part will have a TEMPORARY directory like
-        # pseudo path. Might want @self.path and/or @local_id to be the root path. So use
-        # @self.folder.account.darcmail._join_paths() to build the path. YES! this path needs to
-        # be a file-like path so that you can just use the path as the actual path to write the data
-        # to file via addons/write_file.py. This way EVERYTHING (folder, message, message parts)
-        # will have a unique folder/file like path. So, multiparts will have folder-like paths,
-        # single bodies will have file-like paths ending in .msg or .att.
-        for part in self.email.walk():
-            if isinstance(part, (email.message.Message, email.message.EmailMessage)):
-                yield MessageObject(self.folder, self.path, part)
+        return mock_path
 
-        return
+
+    def get_parts(self, msg=None, parts=None):
+        """ ??? """
+
+        # ???
+        if parts is None:
+            parts = []
+        msg = self if msg is None else msg        
+        parts.append(msg)
+
+        # ???
+        if msg.email.is_multipart():
+            for part in msg.email._payload:
+                part = MessageObject(msg.folder, msg.path, part)
+                part.mock_path = os.path.join(msg.mock_path, os.path.basename(part.mock_path))
+                self.get_parts(part, parts)
+
+        return parts
 
     
 if __name__ == "__main__":
