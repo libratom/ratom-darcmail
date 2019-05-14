@@ -66,21 +66,15 @@ class DarcMail():
         self.event_logger = logging.getLogger(__name__)
         self.event_logger.addHandler(logging.NullHandler())
 
-        # convenience functions to clean up path notation.
-        self._normalize_sep = lambda p: p.replace(os.sep, os.altsep) if (
-                os.altsep == "/") else p
-        self._normalize_path = lambda p: self._normalize_sep(os.path.normpath(p)) 
-        self._join_paths = lambda *p: self._normalize_path(os.path.join(*p))
-
         # set attributes
         self.account = AccountObject(darcmail=self, **account_args)
-        self.eaxs_path = self._normalize_path(os.path.abspath(eaxs_path))
-        self.eaxs_container = self._normalize_path(os.path.dirname(self.eaxs_path))
+        self.eaxs_path = os.path.abspath(eaxs_path)
+        self.eaxs_container = os.path.dirname(self.eaxs_path)
         self.template = template
-        self.template_dir = (self._normalize_path(template_dir) if template_dir is not None else
-            self._join_paths(os.path.dirname(__file__), "eaxs_templates"))
-        self.message_dir = self._join_paths(self.eaxs_container, message_dir)
-        self.attachment_dir = self._join_paths(self.eaxs_container, attachment_dir)
+        self.template_dir = (template_dir if template_dir is not None else
+            os.path.join(os.path.dirname(__file__), "eaxs_templates"))
+        self.message_dir = os.path.join(self.eaxs_container, message_dir)
+        self.attachment_dir = os.path.join(self.eaxs_container, attachment_dir)
         self.charset = charset
         
         # create an instance of EAXSMaker; create alias to its @make method.

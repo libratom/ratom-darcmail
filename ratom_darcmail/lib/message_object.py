@@ -54,10 +54,10 @@ class MessageObject():
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
-        self.rel_path = self.folder.account.darcmail._normalize_path(os.path.relpath(self.path, 
-            self.folder.account.path))
+        self.rel_path = os.path.relpath(self.path, self.folder.account.path)
         self.basename = os.path.basename(self.path)
         self.local_id = self.folder.account.set_current_id()
+        self.mock_path = os.path.split  
         self.parse_errors = []
 
 
@@ -130,8 +130,9 @@ class MessageObject():
         # pseudo path. Might want @self.path and/or @local_id to be the root path. So use
         # @self.folder.account.darcmail._join_paths() to build the path. YES! this path needs to
         # be a file-like path so that you can just use the path as the actual path to write the data
-        # to file via addons/write_file.py. This way EVERYHINNG (folder, message, message parts)
-        # will have a unique folder/file like path.
+        # to file via addons/write_file.py. This way EVERYTHING (folder, message, message parts)
+        # will have a unique folder/file like path. So, multiparts will have folder-like paths,
+        # single bodies will have file-like paths ending in .msg or .att.
         for part in self.email.walk():
             if isinstance(part, (email.message.Message, email.message.EmailMessage)):
                 yield MessageObject(self.folder, self.path, part)

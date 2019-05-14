@@ -51,7 +51,7 @@ class AccountObject():
         
         # set attributes.
         self.darcmail = darcmail
-        self.path = self.darcmail._normalize_path(path)
+        self.path = path
         self.email_addresses = ([email_addresses] if not isinstance(email_addresses, list) else
             email_addresses)
         self.is_eml = is_eml
