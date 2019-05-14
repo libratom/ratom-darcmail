@@ -128,7 +128,10 @@ class MessageObject():
         # And the "path" needs to be done in the manner of body_closer.py.
         # Update the main docstring to explain that each part will have a TEMPORARY directory like
         # pseudo path. Might want @self.path and/or @local_id to be the root path. So use
-        # @self.folder.account.darcmail._join_paths() to build the path.
+        # @self.folder.account.darcmail._join_paths() to build the path. YES! this path needs to
+        # be a file-like path so that you can just use the path as the actual path to write the data
+        # to file via addons/write_file.py. This way EVERYHINNG (folder, message, message parts)
+        # will have a unique folder/file like path.
         for part in self.email.walk():
             if isinstance(part, (email.message.Message, email.message.EmailMessage)):
                 yield MessageObject(self.folder, self.path, part)
