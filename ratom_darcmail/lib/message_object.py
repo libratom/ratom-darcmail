@@ -10,10 +10,8 @@ Todo:
 
 # import modules.
 import email
-import hashlib
 import logging
 import os
-import time
 import traceback
 from datetime import datetime
 
