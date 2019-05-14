@@ -11,12 +11,12 @@ account_args = dict(path="tests/sample_files/eml",
                     email_addresses="email@email.com", is_eml=True,
                     global_id=None,
                     references_account=references_account)
-dm_eml = DarcMail(account_args, TEST_EAXS)
-#dm_eml.eaxs.make(dm_eml.eaxs_path)
-#dm_eml.make_eaxs() # shorter way of doing the line above.
-fol = next(dm_eml.account.get_folders())
+dm = DarcMail(account_args, TEST_EAXS)
+#dm.eaxs.make(dm.eaxs_path)
+#dm.make_eaxs() # shorter way of doing the line above.
+fol = next(dm.account.get_folders())
 msg = next(fol.get_messages())
-#dm_eml.account == fol.account == msg.folder.account # True
+#dm.account == fol.account == msg.folder.account # True
 def _fail(): raise Exception("hell")
 msg.email.fail = _fail # should update parse_errors.
 

@@ -10,8 +10,10 @@ Todo:
 
 # import modules.
 import email
+import hashlib
 import logging
 import os
+import time
 import traceback
 from datetime import datetime
 
@@ -57,7 +59,7 @@ class MessageObject():
         self.rel_path = os.path.relpath(self.path, self.folder.account.path)
         self.basename = os.path.basename(self.path)
         self.local_id = self.folder.account.set_current_id()
-        self.mock_path = self._get_mock_path()
+        self.mock_path, self.write_path = self._get_abstract_paths() #TODO: add these to docstring.
         self.parse_errors = []
 
 
@@ -120,23 +122,23 @@ class MessageObject():
         return
 
 
-    def _get_mock_path(self):
-        """ ??? """
-    
+    def _get_abstract_paths(self):
+        """ ???
+        """
+
         # ???
-        if self.email.is_multipart():
-            sep, tail = "_", self.email.get_content_subtype()
-        else:
-            sep, tail = ".", "msg"
+        sep, ext, is_file_like = "", "", False
+        if not self.email.is_multipart():
+            sep, ext, is_file_like = ".", "msg", True
             disposition =  self.email.get_content_disposition() 
             if disposition not in [None, ""]:
-                tail = disposition[:3]
-        
-        # ???
-        tail = "{}{}{}".format(self.local_id, sep, tail)
-        mock_path = os.path.join(os.path.split(self.rel_path)[0], tail)
+                ext = disposition[:3]
 
-        return mock_path
+        # ???
+        mock_tail = "{}{}{}".format(self.local_id, sep, ext)
+        mock_path = os.path.join(os.path.split(self.rel_path)[0], mock_tail)
+        write_path = mock_path if is_file_like else None
+        return mock_path, write_path
 
 
     def get_parts(self, msg=None, parts=None):
@@ -150,10 +152,11 @@ class MessageObject():
 
         # ???
         if msg.email.is_multipart():
-            for part in msg.email._payload:
-                part = MessageObject(msg.folder, msg.path, part)
-                part.mock_path = os.path.join(msg.mock_path, os.path.basename(part.mock_path))
-                self.get_parts(part, parts)
+            for msg_part in msg.email._payload:
+                msg_part = MessageObject(msg.folder, msg.path, msg_part)
+                msg_part.mock_path = os.path.join(msg.mock_path, os.path.basename(
+                    msg_part.mock_path))
+                self.get_parts(msg_part, parts)
 
         return parts
 
