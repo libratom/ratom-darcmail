@@ -149,23 +149,23 @@ class MessageObject():
         """
 
         # determine the extension for the file-like "write_path".
-        subtype =  self.email.get_content_subtype() 
+        ext, subtype = "ext", self.email.get_content_subtype()
         if subtype not in [None, ""]:
-            ext = "".join([c for c in subtype if not c in string.whitespace])
-        if len(ext) == 0:
-            ext = "msg"
+            xtnsn = "".join([c for c in subtype if not c in string.whitespace and 
+                c.isalpha()])
+            ext = ext if len(xtnsn) < 3 else xtnsn.lower()
 
         # determine the path prefix for "write_path".
         if self.email.get_content_disposition() is None:
-            write_dir = self.folder.account.darcmail.message_dir
+            write_prefix = self.folder.account.darcmail.message_dir
         else:
-            write_dir = self.folder.account.darcmail.attachment_dir
+            write_prefix = self.folder.account.darcmail.attachment_dir
 
         # create the "mock_path" and "write_path" strings.
         mock_tail = "[{}]".format(self.local_id)
         mock_path = os.path.join(self.folder.rel_path, mock_tail)
         write_tail = "{}.{}".format(self.local_id, ext)
-        write_path = os.path.join(write_dir, self.folder.rel_path, write_tail)
+        write_path = os.path.join(write_prefix, self.folder.rel_path, write_tail)
         
         # if needed, make the "mock_path" relative to @msg.mock_path.
         if msg is not None:
