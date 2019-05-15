@@ -208,7 +208,8 @@ class MessageObject():
 
     def get_submessages(self):
         """ Gets all the parts in @self.email._payload and converts each part to a MessageObject in
-        which the @mock_path attribute is relative to @self.mock_path.
+        which the @mock_path attribute is relative to @self.mock_path. Note: the first item in the
+        list is the same object as @self.
         
         Returns:
             list: The return value.

@@ -52,6 +52,7 @@ def main(message):
     # TODO: Are you sure about using xmlcharrefreplace for the @errors? What should it be? Optional?
 
     # TODO: This still includes the Content Type headers and such. Are you supposed to retain that? I doubt it.
+        # So might have to start only where there's just been a double line break but remember it might not be "\n\n".
     with open(destination, mode="w", encoding=message.folder.account.darcmail.charset, 
         errors="xmlcharrefreplace") as fopen:
 
