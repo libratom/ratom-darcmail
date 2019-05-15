@@ -39,7 +39,6 @@ class FolderObject():
         Attributes:
             - rel_path (str): The relative path of this folder's @path attribute to its 
             @account.path attribute.
-            - basename (str): The basename of @path.
             - get_messages (generator): Each item is a lib.message_object.MessageObject that
             corresponds to each message within this folder. This is an alias to either 
             @_get_eml_messages() if @account.is_eml is True or @_get_mbox_messages() is it's False.
@@ -58,7 +57,6 @@ class FolderObject():
 
         # set unpassed attributes.
         self.rel_path = os.path.relpath(self.path, self.account.path)
-        self.basename = os.path.basename(self.path)
         self.get_messages = (self._get_eml_messages if self.account.is_eml else 
             self._get_mbox_messages)
 

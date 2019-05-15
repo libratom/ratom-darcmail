@@ -38,7 +38,6 @@ class MessageObject():
         Attributes:
             - rel_path (str): The relative path of this messages's @path attribute to its 
             @folder.account.path attribute.
-            - basename (str): The basename of @path.
             - local_id (int): The @folder.account.current_id after it's been incremented by 1.
             - mock_path (str): A folder-like path that represents the conceptual location of this
             object within self.folder.account. This is useful when @get_submessages() is used
@@ -63,10 +62,9 @@ class MessageObject():
 
         # set unpassed attributes.
         self.rel_path = os.path.relpath(self.path, self.folder.account.path)
-        self.basename = os.path.basename(self.path)
         self.local_id = self.folder.account.set_current_id()
         self.mock_path, self.write_path = self._get_abstract_paths()
-        self.parse_errors = []
+        self.parse_errors = [] #TODO: You should look into adding @self.email.defects to this.
 
 
     @staticmethod
