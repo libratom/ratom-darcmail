@@ -6,6 +6,8 @@
 Each module MUST have an "IS_HELPER" boolean and a "main" function that provides the API. If 
 @IS_HELPER is True, the module's @main function will be acessible via "lib.addons.EAXSHelpers".
 Otherwise, it will be accessible via "lib.addons.JinjaFilters".
+
+TODO: Instead of main() use the module name as the function API. This makes debugging easier.
 """
 
 # import modules.

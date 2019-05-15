@@ -10,6 +10,7 @@ Todo:
 
 # import modules.
 import email
+import hashlib
 import logging
 import os
 import string
@@ -21,7 +22,7 @@ class MessageObject():
     """ A class that represents a Message element within the EAXS context. """
     
 
-    def __init__(self, folder, path, email, mpath=None, *args, **kwargs):
+    def __init__(self, folder, path, email, *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -148,23 +149,22 @@ class MessageObject():
             tuple: The return value.
         """
 
-        # determine the extension for the file-like "write_path".
-        ext, subtype = "ext", self.email.get_content_subtype()
-        if subtype not in [None, ""]:
-            xtnsn = "".join([c for c in subtype if not c in string.whitespace and 
-                c.isalpha()])
-            ext = ext if len(xtnsn) < 3 else xtnsn.lower()
+        # determine the filename prefix for "write_path"; this achieves uniform filename lengths.
+        id_bytes = str(self.local_id).encode(errors="replace")
+        id_hash = hashlib.sha256(id_bytes).hexdigest()[:10]
 
-        # determine the path prefix for "write_path".
+        # determine the extension and path prefix for "write_path".
         if self.email.get_content_disposition() is None:
+            ext = "msg"
             write_prefix = self.folder.account.darcmail.message_dir
         else:
+            ext = "att"
             write_prefix = self.folder.account.darcmail.attachment_dir
 
-        # create the "mock_path" and "write_path" strings.
+        # create the "mock_path" and "write_path".
         mock_tail = "[{}]".format(self.local_id)
         mock_path = os.path.join(self.folder.rel_path, mock_tail)
-        write_tail = "{}.{}".format(self.local_id, ext)
+        write_tail = "{}.{}".format(id_hash, ext)
         write_path = os.path.join(write_prefix, self.folder.rel_path, write_tail)
         
         # if needed, make the "mock_path" relative to @msg.mock_path.
@@ -201,7 +201,7 @@ class MessageObject():
             # create a new MessageObject for each part; tweaks the @mock_path attribute relative to
             # @msg.
             for msg_part in msg.email._payload:
-                msg_part = MessageObject(msg.folder, msg.path, msg_part)
+                msg_part = MessageObject(msg.folder, msg.path, msg_part, parent_msg=self)
                 msg_part.mock_path = msg_part._get_abstract_paths(msg)[0]
                 self._get_parts(msg_part, parts)
 
@@ -217,6 +217,16 @@ class MessageObject():
         """
         
         return self._get_parts()
+
+
+    def get_child_message(self):
+        """ ??? """
+        raise NotImplementedError
+
+    
+    def get_phantom_message(self):
+        """ ??? """
+        raise NotImplementedError
 
 
 if __name__ == "__main__":

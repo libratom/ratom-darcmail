@@ -93,7 +93,7 @@ class AccountObject():
         email_prefix = "".join([c if c.isidentifier() else "_" for c in email_prefix])
 
         # hash @id_bytes and prepend @email_prefix to it.
-        global_id = email_prefix + "_" + hashlib.sha256(id_bytes).hexdigest()[:7]
+        global_id = email_prefix + "_" + hashlib.sha256(id_bytes).hexdigest()[:10]
 
         return global_id
 

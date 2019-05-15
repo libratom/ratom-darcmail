@@ -76,7 +76,7 @@ TODO:
             #-->
 
             <!--# TODO: Implement ExtBodyContent option for messages? #-->
-            {% if message_body.TEMPdisposition is not defined %}
+            {% if None is not defined %}
                 <BodyContent>
                 <!--#Content><![CDATA[{% for part in message_body.walk() %}{{ part | escape_cdata }}{% endfor %}]]></Content#-->
                     <!--# TODO: Work on this. Needs to be printable? #-->
@@ -86,7 +86,7 @@ TODO:
             {% else %}
             <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
                 <ExtBodyContent>
-                    {% set ext_file = EAXSHelpers.write_message(message_body, True) %}
+                    {% set ext_file = EAXSHelpers.write_message(message_body) %}
                     <RelPath>{{ ext_path }}</RelPath>
                     <CharSet>{{ message_body.get_content_charset() | skipnull }}</CharSet>
                     <TransferEncoding>{{ message_body.get("content-transfer-encoding") }}</TransferEncoding>
