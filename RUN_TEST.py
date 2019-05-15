@@ -19,6 +19,8 @@ msg = next(fol.get_messages())
 #dm.account == fol.account == msg.folder.account # True
 def _fail(): raise Exception("hell")
 msg.email.fail = _fail # should update parse_errors.
+for p in msg.get_submessages():
+    print(p.mock_path, p.write_path, sep="\t")
 
 #mbox_args = account_args
 #mbox_args["path"] = mbox_args["path"].replace("eml", "mbox")

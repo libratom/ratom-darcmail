@@ -12,6 +12,7 @@ Todo:
 import email
 import logging
 import os
+import string
 import traceback
 from datetime import datetime
 
@@ -38,6 +39,12 @@ class MessageObject():
             @folder.account.path attribute.
             - basename (str): The basename of @path.
             - local_id (int): The @folder.account.current_id after it's been incremented by 1.
+            - mock_path (str): A conceptual folder-like path. This is useful when @get_submessages()
+            is used because it allows one to see the depth relationship of each part.
+            - write_path (str): The proposed file-like path to write @email to. This is useful when
+            @get_submessages() is used because it provides a ready-made output path for each 
+            part. This will be prepended with @folder.account.darcmail.message_dir if @email is not
+            an attachment. Otherwise, it's prepended with @folder.account.darcmail.message_dir.
             - parse_errors (list): Requests from @email that raised an exception. Each item is a 
             dict with the keys: "exception_obj" (Exception), "timestamp" (str), 
             "traceback_obj" (traceback), and "traceback_lines" (list of strings).
@@ -57,12 +64,12 @@ class MessageObject():
         self.rel_path = os.path.relpath(self.path, self.folder.account.path)
         self.basename = os.path.basename(self.path)
         self.local_id = self.folder.account.set_current_id()
-        self.mock_path, self.write_path = self._get_abstract_paths() #TODO: add these to docstring.
+        self.mock_path, self.write_path = self._get_abstract_paths()
         self.parse_errors = []
 
 
     @staticmethod
-    def __get_parse_error(err):
+    def _get_parse_error(err):
         """ Formats @err so that it can be appended to @self.parse_errors.
         
         Args:
@@ -97,7 +104,7 @@ class MessageObject():
                 return getattr(self.email, attr)
             except Exception as err:
                 self.logger.error(err)
-                self.parse_errors.append(self.__get_parse_error(err))
+                self.parse_errors.append(self._get_parse_error(err))
 
         # wrap method requests per: https://stackoverflow.com/a/13776530.
         def _wrap_method(*args, **kwargs):
@@ -106,7 +113,7 @@ class MessageObject():
                 return getattr(self.email, attr)(*args, **kwargs)
             except Exception as err:
                 self.logger.error(err)
-                self.parse_errors.append(self.__get_parse_error(err))
+                self.parse_errors.append(self._get_parse_error(err))
 
         # if @attr belongs to @self.email, request it. 
         if hasattr(self.email, attr):
@@ -120,44 +127,93 @@ class MessageObject():
         return
 
 
-    def _get_abstract_paths(self):
-        """ ???
+    def _get_abstract_paths(self, msg=None):
+        """ Creates the "mock_path" and "write_path" for @self. This makes it possible to view each
+        item in @self.get_submessages() as a folder-like or file-like representation.
+
+        Args:
+             msg (MessageObject): If left as None, the "mock_path" will be relative to @self. 
+             Otherwise, it will be relative to this @msg argument. The only use of this argument
+             is expected to be a call from @self._build_parts(). 
+        
+        Returns:
+            tuple: The return value.
+            This tuple is meant to help set the respective values for @self.mock_path and 
+            @self.write_path. 
         """
 
-        # ???
-        sep, ext, is_file_like = "", "", False
-        if not self.email.is_multipart():
-            sep, ext, is_file_like = ".", "msg", True
-            disposition =  self.email.get_content_disposition() 
-            if disposition not in [None, ""]:
-                ext = disposition[:3]
+        # determine the extension for the file-like "write_path".
+        subtype =  self.email.get_content_subtype() 
+        if subtype not in [None, ""]:
+            ext = "".join([c for c in subtype if not c in string.whitespace])
+        if len(ext) == 0:
+            ext = "msg"
 
-        # ???
-        mock_tail = "{}{}{}".format(self.local_id, sep, ext)
-        mock_path = os.path.join(os.path.split(self.rel_path)[0], mock_tail)
-        write_path = mock_path if is_file_like else None
+        # determine the path prefix for "write_path".
+        if self.email.get_content_disposition() is None:
+            write_dir = self.folder.account.darcmail.message_dir
+        else:
+            write_dir = self.folder.account.darcmail.attachment_dir
+
+        # create the "mock_path" and "write_path" strings.
+        mock_tail = "[{}]".format(self.local_id)
+        mock_path = os.path.join(self.folder.rel_path, mock_tail)
+        write_tail = "{}.{}".format(self.local_id, ext)
+        write_path = os.path.join(write_dir, self.folder.rel_path, write_tail)
+        
+        # if needed, make the "mock_path" relative to @msg.mock_path.
+        if msg is not None:
+            mock_path = os.path.join(msg.mock_path, os.path.basename(mock_path))
+
         return mock_path, write_path
 
 
-    def get_parts(self, msg=None, parts=None):
-        """ ??? """
+    def _get_parts(self, msg=None, parts=None):
+        """ Loops through @self.email._payload and returns a list of its message objects. This is
+        designed to be called exclusively by @self.get_submessages().
+        
+        Args:
+            - msg (MessageObject): The message to store to @parts. If None, this defaults to
+            @self.
+            - parts (list): Each item is a MessageObject. If None, a new list is created.
 
-        # ???
+        Returns:
+            list: The return value.
+            The returned object is @parts.
+        """
+
+        # if needed, set @parts as a list and @msg as @self.
         if parts is None:
             parts = []
         msg = self if msg is None else msg        
+        
+        # add @msg to @parts.
         parts.append(msg)
 
-        # ???
+        # if @msg is a multipart message, then send it and @parts to @self_get_parts().
         if msg.email.is_multipart():
+            
+            # create a new MessageObject for each part; tweaks the @mock_path attribute relative to
+            # @msg.
             for msg_part in msg.email._payload:
                 msg_part = MessageObject(msg.folder, msg.path, msg_part)
-                msg_part.mock_path = os.path.join(msg.mock_path, os.path.basename(
-                    msg_part.mock_path))
-                self.get_parts(msg_part, parts)
+                msg_part.mock_path = msg_part._get_abstract_paths(msg)[0]
+                self._get_parts(msg_part, parts)
 
         return parts
 
-    
+
+    def get_submessages(self):
+        """ Gets all the parts in @self.email._payload.
+        
+        Returns:
+            list: The return value.
+            Each item is a MessageObject in which the @mock_path attribute is relative to 
+            @self.mock_path.
+        """
+        
+        return self._get_parts()
+
+
 if __name__ == "__main__":
     pass

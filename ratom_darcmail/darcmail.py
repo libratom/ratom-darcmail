@@ -68,7 +68,7 @@ class DarcMail():
 
         # set attributes
         self.account = AccountObject(darcmail=self, **account_args)
-        self.eaxs_path = os.path.abspath(eaxs_path)
+        self.eaxs_path = eaxs_path
         self.eaxs_container = os.path.dirname(self.eaxs_path)
         self.template = template
         self.template_dir = (template_dir if template_dir is not None else
