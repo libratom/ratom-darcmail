@@ -183,8 +183,7 @@ class MessageObject():
         """
 
         # if needed, set @parts as a list and @msg as @self.
-        if parts is None:
-            parts = []
+        parts = [] if parts is None else parts
         msg = self if msg is None else msg        
         
         # add @msg to @parts.
