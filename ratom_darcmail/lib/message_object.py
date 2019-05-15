@@ -39,12 +39,12 @@ class MessageObject():
             @folder.account.path attribute.
             - basename (str): The basename of @path.
             - local_id (int): The @folder.account.current_id after it's been incremented by 1.
-            - mock_path (str): A conceptual folder-like path. This is useful when @get_submessages()
-            is used because it allows one to see the depth relationship of each part.
-            - write_path (str): The proposed file-like path to write @email to. This is useful when
-            @get_submessages() is used because it provides a ready-made output path for each 
-            part. This will be prepended with @folder.account.darcmail.message_dir if @email is not
-            an attachment. Otherwise, it's prepended with @folder.account.darcmail.message_dir.
+            - mock_path (str): A folder-like path that represents the conceptual location of this
+            object within self.folder.account. This is useful when @get_submessages() is used
+            because it allows one to see the depth relationship of each part.
+            - write_path (str): A ready-made file-like output path for @email. This will be
+            prepended with @folder.account.darcmail.message_dir if @email is not an attachment.
+            Otherwise, it will be prepended with @folder.account.darcmail.attachment_dir.
             - parse_errors (list): Requests from @email that raised an exception. Each item is a 
             dict with the keys: "exception_obj" (Exception), "timestamp" (str), 
             "traceback_obj" (traceback), and "traceback_lines" (list of strings).
@@ -93,9 +93,18 @@ class MessageObject():
 
 
     def __getattr__(self, attr, *args, **kwargs):
-        """ This intercepts non-attributes, assumes that the request is for @self.email, logs the
-        request, and makes the request. If the request raises an exception, then @self.parse_errors
-        is updated and None is returned. """
+        """ This intercepts non-attributes of @self. It then assumes that the request is for 
+        @self.email, logs the request, and makes the request. If the request raises an exception,
+        then @self.parse_errors is updated and None is returned. None will also be returned if
+        @attr is not an attribute or method of @self.email but @self.parse_errors will not be
+        affected because calling a non-attribute of @self.email is a user error.
+        
+        Args:
+            - attr (object): The attribute to retrieve or method to call for @self.email.
+
+        Returns:
+            object: The return type.
+        """
 
         # wrap attribute requests.
         def _wrap_attr():
@@ -128,18 +137,15 @@ class MessageObject():
 
 
     def _get_abstract_paths(self, msg=None):
-        """ Creates the "mock_path" and "write_path" for @self. This makes it possible to view each
-        item in @self.get_submessages() as a folder-like or file-like representation.
+        """ Returns values for needed to set @self.mock_path and @self.write_path.
 
         Args:
-             msg (MessageObject): If left as None, the "mock_path" will be relative to @self. 
-             Otherwise, it will be relative to this @msg argument. The only use of this argument
-             is expected to be a call from @self._build_parts(). 
+            - msg (MessageObject): If left as None, the "mock_path" will be relative to @self. 
+            Otherwise, it will be relative to this @msg. The only use of this argument is expected
+            to be a call from @self._build_parts(). 
         
         Returns:
             tuple: The return value.
-            This tuple is meant to help set the respective values for @self.mock_path and 
-            @self.write_path. 
         """
 
         # determine the extension for the file-like "write_path".
@@ -182,7 +188,7 @@ class MessageObject():
             The returned object is @parts.
         """
 
-        # if needed, set @parts as a list and @msg as @self.
+        # if needed, set @parts as a list and @msg as @self.g
         parts = [] if parts is None else parts
         msg = self if msg is None else msg        
         
@@ -203,12 +209,11 @@ class MessageObject():
 
 
     def get_submessages(self):
-        """ Gets all the parts in @self.email._payload.
+        """ Gets all the parts in @self.email._payload and converts each part to a MessageObject in
+        which the @mock_path attribute is relative to @self.mock_path.
         
         Returns:
             list: The return value.
-            Each item is a MessageObject in which the @mock_path attribute is relative to 
-            @self.mock_path.
         """
         
         return self._get_parts()

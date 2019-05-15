@@ -5,7 +5,9 @@ Todo:
     * If you want to deal with duplicates, this is where to do it: first hash the data, then look
     it up (from a dict in memory, say account.file_dict), if it's a duplicate, return the file path
     that already exists and update the dict with {local_id} = {file path}. If not a duplicate,
-    return the path to the new file (and still update that dict).
+    return the path to the new file (and still update that dict).\
+    * Now that you've added the "write_path" concept to MessageObject, you'll need to update this
+    to reflect that.
 """
 
 import logging
