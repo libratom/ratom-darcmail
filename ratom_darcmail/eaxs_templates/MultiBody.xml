@@ -1,6 +1,10 @@
 <!--# 
 This template represents the EAXS ??? element.
 It is related to the lib.??? module.
+
+TODO:
+    * Remove fake attributes: @att, @multi from MultiBody; remove test lines.
+    * Add in child elements of opening MultiBody tags.
 #-->
 
 {% set OPENED_MULTIBODIES = [] %}
@@ -16,7 +20,7 @@ It is related to the lib.??? module.
     {% if submessage.is_multipart() %}
     <MultiBody att="{{ submessage.mock_path }}">
     {% else %}
-    <SBody att="{{ submessage.mock_path }}" multi="false" /> <!-- TEST LINE -->
+    <SBody att="{{ submessage.mock_path }}" multi="false" />
     <!--# {% include "SingleBody.xml" %} #-->
     <!--# Because this is a SingleBody element, remove it from @OPENED_MULTIBODIES so that we don't
     end up with an stray closing MultiBody tags. #-->
