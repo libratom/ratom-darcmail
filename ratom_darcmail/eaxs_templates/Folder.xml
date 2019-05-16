@@ -8,7 +8,7 @@ It is related to the lib.folder_object.FolderObject module.
 
 <!--# Loop through each folder object and create <Folder> elements. #-->
 {% for folder in DarcMail.account.get_folders() %}
-
+    
     <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
     {% for open_folder in EAXSHelpers.close_folders(folder, OPENED_FOLDERS) %}
     </Folder>
@@ -40,6 +40,6 @@ It is related to the lib.folder_object.FolderObject module.
 <!--# Close remaining <Folder> elements.
 Even though the output isn't effected, it's more proper to use "reverse" because each @folder in
 @OPENED_FOLDERS is a child of the item that precedes it. #-->
-{% for folder in OPENED_FOLDERS | reverse %}
+{% for folder in OPENED_FOLDERS|reverse %}
     </Folder>
 {% endfor %}

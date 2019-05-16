@@ -24,7 +24,7 @@ class Body():
 
 ###
 parts = []
-def split_msg(msg, path="."):
+def split_msg(msg, path="inbox"):
         
         ctype = msg.get_content_type().replace("/", "_")
         path += "/{}_{}".format(ctype, len(parts))

@@ -29,6 +29,7 @@ TODO:
     * The EAXS schema seems to explicitly say when to use CDATA; TOMES DarcMail seems to use CDATA 
     blocks more liberally. This might be a problem that shouldn't get replicated here. So check
     when you should/shouldn't use CDATA. 
+    * Filters should NOT have a space before/after the pipe. DO: "l|reverse" NOT: "l | reverse".
 #-->
 
 {% for email_address in DarcMail.account.email_addresses %}

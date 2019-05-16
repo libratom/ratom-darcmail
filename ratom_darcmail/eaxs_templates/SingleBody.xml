@@ -101,6 +101,8 @@ TODO:
             {% endif %}
     
             <!--# Skip. EAXS XSD does not describe this well enough to implement.
+            TODO: I'm not sure about that: it's for "message/external-body" so research that before
+            giving up on this element.
                 <PhantomBody></PhantomBody>
             #-->
             </SingleBody>

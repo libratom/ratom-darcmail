@@ -3,7 +3,8 @@
 """ This module contains a class that represents a Message element within the EAXS context. 
 
 Todo:
-    * Probably want to add documentation here as to why you didn't just subclass 
+    * You should look into adding @self.email.defects to @self.parse_errors if it makes sense.
+    * Probably want to add documentation here as to why you didn't just subclass
     email.message.Message - because it helps with intercepting via __getattr__ through which we'll
     update @self.parse_errors.
 """
@@ -64,7 +65,7 @@ class MessageObject():
         self.rel_path = os.path.relpath(self.path, self.folder.account.path)
         self.local_id = self.folder.account.set_current_id()
         self.mock_path, self.write_path = self._get_abstract_paths()
-        self.parse_errors = [] #TODO: You should look into adding @self.email.defects to this.
+        self.parse_errors = []
 
 
     @staticmethod
@@ -83,12 +84,12 @@ class MessageObject():
         traceback_lines = [l.strip() for l in traceback.format_tb(traceback_obj)]
         
         # create dict to return.
-        parse_err = {"error_obj": err, 
+        parse_error = {"error_obj": err, 
                 "timestamp": datetime.now().isoformat(), 
                 "traceback_obj": traceback_obj,
                 "traceback_lines": traceback_lines}
        
-        return parse_err
+        return parse_error
 
 
     def __getattr__(self, attr, *args, **kwargs):
@@ -147,8 +148,8 @@ class MessageObject():
             tuple: The return value.
         """
 
-        # determine the filename prefix for "write_path"; this achieves uniform filename lengths.
-        id_bytes = str(self.local_id).encode(errors="replace")
+        # create a unique, fixed length filename prefix for "write_path".
+        id_bytes = "{}{}".format(datetime.now(), self.local_id).encode(errors="replace")
         id_hash = hashlib.sha256(id_bytes).hexdigest()[:10]
 
         # determine the extension and path prefix for "write_path".
@@ -160,7 +161,7 @@ class MessageObject():
             write_prefix = self.folder.account.darcmail.attachment_dir
 
         # create the "mock_path" and "write_path".
-        mock_tail = "[{}]".format(self.local_id)
+        mock_tail = "{}_{}".format(self.local_id, self.email.get_content_type()).replace("/", "_")
         mock_path = os.path.join(self.folder.rel_path, mock_tail)
         write_tail = "{}.{}".format(id_hash, ext)
         write_path = os.path.join(write_prefix, self.folder.rel_path, write_tail)
@@ -216,16 +217,6 @@ class MessageObject():
         """
         
         return self._get_parts()
-
-
-    def get_child_message(self):
-        """ ??? """
-        raise NotImplementedError
-
-    
-    def get_phantom_message(self):
-        """ ??? """
-        raise NotImplementedError
 
 
 if __name__ == "__main__":
