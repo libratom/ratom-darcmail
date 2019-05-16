@@ -1,0 +1,30 @@
+<!--# 
+This template represents the EAXS ??? element.
+It is related to the lib.??? module.
+#-->
+
+{% set OPENED_MULTIBODIES = [] %}
+
+<!--# ??? #-->
+{% for submessage in message.get_submessages() %}
+
+    {% for open_multibody in EAXSHelpers.close_folders(submessage, OPENED_MULTIBODIES, "mock_path") %}
+    </MultiBody>
+    {% endfor %}
+
+    <!--# Add in <MultiBody> child elements. #-->
+    {% if submessage.is_multipart() %}
+    <MultiBody att="{{ submessage.mock_path }}">
+    {% else %}
+    <SBody att="{{ submessage.mock_path }}" multi="false" /> <!-- TEST LINE -->
+    <!--# {% include "SingleBody.xml" %} #-->
+    <!--# Because this is a SingleBody element, remove it from OPENED_MULTIBODIES so that we don't
+    end up with an stray closing MultiBody tag. #-->
+    {% if OPENED_MULTIBODIES.pop() %}{% endif %}
+    {% endif %}
+
+{% endfor %}
+
+{% for submessage in OPENED_MULTIBODIES |reverse %}
+    </MultiBody>
+{% endfor %}
