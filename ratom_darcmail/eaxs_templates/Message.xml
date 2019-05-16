@@ -13,14 +13,14 @@ TODO:
         <Message>
         
             <!--# Add in the initial child elements. #-->
-            <RelPath>{{ message.rel_path }}</RelPath>
+            <RelPath>{{ message.rel_path |normalize_path }}</RelPath>
             <LocalId>{{ message.local_id }}</LocalId>
 
             <!--# If the message id doesn't exists, then create one and set @Supplied to True. #-->
             {% set message_id = message.get("message-id") %}
             {% set message_el = (message_id, "false") if message_id else ("{}_{}".format(
                 message.account.global_id, message.local_id), "true") %}
-            <MessageId Supplied="{{ message_el[1] }}">{{ message_el[0] | cdata }}</MessageId>
+            <MessageId Supplied="{{ message_el[1] }}">{{ message_el[0] |cdata }}</MessageId>
 
             <MimeVersion>{{ message.get("mime-version") }}</MimeVersion>
 
@@ -30,17 +30,17 @@ TODO:
             TODO: Need to be repeatable: TO, CC, BCC, IN REPLY TO, REFERENCES, COMMENTS, KEYWORDS.
             TODO: Is Sender always returned? If it's xs:string does it matter since blanks are OK?
             #-->
-            <OrigDate>{{ message.get("orig-date") | skipnull }}</OrigDate>
-            <From>{{ message.get("from") | cdata }}</From>
-            <Sender>{{ message.get("sender") | cdata }}</Sender>
-            <To>{{ message.get("to") | cdata }}</To>
-            <Cc>{{ message.get("cc") | skipnull | cdata }}</Cc>
-            <Bcc>{{ message.get("bcc") | skipnull | cdata }}</Bcc>
-            <InReplyTo>{{ message.get("in-reply-to") | skipnull | cdata }}</InReplyTo>
-            <References>{{ message.get("references") | skipnull | cdata }}</References>
-            <Subject>{{ message.get("subject") | cdata }}</Subject>
-            <Comments>{{ message.get("comments") | skipnull | cdata }}</Comments>
-            <Keywords>{{ message.get("keywords") | skipnull | cdata }}</Keywords> 
+            <OrigDate>{{ message.get("orig-date") |skipnull }}</OrigDate>
+            <From>{{ message.get("from") |cdata }}</From>
+            <Sender>{{ message.get("sender") |cdata }}</Sender>
+            <To>{{ message.get("to") |cdata }}</To>
+            <Cc>{{ message.get("cc") |skipnull |cdata }}</Cc>
+            <Bcc>{{ message.get("bcc") |skipnull |cdata }}</Bcc>
+            <InReplyTo>{{ message.get("in-reply-to") |skipnull |cdata }}</InReplyTo>
+            <References>{{ message.get("references") |skipnull |cdata }}</References>
+            <Subject>{{ message.get("subject") |cdata }}</Subject>
+            <Comments>{{ message.get("comments") |skipnull |cdata }}</Comments>
+            <Keywords>{{ message.get("keywords") |skipnull |cdata }}</Keywords> 
 
             <!--# Add in elements per the EAXS "header-type" type. #-->
             <!--#
@@ -50,7 +50,7 @@ TODO:
             {% for name, value in message.items() %}
             <Header>
                 <Name>{{ name }}</Name>
-                <Value>{{ value | cdata }}</Value>
+                <Value>{{ value |cdata }}</Value>
                 <Comments></Comments>
             </Header>
             {% endfor %}
@@ -66,8 +66,8 @@ TODO:
             #-->
             {% set status = message.get("status", failobj="") + message.get("x-status", failobj="") %}
             {% set status_dict = {"R": "Seen", "A": "Answered", "F": "Flagged", "D": "Deleted"} %}
-            {% for status_item in status | trim %}
-            <StatusFlag>{{ status_dict.get(status_item) | skipnull }}</StatusFlag>
+            {% for status_item in status |trim %}
+            <StatusFlag>{{ status_dict.get(status_item) |skipnull }}</StatusFlag>
             {% endfor %}
 
             <!--# ??? TODO: if multibody then include Multibody.xml ... otherwise include Body.xml ... or something like that? ... #-->

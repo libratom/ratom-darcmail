@@ -18,14 +18,14 @@ TODO:
 
                 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW.
                 FYI: TOMES DarcMail equates this to Content-Description. #-->
-                <ContentName>{{ message_body.get_params(header="content-description") | skipnull | cdata }}</ContentName>
+                <ContentName>{{ message_body.get_params(header="content-description") |skipnull |cdata }}</ContentName>
                 
                 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <ContentTypeComments></ContentTypeComments>
                 
                 <!--# TODO: document this. #-->
                 {% set message_params = EAXSHelpers.filter_params(message_body.get_params()) %}
-                {% if message_params|length != 0 %}
+                {% if message_params |length != 0 %}
                 <ContentTypeParam>
                 {% for name, value in message_params %}
                     <Name>{{ name }}</Name>
@@ -34,25 +34,25 @@ TODO:
                 </ContentTypeParam>
                 {% endif %}
 
-                <TransferEncoding>{{ message_body.get("content-transfer-encoding") | skipnull }}</TransferEncoding>
+                <TransferEncoding>{{ message_body.get("content-transfer-encoding") |skipnull }}</TransferEncoding>
                 
                 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <TransferEncodingComments></TransferEncodingComments>
 
-                <ContentId>{{ message_body.get("content-id") | skipnull | cdata }}</ContentId>
+                <ContentId>{{ message_body.get("content-id") |skipnull |cdata }}</ContentId>
     
                 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <ContentIdComments></ContentIdComments>
 
                 <!--# TODO: still check RFC-4021 for the source of this; because it's not clear what this
                 element is about. It's optional BTW. #-->
-                <Description>{{ message_body.get("content-description") | skipnull | cdata }}</Description>
+                <Description>{{ message_body.get("content-description") |skipnull |cdata }}</Description>
                 
                 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <DescriptionComments></DescriptionComments>
 
-                <Disposition>{{message_body.get_content_disposition() | skipnull }}</Disposition>
-                <DispositionFileName>{{message_body.get_filename() | skipnull }}</DispositionFileName>
+                <Disposition>{{message_body.get_content_disposition() |skipnull }}</Disposition>
+                <DispositionFileName>{{message_body.get_filename() |skipnull }}</DispositionFileName>
 
                 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
                 <DispositionComments></DispositionComments>
@@ -61,7 +61,7 @@ TODO:
                     message_body.get_params(header="content-disposition"),
                     ["filename"])
                 %}
-                {% if disposition_params|length != 0 %}
+                {% if disposition_params |length != 0 %}
                 <DispositionParams>
                 {% for name, value in disposition_params %}
                     <Name>{{ name }}</Name>
@@ -78,9 +78,9 @@ TODO:
             <!--# TODO: Implement ExtBodyContent option for messages? #-->
             {% if None is not defined %}
                 <BodyContent>
-                <!--#Content><![CDATA[{% for part in message_body.walk() %}{{ part | escape_cdata }}{% endfor %}]]></Content#-->
+                <!--#Content><![CDATA[{% for part in message_body.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content#-->
                     <!--# TODO: Work on this. Needs to be printable? #-->
-                    <Content>{{ message_body.as_string() | cdata }}</Content>
+                    <Content>{{ message_body.as_string() |cdata }}</Content>
                     <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
                 </BodyContent>
             {% else %}
@@ -88,7 +88,7 @@ TODO:
                 <ExtBodyContent>
                     {% set ext_file = EAXSHelpers.write_message(message_body) %}
                     <RelPath>{{ ext_path }}</RelPath>
-                    <CharSet>{{ message_body.get_content_charset() | skipnull }}</CharSet>
+                    <CharSet>{{ message_body.get_content_charset() |skipnull }}</CharSet>
                     <TransferEncoding>{{ message_body.get("content-transfer-encoding") }}</TransferEncoding>
                     <LocalId>{{ message_body.account.current_id }}</LocalId>
                     <XMLWrapped>false</XMLWrapped>

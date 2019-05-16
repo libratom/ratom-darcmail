@@ -30,13 +30,14 @@ TODO:
     blocks more liberally. This might be a problem that shouldn't get replicated here. So check
     when you should/shouldn't use CDATA. 
     * Filters should NOT have a space before/after the pipe. DO: "l|reverse" NOT: "l | reverse".
+        - Let men ammend that: DO "l |reverse" - it's easier to read.
 #-->
 
 {% for email_address in DarcMail.account.email_addresses %}
-    <EmailAddress>{{ email_address | cdata }}</EmailAddress>
+    <EmailAddress>{{ email_address |cdata }}</EmailAddress>
 {% endfor %}
 
-    <GlobalId>{{ DarcMail.account.global_id | cdata }}</GlobalId>
+    <GlobalId>{{ DarcMail.account.global_id |cdata }}</GlobalId>
 
 
 {% if DarcMail.account.references_account is defined %}

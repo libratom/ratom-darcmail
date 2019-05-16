@@ -40,6 +40,6 @@ It is related to the lib.folder_object.FolderObject module.
 <!--# Close remaining <Folder> elements.
 Even though the output isn't effected, it's more proper to use "reverse" because each @folder in
 @OPENED_FOLDERS is a child of the item that precedes it. #-->
-{% for folder in OPENED_FOLDERS|reverse %}
+{% for folder in OPENED_FOLDERS |reverse %}
     </Folder>
 {% endfor %}
