@@ -18,8 +18,8 @@ It is related to the lib.??? module.
     {% else %}
     <SBody att="{{ submessage.mock_path }}" multi="false" /> <!-- TEST LINE -->
     <!--# {% include "SingleBody.xml" %} #-->
-    <!--# Because this is a SingleBody element, remove it from OPENED_MULTIBODIES so that we don't
-    end up with an stray closing MultiBody tag. #-->
+    <!--# Because this is a SingleBody element, remove it from @OPENED_MULTIBODIES so that we don't
+    end up with an stray closing MultiBody tags. #-->
     {% if OPENED_MULTIBODIES.pop() %}{% endif %}
     {% endif %}
 
