@@ -3,8 +3,8 @@
 import logging
 
 IS_HELPER = True
-
-def main(folder, opened_folders):
+#TODO: Rewrite docstrings now that this helps with MultiBody too.
+def main(folder, opened_folders, attr="path"):
     """ Looks at the current @folder depth in the context of previously @opened_folders and 
     returns a list of folders to close. This module is designed to accomodate EAXS' use of recursive
     <Folder> elements.
@@ -14,6 +14,7 @@ def main(folder, opened_folders):
         EAXS context.
         - opened_folders (list): The list of non-closed folders within the EAXS context. Note: this
         must be intially passed in as an empty list and it *will* be mutated over time.
+        - attr (str): The attribute of @folder that ???
     
     Returns:
         list: The return value.
@@ -28,7 +29,12 @@ def main(folder, opened_folders):
     # @folders_to_close and remove it from @opened_folders.
     for opened in reversed(opened_folders):
         
-        if not folder.path.startswith(opened.path):
+        # ???
+        folder_attr = getattr(folder, attr)
+        opened_attr = getattr(opened, attr)
+
+        # ???
+        if not folder_attr.startswith(opened_attr):
             folders_to_close.append(opened)
             opened_folders.remove(opened)
     
@@ -36,3 +42,5 @@ def main(folder, opened_folders):
     opened_folders.append(folder)
 
     return folders_to_close
+
+#TODO: Need to change the name of this because it's not just for folders now.

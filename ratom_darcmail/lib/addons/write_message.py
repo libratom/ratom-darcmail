@@ -13,13 +13,11 @@ import os
 
 IS_HELPER = True
 
-def main(message):
+def main(msg):
     """ Writes string value of @message to file.
 
     Args:
-        - message (email.message.Message): The message to write.
-        - is_attachement (bool): Use True to write to @darcmail_obj.message_dir. Otherwise, use
-        False to write to @darcmail_obj.attachment_dir. 
+        - msg (email.message.Message): The message to write.
     
     Returns:
         str: The path to the written file.
@@ -29,7 +27,7 @@ def main(message):
     """
 
     # set the output path.
-    destination = message.write_path 
+    destination = msg.write_path 
 
     # make sure @destination doesn't exist.
     if os.path.isfile(destination):
@@ -45,18 +43,18 @@ def main(message):
         logging.debug("Creating parent folders: {}".format(destination_folder))
         os.makedirs(destination_folder)
 
-    # write @message to @destination.
+    # write @msg to @destination.
     
-    # TODO: Might need a try/except around this: You can update the message's @parse_errors list if needed.
+    # TODO: Might need a try/except around this: You can update the msg's @parse_errors list if needed.
     
     # TODO: Are you sure about using xmlcharrefreplace for the @errors? What should it be? Optional?
 
     # TODO: This still includes the Content Type headers and such. Are you supposed to retain that? I doubt it.
         # So might have to start only where there's just been a double line break but remember it might not be "\n\n".
-    with open(destination, mode="w", encoding=message.folder.account.darcmail.charset, 
+    with open(destination, mode="w", encoding=msg.folder.account.darcmail.charset, 
         errors="xmlcharrefreplace") as fopen:
 
-        for part in message.walk():
+        for part in msg.walk():
             part = part.as_string()
             fopen.write(part)
 

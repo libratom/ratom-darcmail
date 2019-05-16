@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 """ This module contains a class that renders EAXS or generic XML files via Jinja2 templates. This
-module also contains a private class that contains a custom Jinja2 template loader. """
+module also contains a private class that contains a custom Jinja2 template loader.
+
+Todo:
+    * Do you want to add options to pass JINJA2 extensions, etc. through __init__()?
+"""
 
 # import logging.
 import jinja2
@@ -116,7 +120,8 @@ class EAXSMaker():
         
         # set Jinja2 environment.
         self.env = jinja2.Environment(loader=_TemplateLoader(self.template_dir), trim_blocks=True, 
-            lstrip_blocks=True, comment_start_string="<!--#", comment_end_string="#-->")
+            lstrip_blocks=True, comment_start_string="<!--#", comment_end_string="#-->", 
+            extensions=["jinja2.ext.loopcontrols"])
         
         # create a unique string to indicate which rendered lines to omit from final output.
         # see @self.env.filters["skipnull"], below.
