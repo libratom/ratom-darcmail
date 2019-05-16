@@ -6,89 +6,93 @@ Note: the custom "skipnull" filter is used so that elements with null values wil
 rendered EAXS file.
 
 TODO:
-    * For this and all included templates you need to make sure the correct xs:type will always be
-    present (valid identifiers, etc.).
+* For this and all included templates you need to make sure the correct xs:type will always be
+present (valid identifiers, etc.).
 #-->
 
-        <Message>
-        
-            <!--# Add in the initial child elements. #-->
-            <RelPath>{{ message.rel_path |normalize_path }}</RelPath>
-            <LocalId>{{ message.local_id }}</LocalId>
+<Message>
 
-            <!--# If the message id doesn't exists, then create one and set @Supplied to True. #-->
-            {% set message_id = message.get("message-id") %}
-            {% set message_el = (message_id, "false") if message_id else ("{}_{}".format(
-                message.account.global_id, message.local_id), "true") %}
-            <MessageId Supplied="{{ message_el[1] }}">{{ message_el[0] |cdata }}</MessageId>
+    <!--# Add in the initial child elements. #-->
+    <RelPath>{{ message.rel_path |normalize_path }}</RelPath>
+    <LocalId>{{ message.local_id }}</LocalId>
 
-            <MimeVersion>{{ message.get("mime-version") }}</MimeVersion>
+    <!--# If the message id doesn't exists, then create one and set @Supplied to True. #-->
+    {% set message_id = message.get("message-id") %}
+    {% set message_el = (message_id, "false") if message_id else ("{}_{}".format(
+        message.account.global_id, message.local_id), "true") %}
+    <MessageId Supplied="{{ message_el[1] }}">{{ message_el[0] |cdata }}</MessageId>
 
-            <!--# Add in elements per the EAXS "message-headers" group. #-->
-            <!--# 
-            TODO: CHECK ALL .get() string request values!
-            TODO: Need to be repeatable: TO, CC, BCC, IN REPLY TO, REFERENCES, COMMENTS, KEYWORDS.
-            TODO: Is Sender always returned? If it's xs:string does it matter since blanks are OK?
-            #-->
-            <OrigDate>{{ message.get("orig-date") |skipnull }}</OrigDate>
-            <From>{{ message.get("from") |cdata }}</From>
-            <Sender>{{ message.get("sender") |cdata }}</Sender>
-            <To>{{ message.get("to") |cdata }}</To>
-            <Cc>{{ message.get("cc") |skipnull |cdata }}</Cc>
-            <Bcc>{{ message.get("bcc") |skipnull |cdata }}</Bcc>
-            <InReplyTo>{{ message.get("in-reply-to") |skipnull |cdata }}</InReplyTo>
-            <References>{{ message.get("references") |skipnull |cdata }}</References>
-            <Subject>{{ message.get("subject") |cdata }}</Subject>
-            <Comments>{{ message.get("comments") |skipnull |cdata }}</Comments>
-            <Keywords>{{ message.get("keywords") |skipnull |cdata }}</Keywords> 
+    <MimeVersion>{{ message.get("mime-version") }}</MimeVersion>
 
-            <!--# Add in elements per the EAXS "header-type" type. #-->
-            <!--#
-            TODO: What's the source for the optional <Comments> element? I can't find anything
-            in RFC 4021 (at least I think that's the correct spec to look at).
-            #-->
-            {% for name, value in message.items() %}
-            <Header>
-                <Name>{{ name }}</Name>
-                <Value>{{ value |cdata }}</Value>
-                <Comments></Comments>
-            </Header>
-            {% endfor %}
+    <!--# Add in elements per the EAXS "message-headers" group. #-->
+    <!--# 
+    TODO: CHECK ALL .get() string request values!
+    TODO: Need to be repeatable: TO, CC, BCC, IN REPLY TO, REFERENCES, COMMENTS, KEYWORDS.
+    TODO: Is Sender always returned? If it's xs:string does it matter since blanks are OK?
+    #-->
+    <OrigDate>{{ message.get("orig-date") |skipnull }}</OrigDate>
+    <From>{{ message.get("from") |cdata }}</From>
+    <Sender>{{ message.get("sender") |cdata }}</Sender>
+    <To>{{ message.get("to") |cdata }}</To>
+    <Cc>{{ message.get("cc") |skipnull |cdata }}</Cc>
+    <Bcc>{{ message.get("bcc") |skipnull |cdata }}</Bcc>
+    <InReplyTo>{{ message.get("in-reply-to") |skipnull |cdata }}</InReplyTo>
+    <References>{{ message.get("references") |skipnull |cdata }}</References>
+    <Subject>{{ message.get("subject") |cdata }}</Subject>
+    <Comments>{{ message.get("comments") |skipnull |cdata }}</Comments>
+    <Keywords>{{ message.get("keywords") |skipnull |cdata }}</Keywords> 
 
-            <!--# Add in the element that shows the message status (read, answered, etc.).
-            Note: this logic is based on https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
-            #-->
-            <!--#
-            TODO: Is there support for "Draft" or "Recent" in other DarcMail packages ??? 
-            TODO: Maybe put this in a Python script. Anything that requires looping, look-ups, etc. should go into external logic, yes?
-                Well, the problem is that makes it harder to see how the element is constructed.
-                It might be better to leave the external Python stuff for things that are too complex to put in the template itself.
-            #-->
-            {% set status = message.get("status", failobj="") + message.get("x-status", failobj="") %}
-            {% set status_dict = {"R": "Seen", "A": "Answered", "F": "Flagged", "D": "Deleted"} %}
-            {% for status_item in status |trim %}
-            <StatusFlag>{{ status_dict.get(status_item) |skipnull }}</StatusFlag>
-            {% endfor %}
+    <!--# Add in elements per the EAXS "header-type" type. #-->
+    <!--#
+    TODO: What's the source for the optional <Comments> element? I can't find anything
+    in RFC 4021 (at least I think that's the correct spec to look at).
+    #-->
+    {% for name, value in message.items() %}
+    <Header>
+        <Name>{{ name }}</Name>
+        <Value>{{ value |cdata }}</Value>
+        <Comments></Comments>
+    </Header>
+    {% endfor %}
 
-            <!--# ??? TODO: if multibody then include Multibody.xml ... otherwise include Body.xml ... or something like that? ... #-->
-            {% if not message.is_multipart() %}
-                {% include "SingleBody.xml" %}
-            {% else %}
-                {% include "MultiBody.xml" %}
-            {% endif %}
+    <!--# Add in the element that shows the message status (read, answered, etc.).
+    Note: this logic is based on https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
+    #-->
+    <!--#
+    TODO: Is there support for "Draft" or "Recent" in other DarcMail packages ??? 
+    TODO: Maybe put this in a Python script. Anything that requires looping, look-ups, etc. should go into external logic, yes?
+        Well, the problem is that makes it harder to see how the element is constructed.
+        It might be better to leave the external Python stuff for things that are too complex to put in the template itself.
+    #-->
+    {% set status = message.get("status", failobj="") + message.get("x-status", failobj="") %}
+    {% set status_dict = {"R": "Seen", "A": "Answered", "F": "Flagged", "D": "Deleted"} %}
+    {% for status_item in status |trim %}
+    <StatusFlag>{{ status_dict.get(status_item) |skipnull }}</StatusFlag>
+    {% endfor %}
 
-            <!--# Add in the element that shows parse errors. #-->
-            {% for type, location in message.parse_errors %}
-            <Incomplete>
-                <ErrorType>Python: {{ type }}</ErrorType>
-                <ErrorLocation>{{ location }}</ErrorLocation>
-            </Incomplete>
-            {% endfor %}
+    <!--# ??? TODO: if multibody then include Multibody.xml ... otherwise include Body.xml ... or something like that? ... #-->
+    {% if not message.is_multipart() %}
+        {% set msg = message %}    
+        {% filter indent(width=4, first=True) %}
+            {% include "SingleBody.xml" %}
+        {% endfilter %}
+    {% else %}
+        {% filter indent(width=4, first=True) %}
+            {% include "MultiBody.xml" %}
+        {% endfilter %}
+    {% endif %}
 
-            <!--# Add in the end-of-line element. #-->
-            <Eol>{{ EAXSHelpers.get_eol(message) }}</Eol>
+    <!--# Add in the element that shows parse errors. #-->
+    {% for type, location in message.parse_errors %}
+    <Incomplete>
+        <ErrorType>Python: {{ type }}</ErrorType>
+        <ErrorLocation>{{ location }}</ErrorLocation>
+    </Incomplete>
+    {% endfor %}
 
-        </Message>
-        <!--# The "raw" block below forces a line break. #-->
-        {% raw %}{% endraw %}
-        
+    <!--# Add in the end-of-line element. #-->
+    <Eol>{{ EAXSHelpers.get_eol(message) }}</Eol>
+
+</Message>
+<!--# The "raw" block below forces a line break. #-->
+{% raw %}{% endraw %}

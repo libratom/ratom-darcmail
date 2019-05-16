@@ -8,103 +8,103 @@ TODO:
         "/attachments/*.attachment".
 #-->
 
-            <SingleBody>
+<SingleBody>
 
-                <!--# Get content type. If there is no Content-Type, this falls back to 
-                message_body.get_default_type() aka "text/plain" as required by EAXS. #-->
-                <ContentType>{{ message_body.get_content_type() }}</ContentType>
-                
-                <Charset>{{ message_body.get_content_charset(failobj="us-ascii") }}</Charset>
-
-                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW.
-                FYI: TOMES DarcMail equates this to Content-Description. #-->
-                <ContentName>{{ message_body.get_params(header="content-description") |skipnull |cdata }}</ContentName>
-                
-                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-                <ContentTypeComments></ContentTypeComments>
-                
-                <!--# TODO: document this. #-->
-                {% set message_params = EAXSHelpers.filter_params(message_body.get_params()) %}
-                {% if message_params |length != 0 %}
-                <ContentTypeParam>
-                {% for name, value in message_params %}
-                    <Name>{{ name }}</Name>
-                    <Value>{{ value }}</Value>
-                {% endfor %}
-                </ContentTypeParam>
-                {% endif %}
-
-                <TransferEncoding>{{ message_body.get("content-transfer-encoding") |skipnull }}</TransferEncoding>
-                
-                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-                <TransferEncodingComments></TransferEncodingComments>
-
-                <ContentId>{{ message_body.get("content-id") |skipnull |cdata }}</ContentId>
+    <!--# Get content type. If there is no Content-Type, this falls back to 
+    msg.get_default_type() aka "text/plain" as required by EAXS. #-->
+    <ContentType>{{ msg.get_content_type() }}</ContentType>
     
-                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-                <ContentIdComments></ContentIdComments>
+    <Charset>{{ msg.get_content_charset(failobj="us-ascii") }}</Charset>
 
-                <!--# TODO: still check RFC-4021 for the source of this; because it's not clear what this
-                element is about. It's optional BTW. #-->
-                <Description>{{ message_body.get("content-description") |skipnull |cdata }}</Description>
-                
-                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-                <DescriptionComments></DescriptionComments>
-
-                <Disposition>{{message_body.get_content_disposition() |skipnull }}</Disposition>
-                <DispositionFileName>{{message_body.get_filename() |skipnull }}</DispositionFileName>
-
-                <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-                <DispositionComments></DispositionComments>
-
-                {% set disposition_params = EAXSHelpers.filter_params(
-                    message_body.get_params(header="content-disposition"),
-                    ["filename"])
-                %}
-                {% if disposition_params |length != 0 %}
-                <DispositionParams>
-                {% for name, value in disposition_params %}
-                    <Name>{{ name }}</Name>
-                    <Value>{{ value }}</Value>
-                {% endfor %}
-                </DispositionParams>
-                {% endif %}
-
-            <!--# Skip. This is not clear. Not currently implemented in TOMES DarcMail either.
-            TODO: What about Smithsonian DarcMail?
-            <OtherMimeHeader></OtherMimeHeader>
-            #-->
-
-            <!--# TODO: Implement ExtBodyContent option for messages? #-->
-            {% if None is not defined %}
-                <BodyContent>
-                <!--#Content><![CDATA[{% for part in message_body.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content#-->
-                    <!--# TODO: Work on this. Needs to be printable? #-->
-                    <Content>{{ message_body.as_string() |cdata }}</Content>
-                    <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
-                </BodyContent>
-            {% else %}
-            <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
-                <ExtBodyContent>
-                    {% set ext_file = EAXSHelpers.write_message(message_body) %}
-                    <RelPath>{{ ext_path }}</RelPath>
-                    <CharSet>{{ message_body.get_content_charset() |skipnull }}</CharSet>
-                    <TransferEncoding>{{ message_body.get("content-transfer-encoding") }}</TransferEncoding>
-                    <LocalId>{{ message_body.account.current_id }}</LocalId>
-                    <XMLWrapped>false</XMLWrapped>
-                    <Eol>{{ EAXSHelpers.get_eol(message_body) }}</Eol>
-                    <!--# ??? Implement? <Hash></Hash> #-->
-                </ExtBodyContent>
-                <!--# Skip Childmessage_body. EAXS XSD does not describe this well enough to implement.
-                    <ChildMessage></ChildMessage>
-                #-->
-            {% endif %}
+    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW.
+    FYI: TOMES DarcMail equates this to Content-Description. #-->
+    <ContentName>{{ msg.get_params(header="content-description") |skipnull |cdata }}</ContentName>
     
-            <!--# Skip. EAXS XSD does not describe this well enough to implement.
-            TODO: I'm not sure about that: it's for "message/external-body" so research that before
-            giving up on this element.
-                <PhantomBody></PhantomBody>
-            #-->
-            </SingleBody>
-            <!--# The "raw" block below forces a line break. #-->
-            {% raw %}{% endraw %}
+    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
+    <ContentTypeComments></ContentTypeComments>
+    
+    <!--# TODO: document this. #-->
+    {% set message_params = EAXSHelpers.filter_params(msg.get_params()) %}
+    {% if message_params |length != 0 %}
+    <ContentTypeParam>
+    {% for name, value in message_params %}
+        <Name>{{ name }}</Name>
+        <Value>{{ value }}</Value>
+    {% endfor %}
+    </ContentTypeParam>
+    {% endif %}
+
+    <TransferEncoding>{{ msg.get("content-transfer-encoding") |skipnull }}</TransferEncoding>
+    
+    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
+    <TransferEncodingComments></TransferEncodingComments>
+
+    <ContentId>{{ msg.get("content-id") |skipnull |cdata }}</ContentId>
+
+    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
+    <ContentIdComments></ContentIdComments>
+
+    <!--# TODO: still check RFC-4021 for the source of this; because it's not clear what this
+    element is about. It's optional BTW. #-->
+    <Description>{{ msg.get("content-description") |skipnull |cdata }}</Description>
+    
+    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
+    <DescriptionComments></DescriptionComments>
+
+    <Disposition>{{msg.get_content_disposition() |skipnull }}</Disposition>
+    <DispositionFileName>{{msg.get_filename() |skipnull }}</DispositionFileName>
+
+    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
+    <DispositionComments></DispositionComments>
+
+    {% set disposition_params = EAXSHelpers.filter_params(
+        msg.get_params(header="content-disposition"),
+        ["filename"])
+    %}
+    {% if disposition_params |length != 0 %}
+    <DispositionParams>
+    {% for name, value in disposition_params %}
+        <Name>{{ name }}</Name>
+        <Value>{{ value }}</Value>
+    {% endfor %}
+    </DispositionParams>
+    {% endif %}
+
+<!--# Skip. This is not clear. Not currently implemented in TOMES DarcMail either.
+TODO: What about Smithsonian DarcMail?
+<OtherMimeHeader></OtherMimeHeader>
+#-->
+
+<!--# TODO: Implement ExtBodyContent option for messages? #-->
+{% if None is not defined %}
+    <BodyContent>
+    <!--#Content><![CDATA[{% for part in msg.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content#-->
+        <!--# TODO: Work on this. Needs to be printable? #-->
+        <Content>{{ msg.as_string() |cdata }}</Content>
+        <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
+    </BodyContent>
+{% else %}
+<!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
+    <ExtBodyContent>
+        {% set ext_file = EAXSHelpers.write_message(msg) %}
+        <RelPath>{{ ext_path }}</RelPath>
+        <CharSet>{{ msg.get_content_charset() |skipnull }}</CharSet>
+        <TransferEncoding>{{ msg.get("content-transfer-encoding") }}</TransferEncoding>
+        <LocalId>{{ msg.account.current_id }}</LocalId>
+        <XMLWrapped>false</XMLWrapped>
+        <Eol>{{ EAXSHelpers.get_eol(msg) }}</Eol>
+        <!--# ??? Implement? <Hash></Hash> #-->
+    </ExtBodyContent>
+    <!--# Skip Childmsg. EAXS XSD does not describe this well enough to implement.
+        <ChildMessage></ChildMessage>
+    #-->
+{% endif %}
+
+<!--# Skip. EAXS XSD does not describe this well enough to implement.
+TODO: I'm not sure about that: it's for "message/external-body" so research that before
+giving up on this element.
+    <PhantomBody></PhantomBody>
+#-->
+</SingleBody>
+<!--# The "raw" block below forces a line break. #-->
+{% raw %}{% endraw %}

@@ -4,6 +4,9 @@
 
 Todo:
     * You should look into adding @self.email.defects to @self.parse_errors if it makes sense.
+    * The @write_path attribute is likely overreach. I don't think this class should be making that
+    level of determination for a user. Granted, they can throw it away so maybe it's OK. Think about
+    it. Maybe just add the word "proposed" or "suggested" to the docstring.
     * Probably want to add documentation here as to why you didn't just subclass
     email.message.Message - because it helps with intercepting via __getattr__ through which we'll
     update @self.parse_errors.
@@ -85,9 +88,9 @@ class MessageObject():
         
         # create dict to return.
         parse_error = {"error_obj": err, 
-                "timestamp": datetime.now().isoformat(), 
-                "traceback_obj": traceback_obj,
-                "traceback_lines": traceback_lines}
+            "timestamp": datetime.now().isoformat(), 
+            "traceback_obj": traceback_obj,
+            "traceback_lines": traceback_lines}
        
         return parse_error
 
@@ -142,7 +145,7 @@ class MessageObject():
         Args:
             - msg (MessageObject): If left as None, the "mock_path" will be relative to @self. 
             Otherwise, it will be relative to this @msg. The only use of this argument is expected
-            to be a call from @self._build_parts(). 
+            to be a call from @self._get_parts(). 
         
         Returns:
             tuple: The return value.

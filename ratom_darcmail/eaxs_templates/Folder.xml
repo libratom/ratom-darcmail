@@ -11,29 +11,31 @@ It is related to the lib.folder_object.FolderObject module.
     
     <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
     {% for open_folder in EAXSHelpers.close_folders(folder, OPENED_FOLDERS) %}
-    </Folder>
+</Folder>
+{% endfor %}
+
+<!--# Add in <Folder> child elements including <Message>. #-->
+<Folder>
+    <Name>{{ folder.basename }}</Name>
+    {% for message in folder.get_messages() %}
+        {% filter indent(width=4, first=True) %}
+            {% include "Message.xml" %}
+        {% endfilter %}
     {% endfor %}
 
-    <!--# Add in <Folder> child elements including <Message>. #-->
-    <Folder>
-        <Name>{{ folder.basename }}</Name>
-        {% for message in folder.get_messages() %}
-            {% include "Message.xml" %}
-        {% endfor %}
-
-        <!--# If the account is an MBOX (i.e. not EML), add in the <Mbox> element. #-->
-        {% if not DarcMail.account.is_eml %}
-        {% for mbox in [] %}
-        <Mbox>
-            <RelPath>{{ mbox }}</RelPath>
-            <<Eol>{{ EAXSHelpers.get_eol(mbox) }}</Eol>
-            <!--# 
-            The <Hash> element is not implemented.
-            It seems METS, Bagger, etc. would be better options for storing file checksums.
-            #-->
-        </Mbox>
-        {% endfor %}
-        {% endif %}
+    <!--# If the account is an MBOX (i.e. not EML), add in the <Mbox> element. #-->
+    {% if not DarcMail.account.is_eml %}
+    {% for mbox in [] %}
+    <Mbox>
+        <RelPath>{{ mbox }}</RelPath>
+        <<Eol>{{ EAXSHelpers.get_eol(mbox) }}</Eol>
+        <!--# 
+        The <Hash> element is not implemented.
+        It seems METS, Bagger, etc. would be better options for storing file checksums.
+        #-->
+    </Mbox>
+    {% endfor %}
+    {% endif %}
 
 {% endfor%}
 
@@ -41,5 +43,5 @@ It is related to the lib.folder_object.FolderObject module.
 Even though the output isn't effected, it's more proper to use "reverse" because each @folder in
 @OPENED_FOLDERS is a child of the item that precedes it. #-->
 {% for folder in OPENED_FOLDERS |reverse %}
-    </Folder>
+</Folder>
 {% endfor %}

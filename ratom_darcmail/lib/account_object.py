@@ -72,6 +72,9 @@ class AccountObject():
         # loop through @self.path's folders.
         for dirpath, dirnames, filenames in os.walk(self.path):
             
+            # remove unused var.
+            del filenames
+
             # sort folders per: https://stackoverflow.com/a/6670926.
             dirnames.sort()
             

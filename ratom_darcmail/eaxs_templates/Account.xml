@@ -25,6 +25,7 @@ and element that needs to be rendered.
         <myElement>{{ some_object }}</myElement> # But not here.
     
 TODO: 
+    * Work on first-level indents in all templates since you're now using an indent on "include"s.
     * Add EAXS XSD URI back to XML header. Remember: It's still on GitHub!
     * The EAXS schema seems to explicitly say when to use CDATA; TOMES DarcMail seems to use CDATA 
     blocks more liberally. This might be a problem that shouldn't get replicated here. So check
@@ -54,5 +55,7 @@ TODO:
 
 
 <!--# Add in <Folder> elements. #-->
+{% filter indent(width=4, first=True) %}
 {% include "Folder.xml" %}
+{% endfilter %}
 </Account>
