@@ -70,21 +70,21 @@ TODO:
     </DispositionParams>
     {% endif %}
 
-<!--# Skip. This is not clear. Not currently implemented in TOMES DarcMail either.
-TODO: What about Smithsonian DarcMail?
-<OtherMimeHeader></OtherMimeHeader>
-#-->
+    <!--# Skip. This is not clear. Not currently implemented in TOMES DarcMail either.
+    TODO: What about Smithsonian DarcMail?
+    <OtherMimeHeader></OtherMimeHeader>
+    #-->
 
-<!--# TODO: Implement ExtBodyContent option for messages? #-->
-{% if None is not defined %}
+    <!--# TODO: Implement ExtBodyContent option for messages? #-->
+    {% if None is not defined %}
     <BodyContent>
     <!--#Content><![CDATA[{% for part in msg.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content#-->
         <!--# TODO: Work on this. Needs to be printable? #-->
         <Content>{{ msg.as_string() |cdata }}</Content>
         <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
     </BodyContent>
-{% else %}
-<!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
+    {% else %}
+    <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
     <ExtBodyContent>
         {% set ext_file = EAXSHelpers.write_message(msg) %}
         <RelPath>{{ ext_path }}</RelPath>
@@ -95,16 +95,18 @@ TODO: What about Smithsonian DarcMail?
         <Eol>{{ EAXSHelpers.get_eol(msg) }}</Eol>
         <!--# ??? Implement? <Hash></Hash> #-->
     </ExtBodyContent>
-    <!--# Skip Childmsg. EAXS XSD does not describe this well enough to implement.
+
+    <!--# Skip. EAXS XSD does not describe this well enough to implement.
         <ChildMessage></ChildMessage>
     #-->
-{% endif %}
+    {% endif %}
 
 <!--# Skip. EAXS XSD does not describe this well enough to implement.
 TODO: I'm not sure about that: it's for "message/external-body" so research that before
 giving up on this element.
     <PhantomBody></PhantomBody>
 #-->
+
 </SingleBody>
 <!--# The "raw" block below forces a line break. #-->
 {% raw %}{% endraw %}
