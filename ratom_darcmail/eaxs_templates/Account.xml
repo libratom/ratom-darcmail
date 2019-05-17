@@ -32,7 +32,20 @@ TODO:
     when you should/shouldn't use CDATA. 
     * Filters should NOT have a space before/after the pipe. DO: "l|reverse" NOT: "l | reverse".
         - Let men ammend that: DO "l |reverse" - it's easier to read.
-    * You should have a graph in this file that shows the overall include structure to build EAXS.
+    * You should have a graph in this file that shows the overall include structure to build EAXS:
+        % start %
+        Account.xml
+            Folder.xml
+                % for each message%
+                    Message.xml
+                    % if message is multi-part %
+                        MultiBody.xml
+                        xm-body-type.xml
+                        SingleBody.xml
+                    % else %
+                        SingleBody.xml
+                        xm-body-type.xml
+        % end %
     * It might be easier to read if all vars you create inside template are CAPS.
 #-->
 
