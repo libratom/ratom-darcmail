@@ -3,6 +3,7 @@ This template represents the EAXS <Folder> element.
 It is related to the lib.folder_object.FolderObject module.
 #-->
 
+
 <!--# Create a list to track open <Folder> elements. #-->
 {% set OPENED_FOLDERS = [] %}
 

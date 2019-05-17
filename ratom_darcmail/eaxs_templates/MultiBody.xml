@@ -19,6 +19,9 @@ TODO:
 <!--# Add in <MultiBody> child elements. #-->
 {% if msg.is_multipart() %}
 <MultiBody att="{{ msg.mock_path |normalize_path }}">
+{% filter indent(width=4, first=True) %}
+    {% include "xm-body-type.xml" %}
+{% endfilter %}
 {% else %}
     <SBody att="{{ msg.mock_path |normalize_path }}" />
     <!--# {% include "SingleBody.xml" %} #-->

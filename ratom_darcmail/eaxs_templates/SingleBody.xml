@@ -1,4 +1,3 @@
-
 <!--# 
 TODO:
     * Make sure you use skipnull and cdata wherever needed.
@@ -8,72 +7,12 @@ TODO:
         "/attachments/*.attachment".
 #-->
 
+
 <SingleBody>
-
-    <!--# Get content type. If there is no Content-Type, this falls back to 
-    msg.get_default_type() aka "text/plain" as required by EAXS. #-->
-    <ContentType>{{ msg.get_content_type() }}</ContentType>
     
-    <Charset>{{ msg.get_content_charset(failobj="us-ascii") }}</Charset>
-
-    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW.
-    FYI: TOMES DarcMail equates this to Content-Description. #-->
-    <ContentName>{{ msg.get_params(header="content-description") |skipnull |cdata }}</ContentName>
-    
-    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-    <ContentTypeComments></ContentTypeComments>
-    
-    <!--# TODO: document this. #-->
-    {% set message_params = EAXSHelpers.filter_params(msg.get_params()) %}
-    {% if message_params |length != 0 %}
-    <ContentTypeParam>
-    {% for name, value in message_params %}
-        <Name>{{ name }}</Name>
-        <Value>{{ value }}</Value>
-    {% endfor %}
-    </ContentTypeParam>
-    {% endif %}
-
-    <TransferEncoding>{{ msg.get("content-transfer-encoding") |skipnull }}</TransferEncoding>
-    
-    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-    <TransferEncodingComments></TransferEncodingComments>
-
-    <ContentId>{{ msg.get("content-id") |skipnull |cdata }}</ContentId>
-
-    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-    <ContentIdComments></ContentIdComments>
-
-    <!--# TODO: still check RFC-4021 for the source of this; because it's not clear what this
-    element is about. It's optional BTW. #-->
-    <Description>{{ msg.get("content-description") |skipnull |cdata }}</Description>
-    
-    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-    <DescriptionComments></DescriptionComments>
-
-    <Disposition>{{msg.get_content_disposition() |skipnull }}</Disposition>
-    <DispositionFileName>{{msg.get_filename() |skipnull }}</DispositionFileName>
-
-    <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
-    <DispositionComments></DispositionComments>
-
-    {% set disposition_params = EAXSHelpers.filter_params(
-        msg.get_params(header="content-disposition"),
-        ["filename"])
-    %}
-    {% if disposition_params |length != 0 %}
-    <DispositionParams>
-    {% for name, value in disposition_params %}
-        <Name>{{ name }}</Name>
-        <Value>{{ value }}</Value>
-    {% endfor %}
-    </DispositionParams>
-    {% endif %}
-
-    <!--# Skip. This is not clear. Not currently implemented in TOMES DarcMail either.
-    TODO: What about Smithsonian DarcMail?
-    <OtherMimeHeader></OtherMimeHeader>
-    #-->
+    {% filter indent(width=4, first=True) %}
+        {% include "xm-body-type.xml" %}
+    {% endfilter %}
 
     <!--# TODO: Implement ExtBodyContent option for messages? #-->
     {% if None is not defined %}

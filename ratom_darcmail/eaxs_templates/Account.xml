@@ -32,14 +32,17 @@ TODO:
     when you should/shouldn't use CDATA. 
     * Filters should NOT have a space before/after the pipe. DO: "l|reverse" NOT: "l | reverse".
         - Let men ammend that: DO "l |reverse" - it's easier to read.
+    * You should have a graph in this file that shows the overall include structure to build EAXS.
+    * It might be easier to read if all vars you create inside template are CAPS.
 #-->
 
+
+<!-- EAXS source data: {{ DarcMail.account.path }} -->
 {% for email_address in DarcMail.account.email_addresses %}
     <EmailAddress>{{ email_address |cdata }}</EmailAddress>
 {% endfor %}
 
     <GlobalId>{{ DarcMail.account.global_id |cdata }}</GlobalId>
-
 
 {% if DarcMail.account.references_account is defined %}
     <ReferencesAccount>
@@ -52,7 +55,6 @@ TODO:
         <RefType>{{ DarcMail.account.references_account["ref_type"] }}</RefType>
     </ReferencesAccount>
 {% endif %}
-
 
 <!--# Add in <Folder> elements. #-->
 {% filter indent(width=4, first=True) %}
