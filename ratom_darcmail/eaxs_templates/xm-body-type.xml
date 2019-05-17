@@ -59,7 +59,7 @@ element is about. It's optional BTW. #-->
     ["filename"])
 %}
 {% if disposition_params |length != 0 %}
-{% set disposition_element = "DispositionParam" if msg.is_multipart() else "DispositionParam" %} <!--# Document why this is! A typo! #-->
+{% set disposition_element = "DispositionParam" if msg.is_multipart() else "DispositionParams" %} <!--# TODO: document why this is! A typo! #-->
 <{{ disposition_element }}>
 {% for name, value in disposition_params %}
     <Name>{{ name }}</Name>
