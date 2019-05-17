@@ -22,6 +22,7 @@ TODO:
 {% filter indent(width=4, first=True) %}
     {% include "xm-body-type.xml" %}
 {% endfilter %}
+    <!--<Preamble></Preamble>--> <!--# TODO: fill in; move this to xm-body-type.xml #-->
 {% else %}
     {% filter indent(width=4, first=True) %}
         {% include "SingleBody.xml" %}
@@ -30,8 +31,16 @@ TODO:
     end up with an stray closing MultiBody tags. #-->
     {% if OPENED_MULTIBODIES.pop() %}{% endif %}
 {% endif %}
+<!--<Epilogue></Epilogue>-->  <!--# TODO: fill in; this isn't in the write place. 
+    I think when you're closing MultiBody you'll need to: 
+    for open_multibody in OPENED_MULTIBODIES:
+        <Epilogue>{{ get epilogue from open_multibody }}<Epilogue></Epilogue>
+        </MultiBody>
+    ps: Looked like msg.preamble|epilogue can return None or an empty string. So skip the element
+    if None, otherwise create the element with no value.
+    #-->
 {% endfor %}
 
-{% for msg in OPENED_MULTIBODIES |reverse %}
+{% for open_multibody in OPENED_MULTIBODIES |reverse %}
 </MultiBody>
 {% endfor %}
