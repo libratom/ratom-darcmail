@@ -13,6 +13,10 @@ This template represents shared element of xm:multi-body-type and xm-single-body
 FYI: TOMES DarcMail equates this to Content-Description. #-->
 <ContentName>{{ msg.get_params(header="content-description") |skipnull |cdata }}</ContentName>
 
+{% if msg.is_multipart() %}
+<BoundaryString>{{ msg.get_boundary() }}</BoundaryString>
+{% endif %}
+
 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
 <ContentTypeComments></ContentTypeComments>
 

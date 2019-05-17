@@ -18,13 +18,14 @@ TODO:
 
 <!--# Add in <MultiBody> child elements. #-->
 {% if msg.is_multipart() %}
-<MultiBody att="{{ msg.mock_path |normalize_path }}">
+<MultiBody>
 {% filter indent(width=4, first=True) %}
     {% include "xm-body-type.xml" %}
 {% endfilter %}
 {% else %}
-    <SBody att="{{ msg.mock_path |normalize_path }}" />
-    <!--# {% include "SingleBody.xml" %} #-->
+    {% filter indent(width=4, first=True) %}
+        {% include "SingleBody.xml" %}
+    {% endfilter %}
     <!--# Because this is a SingleBody element, remove it from @OPENED_MULTIBODIES so that we don't
     end up with an stray closing MultiBody tags. #-->
     {% if OPENED_MULTIBODIES.pop() %}{% endif %}

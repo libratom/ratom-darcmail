@@ -29,7 +29,7 @@ TODO:
         <RelPath>{{ ext_path }}</RelPath>
         <CharSet>{{ msg.get_content_charset() |skipnull }}</CharSet>
         <TransferEncoding>{{ msg.get("content-transfer-encoding") }}</TransferEncoding>
-        <LocalId>{{ msg.account.current_id }}</LocalId>
+        <LocalId>{{ msg.local_id }}</LocalId>
         <XMLWrapped>false</XMLWrapped>
         <Eol>{{ EAXSHelpers.get_eol(msg) }}</Eol>
         <!--# ??? Implement? <Hash></Hash> #-->
