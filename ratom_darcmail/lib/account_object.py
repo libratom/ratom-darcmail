@@ -7,6 +7,9 @@ Todo:
     to a message that's already been yielded via repeated called to get_messages(). OR ... there
     needs to be an understanding that one had better do everything they need to with a message
     as soon as it's yielded and store it in their own data structure if they need to re-refer to it.
+        - There's no reason you can't create an id incrementer inside the template itself. But I
+        still think you'll want a unique ID for each MessageObject but it won't need to be an int so
+        you can have submessages have id's in the form "{rootMessageID}_{subMessageID}", etc.
     * Generator methods should start with "gen_" and list methods should start with "list_".
     * How are attachements going to be read if they aren't embedded into the EML/MBOX, i.e. are
     real, external files?
