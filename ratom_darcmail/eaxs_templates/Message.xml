@@ -14,6 +14,8 @@ present (valid identifiers, etc.).
 <Message>
 
     <!--# Add in the initial child elements. #-->
+    <!--# TODO: RelPath is supposed to be the containing folder not the file. Adding a Header is a 
+    bad way of getting the filename, I'd rather do something like "inbox#1_.eml" since that's still a URI. #-->
     <RelPath>{{ message.rel_path |normalize_path }}</RelPath>
     <LocalId>{{ message.local_id }}</LocalId>
 

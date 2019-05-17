@@ -125,7 +125,7 @@ class EAXSMaker():
         
         # create a unique string to indicate which rendered lines to omit from final output.
         # see @self.env.filters["skipnull"], below.
-        self._skip_hash = "skip_" + time.time().hex()
+        self._skip_hash = "skip_" + time.time().hex() #TODO: should probably use hashlib here.
 
         # add custom filters to @self.env.filters.
         self.env.filters["skipnull"] = (lambda text: text if text is not None else self._skip_hash) 
