@@ -29,7 +29,7 @@ def _get_string(data):
 
 
 def main(obj):
-    """ Gets the end-of-line value of @obj. This addresses the EAXS <Eol> elements.
+    """ Gets the end-of-line value of @obj. This addresses EAXS <Eol> elements.
 
     Args:
         - obj (object): This must be a message_object.MessageObject, a path to a file (str), or 
@@ -40,7 +40,6 @@ def main(obj):
         Valid return values are "LF", "CR", and "CRLN". These are respective aliases for "\n",
         "\r", and "\r\n".
     """
-
 
     logging.debug("Looking up EOL for: {}".format(obj))
 

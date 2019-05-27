@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+import logging
+
 IS_HELPER = True
+
 
 def main(params, restrictions=["id", "name"]):
     """ Returns a copy of @params in which items are filtered out per @resttrictions. This is meant
@@ -18,6 +21,8 @@ def main(params, restrictions=["id", "name"]):
         list: The return type.
         If @params is None, the list is empty.
     """
+
+    #TODO: add logging here and in the loop.
 
     # if needed, fallback to an empty list.
     if params is None:

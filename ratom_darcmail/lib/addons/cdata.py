@@ -7,6 +7,7 @@ from ..addons import escape_cdata
 
 IS_HELPER = False
 
+
 def main(text):
     """ This custom Jinja2 filter converts wraps @text as CDATA. If needed, ending CDATA blocks are 
     escaped. Also, any XML-illegal line endings are converted to "\n".  
@@ -16,7 +17,12 @@ def main(text):
 
     Returns:
         str: The return value.
+
+TODO: Consider an optional param. If True, CDATA is returned. If False, CDATA is outputted only
+if @text can't otherwise be written to an XML element. This can prevent overuse of CDATA.
     """
+
+    #TODO: Add logging here.
 
     # if needed, fallback to string.
     if text is None:

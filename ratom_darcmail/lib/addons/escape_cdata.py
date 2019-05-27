@@ -4,6 +4,7 @@ import logging
 
 IS_HELPER = False
 
+
 def main(text):
     """ This custom Jinja2 filter escapes any ending CDATA blocks in @text.
 

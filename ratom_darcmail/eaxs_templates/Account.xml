@@ -22,7 +22,8 @@ TODO:
     "include".
     * The EAXS schema seems to explicitly say when to use CDATA; TOMES DarcMail seems to use CDATA 
     blocks more liberally. This might be a problem that shouldn't get replicated here. So check
-    when you should/shouldn't use CDATA. The "cdata" filter can export CDATA only when needed.
+    when you should/shouldn't use CDATA. The "cdata" filter can be made to export CDATA only when
+    needed.
     * Filters notation: DO: "l |reverse" NOT: "l | reverse".
     * It might be easier to read if all vars you create inside template are CAPS.
 #-->
