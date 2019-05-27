@@ -12,7 +12,7 @@ Todo:
         you can have submessages have id's in the form "{rootMessageID}_{subMessageID}", etc.
     * Generator methods should start with "gen_" and list methods should start with "list_".
     * How are attachements going to be read if they aren't embedded into the EML/MBOX, i.e. are
-    real, external files?
+    real, external files? Would such ad MBOX/EML even exist (legally)?
 """
 
 # import modules.

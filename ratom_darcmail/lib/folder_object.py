@@ -6,7 +6,7 @@ Todo:
     * I'm not having success setting the "factory" for MBOX to email.message.EmailMessage so might
     need to make sure both EML and MBOX use email.message.Message. This needs to be documented big
     time.
-    * You might want to pass the charset down from the DarcMail object into the email policy.
+    * You'll want to pass the charset down from the DarcMail object into @_message_policy.
 """
 
 # import modules.
@@ -24,8 +24,7 @@ class FolderObject():
     """ A class that represents a Folder element within the EAXS context. """
 
 
-    def __init__(self, account, path, file_extension=None, message_policy=email.policy.Compat32(),
-        *args, **kwargs):
+    def __init__(self, account, path, file_extension=None, *args, **kwargs):
         """ Sets instance attributes. 
         
         Args:
@@ -53,15 +52,14 @@ class FolderObject():
         self.account = account
         self.path = path
         self.file_extension = file_extension
-        self.message_policy = message_policy
         self.args, self.kwargs = args, kwargs
 
         # set unpassed attributes.
+        self._message_policy = email.policy.Compat32()
         self.rel_path = os.path.relpath(self.path, self.account.path)
         self.basename = os.path.basename(self.rel_path)
         self.get_messages = (self._get_eml_messages if self.account.is_eml else 
             self._get_mbox_messages)
-
 
     def _get_eml_messages(self):
         """ Generator for each EML file in @self.path. Each item is a 
@@ -71,7 +69,7 @@ class FolderObject():
         for eml in self.get_files():
             with open(eml, "rb") as eml_bytes:
                 message = email.message_from_binary_file(eml_bytes, _class=email.message.Message,
-                policy=self.message_policy)
+                policy=self._message_policy)
             message_object = MessageObject(self, eml, message)
             yield message_object
         
@@ -87,7 +85,7 @@ class FolderObject():
         for mbox in self.get_files():
             
             mbox_obj = mailbox.mbox(mbox, factory=email.message.Message(
-                policy=self.message_policy))
+                policy=self._message_policy))
       
             for message in mbox_obj.values():
                 message_object = MessageObject(self, mbox, message)

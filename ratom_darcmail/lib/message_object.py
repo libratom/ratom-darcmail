@@ -4,11 +4,11 @@
 
 Todo:
     * Try making mock_path be a file-like string for single body messages - it's more "correct".
-        - Something like "inbox/..../4_#image.gif", i.e. with a "#" URI-style mark.
+        - Something like "inbox/..../4_image.gif".
     * You should look into adding @self.email.defects to @self.parse_errors if it makes sense.
     * The @write_path attribute is likely overreach. I don't think this class should be making that
     level of determination for a user. Granted, they can throw it away so maybe it's OK. Think about
-    it. Maybe just add the word "proposed" or "suggested" to the docstring.
+    it. Maybe keep it and just add the word "proposed" or "suggested" to the docstring.
     * Probably want to add documentation here as to why you didn't just subclass
     email.message.Message - because it helps with intercepting via __getattr__ through which we'll
     update @self.parse_errors.
