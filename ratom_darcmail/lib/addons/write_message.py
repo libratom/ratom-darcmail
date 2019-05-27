@@ -27,7 +27,7 @@ def main(msg):
     """
 
     # set the output path.
-    destination = msg.write_path 
+    destination = msg.write_path
 
     # make sure @destination doesn't exist.
     if os.path.isfile(destination):
@@ -58,4 +58,6 @@ def main(msg):
             part = part.as_string()
             fopen.write(part)
 
+    # TODO: figure out what you want to return!
+    destination = os.path.relpath(msg.write_path, msg.folder.account.darcmail.eaxs_container)
     return destination

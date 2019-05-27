@@ -1,54 +1,36 @@
+<!--# 
+This template represents the EAXS <Account> element. It is related to the 
+lib.account_object.AccountObject module. It includes other templates to form a complete EAXS 
+template representation.
+
+Note: This template (and the others) all have leading whitespace that matches what their indentation
+should be within the context of a rendered EAXS XML file. While indentation isn't required, it's
+a good idea to try for fairly well-indented XML.
+
+Note: Avoid placing Jinja2 comments or XML comments on the same line as something that will be 
+renderered. In other words:
+
+    # Put Jinja2 or XML comments here.
+    <myElement>{{ some_object }}</myElement>
+    # Or here.
+    <myElement>{{ some_object }}</myElement> # But not here.
+    
+TODO: 
+    * Add EAXS XSD URI back to XML header. Remember: It's still on GitHub and that's not great!
+    * Put these templates in a subfolder "/eaxs_v1".
+    * Work on first-level indents in all templates since you're now using an indent filter on 
+    "include".
+    * The EAXS schema seems to explicitly say when to use CDATA; TOMES DarcMail seems to use CDATA 
+    blocks more liberally. This might be a problem that shouldn't get replicated here. So check
+    when you should/shouldn't use CDATA. The "cdata" filter can export CDATA only when needed.
+    * Filters notation: DO: "l |reverse" NOT: "l | reverse".
+    * It might be easier to read if all vars you create inside template are CAPS.
+#-->
+
 <?xml version="1.0" encoding="{{ DarcMail.charset.upper() }}"?>
 <Account
 xmlns="https://github.com/StateArchivesOfNorthCarolina/tomes-eaxs" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<!--# 
-This template represents the EAXS <Account> element.
-It is related to the lib.account_object.AccountObject module.
-
-Note: this template (and the others) all have leading whitespace that matches what their indentation
-should be within the context of a rendered EAXS XML file. While indentation isn't required, it's
-a good idea to try for fairly well-indented XML.
-
-Note: the custom "cdata" filter is used as needed to wrap the data in a CDATA block.
-
-Note: avoid placing Jinja2 comments on the same line as an element that needs to be rendered because
-that can create issues: i.e. line breaks will be missing, making the XML harder to read. It might be
-best to also avoid writing XML comments (which will be rendered in the output) on the same line of
-and element that needs to be rendered.
-
-    In other words:
-
-        # Put Jinja2 or XML comments here.
-        <myElement>{{ some_object }}</myElement>
-        # Or here.
-        <myElement>{{ some_object }}</myElement> # But not here.
-    
-TODO: 
-    * Work on first-level indents in all templates since you're now using an indent on "in"
-    * Add EAXS XSD URI back to XML header. Remember: It's still on GitHub!
-    * The EAXS schema seems to explicitly say when to use CDATA; TOMES DarcMail seems to use CDATA 
-    blocks more liberally. This might be a problem that shouldn't get replicated here. So check
-    when you should/shouldn't use CDATA. 
-    * Filters should NOT have a space before/after the pipe. DO: "l|reverse" NOT: "l | reverse".
-        - Let men ammend that: DO "l |reverse" - it's easier to read.
-    * You should have a graph in this file that shows the overall include structure to build EAXS:
-        % start %
-        Account.xml
-            Folder.xml
-                % for each message%
-                    Message.xml
-                    % if message is multi-part %
-                        MultiBody.xml
-                        xm-body-type.xml
-                        SingleBody.xml
-                    % else %
-                        SingleBody.xml
-                        xm-body-type.xml
-        % end %
-    * It might be easier to read if all vars you create inside template are CAPS.
-#-->
-
 
 <!-- EAXS source data: {{ DarcMail.account.path }} -->
 {% for email_address in DarcMail.account.email_addresses %}
@@ -69,7 +51,7 @@ TODO:
     </ReferencesAccount>
 {% endif %}
 
-<!--# Add in <Folder> elements. #-->
+<!--# Add <Folder> elements. #-->
 {% filter indent(width=4, first=True) %}
     {% include "Folder.xml" %}
 {% endfilter %}

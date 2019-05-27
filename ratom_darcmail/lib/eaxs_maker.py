@@ -5,6 +5,7 @@ module also contains a private class that contains a custom Jinja2 template load
 
 Todo:
     * Do you want to add options to pass JINJA2 extensions, etc. through __init__()?
+    * I think skipnull might need to also skip empty strings.
 """
 
 # import logging.

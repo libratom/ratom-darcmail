@@ -1,12 +1,11 @@
 <!--# 
-TODO:
-    * Make sure you use skipnull and cdata wherever needed.
-    * Check all elements against schema for what elements are repeatable and make sure you are
-    supporting that.
-    * Need to store messages in "/messages" with ".message" extenstion VS attachments:
-        "/attachments/*.attachment".
-#-->
+This template represents the EAXS <SingleBody> element.
 
+TODO:
+    * Need to store messages in "/messages" with ".message" extenstion VS attachments:
+        "/attachments/*.attachment". Or something ... I still need to decide if the template does
+        this or if the underlying MessageObject does via @write_path attribute, etc.
+#-->
 
 <SingleBody>
     
@@ -14,38 +13,44 @@ TODO:
         {% include "xm-body-type.xml" %}
     {% endfilter %}
 
-    <!--# TODO: Implement ExtBodyContent option for messages? #-->
     {% if None is not defined %}
     <BodyContent>
-    <!--#Content><![CDATA[{% for part in msg.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content#-->
-        <!--# TODO: Work on this. Needs to be printable? #-->
+    <!--# TODO: Work on this. Needs to be printable?
+    And only work on this is you plan in writing messages inside the EAXS as an option.
+    Default should be to file.
+    <Content><![CDATA[{% for part in msg.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content>
+    #-->
         <Content>{{ msg.as_string() |cdata }}</Content>
         <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
     </BodyContent>
     {% else %}
-    <!--# TODO: work on ext_path, LocalId, EOL, etc. ... #-->
+    <!--# TODO: Work on @ext_path, LocalId (isn' this OK?), EOL (how is this not OK as is?) ... #-->
     <ExtBodyContent>
-        {% set ext_file = EAXSHelpers.write_message(msg) %}
-        <RelPath>{{ ext_path }}</RelPath>
+        {% set ext_path = EAXSHelpers.write_message(msg) %}
+        <RelPath>{{ ext_path |normalize_path }}</RelPath>
         <CharSet>{{ msg.get_content_charset() |skipnull }}</CharSet>
         <TransferEncoding>{{ msg.get("content-transfer-encoding") }}</TransferEncoding>
         <LocalId>{{ msg.local_id }}</LocalId>
         <XMLWrapped>false</XMLWrapped>
         <Eol>{{ EAXSHelpers.get_eol(msg) }}</Eol>
-        <!--# ??? Implement? <Hash></Hash> #-->
+        <!--# 
+        The <Hash> element is not implemented.
+        It seems METS, Bagger, etc. would be better options for storing file checksums.
+        #-->
     </ExtBodyContent>
 
     <!--# Skip. EAXS XSD does not describe this well enough to implement.
-        <ChildMessage></ChildMessage>
+    <ChildMessage></ChildMessage>
     #-->
     {% endif %}
 
-<!--# Skip. EAXS XSD does not describe this well enough to implement.
-TODO: I'm not sure about that: it's for "message/external-body" so research that before
-giving up on this element.
+    <!--# Skip. EAXS XSD does not describe this well enough to implement.
+    TODO: I'm not sure about that: it's for "message/external-body" so research that before
+    giving up on this element.
     <PhantomBody></PhantomBody>
-#-->
+    #-->
 
 </SingleBody>
-<!--# The "raw" block below forces a line break. #-->
+
+<!--# Force a line break. #-->
 {% raw %}{% endraw %}

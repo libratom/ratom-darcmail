@@ -12,6 +12,8 @@ Todo:
     * Probably want to add documentation here as to why you didn't just subclass
     email.message.Message - because it helps with intercepting via __getattr__ through which we'll
     update @self.parse_errors.
+    * You definitely want to create a logger exclusively for the interceptor: in case you want to
+    filter out those logs.
 """
 
 # import modules.

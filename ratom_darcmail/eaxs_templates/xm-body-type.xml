@@ -1,12 +1,13 @@
 <!--# 
-This template represents shared element of xm:multi-body-type and xm-single-body-type elements.
+This template represents "xm:multi-body-type" and "xm-single-body-type" elements as they are nearly
+identical.
 #-->
 
-
-<!--# Get content type. If there is no Content-Type, this falls back to msg.get_default_type() aka
-"text/plain" as required by EAXS. #-->
+<!--# If there is no Content-Type, this falls back to msg.get_default_type() aka "text/plain" as
+required by EAXS. #-->
 <ContentType>{{ msg.get_content_type() }}</ContentType>
 
+<!--# If there is no charset, fall back to "us-ascii" as required by EAXS. #-->
 <Charset>{{ msg.get_content_charset(failobj="us-ascii") }}</Charset>
 
 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW.
@@ -20,7 +21,6 @@ FYI: TOMES DarcMail equates this to Content-Description. #-->
 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
 <ContentTypeComments></ContentTypeComments>
 
-<!--# TODO: document this. #-->
 {% set message_params = EAXSHelpers.filter_params(msg.get_params()) %}
 {% if message_params |length != 0 %}
 <ContentTypeParam>
@@ -54,12 +54,13 @@ element is about. It's optional BTW. #-->
 <!--# TODO: check RFC-4021 for the source of this. It's optional BTW. #-->
 <DispositionComments></DispositionComments>
 
-{% set disposition_params = EAXSHelpers.filter_params(
-    msg.get_params(header="content-disposition"),
-    ["filename"])
-%}
+<!--# TODO: document why is either singular or plural "params" - because there's a typo in the XSD!
+Link to the issue in GitHub.
+#-->
+{% set disposition_params = EAXSHelpers.filter_params(msg.get_params(header="content-disposition"),
+    ["filename"]) %}
 {% if disposition_params |length != 0 %}
-{% set disposition_element = "DispositionParam" if msg.is_multipart() else "DispositionParams" %} <!--# TODO: document why this is! A typo! #-->
+{% set disposition_element = "DispositionParam" if msg.is_multipart() else "DispositionParams" %}
 <{{ disposition_element }}>
 {% for name, value in disposition_params %}
     <Name>{{ name }}</Name>
@@ -68,7 +69,12 @@ element is about. It's optional BTW. #-->
 </{{ disposition_element }}>
 {% endif %}
 
-<!--# Skip. This is not clear. Not currently implemented in TOMES DarcMail either.
-TODO: What about Smithsonian DarcMail?
+<!--# Skip. EAXS XSD does not describe this well enough to implement.
+Not currently implemented in TOMES DarcMail either.
+TODO: What about Smithsonian DarcMail? Make sure before you give up on this element.
 <OtherMimeHeader></OtherMimeHeader>
 #-->
+
+{% if msg.is_multipart() %}
+<Preamble>{{ msg.preamble |skipnull }}</Preamble>
+{% endif %}

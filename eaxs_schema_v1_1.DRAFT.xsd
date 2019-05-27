@@ -536,6 +536,8 @@
       
       Should re-implement the thing that prevents redundant RTF copies of messages?
       ???
+	  
+	  "the absolute path from which this XML file was accessed" - how is this possible to know from WHERE it will be ACCESSED? It should be relative to the EAXS path.
       -->
       <element name="CharSet" type="string" minOccurs="0">
         <annotation>

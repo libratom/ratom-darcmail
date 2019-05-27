@@ -3,11 +3,10 @@ This template represents the EAXS <Folder> element.
 It is related to the lib.folder_object.FolderObject module.
 #-->
 
-
 <!--# Create a list to track open <Folder> elements. #-->
 {% set OPENED_FOLDERS = [] %}
 
-<!--# Loop through each folder object and create <Folder> elements. #-->
+<!--# The "main loop", i.e. creates <Folder> elements for each FolderObject. #-->
 {% for folder in DarcMail.account.get_folders() %}
     
 <!--# Close open <Folder> elements from previous iterations of the main loop. #-->
@@ -15,16 +14,17 @@ It is related to the lib.folder_object.FolderObject module.
 </Folder>
 {% endfor %}
 
-<!--# Add in <Folder> child elements including <Message>. #-->
+<!--# Add <Folder> child elements. #-->
 <Folder>
     <Name>{{ folder.basename }}</Name>
+    <!--# Add <Message> elements. #-->
     {% for message in folder.get_messages() %}
         {% filter indent(width=4, first=True) %}
             {% include "Message.xml" %}
         {% endfilter %}
     {% endfor %}
 
-    <!--# If the account is an MBOX (i.e. not EML), add in the <Mbox> element. #-->
+    <!--# If the account is an MBOX, add <Mbox> element. #-->
     {% if not DarcMail.account.is_eml %}
     {% for mbox in [] %}
     <Mbox>

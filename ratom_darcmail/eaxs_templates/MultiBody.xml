@@ -1,46 +1,38 @@
 <!--# 
-This template represents the EAXS ??? element.
-It is related to the lib.??? module.
-
-TODO:
-    * Remove fake attributes: @att, etc. from MultiBody; remove test lines.
-    * Add in child elements of opening MultiBody tags.
+This template represents the EAXS <MultiBody> element.
 #-->
 
+<!--# Create a list to track open <MultiBody> elements. #-->
 {% set OPENED_MULTIBODIES = [] %}
 
-<!--# ??? #-->
+<!--# The "main loop", i.e. creates <MultiBody> elements for each multi-part message. #-->
 {% for msg in message.get_submessages() %}
 
+<!--# Close open <MultiBody> elements from previous iterations of the main loop. #-->
 {% for open_multibody in EAXSHelpers.close_folders(msg, OPENED_MULTIBODIES, "mock_path") %}
+    <Epilogue>{{ open_multibody.epilogue |skipnull }}</Epilogue>
 </MultiBody>
 {% endfor %}
 
-<!--# Add in <MultiBody> child elements. #-->
+<!--# Add <MultiBody> child elements. #-->
 {% if msg.is_multipart() %}
 <MultiBody>
+<!--# Add child elements. #-->
 {% filter indent(width=4, first=True) %}
     {% include "xm-body-type.xml" %}
 {% endfilter %}
-    <!--<Preamble></Preamble>--> <!--# TODO: fill in; move this to xm-body-type.xml #-->
+    
 {% else %}
     {% filter indent(width=4, first=True) %}
         {% include "SingleBody.xml" %}
     {% endfilter %}
-    <!--# Because this is a SingleBody element, remove it from @OPENED_MULTIBODIES so that we don't
-    end up with an stray closing MultiBody tags. #-->
+    <!--# Because this is a <SingleBody> element, remove it from @OPENED_MULTIBODIES so that we 
+    don't end up with a stray </MultiBody> closing. #-->
     {% if OPENED_MULTIBODIES.pop() %}{% endif %}
 {% endif %}
-<!--<Epilogue></Epilogue>-->  <!--# TODO: fill in; this isn't in the write place. 
-    I think when you're closing MultiBody you'll need to: 
-    for open_multibody in OPENED_MULTIBODIES:
-        <Epilogue>{{ get epilogue from open_multibody }}<Epilogue></Epilogue>
-        </MultiBody>
-    ps: Looked like msg.preamble|epilogue can return None or an empty string. So skip the element
-    if None, otherwise create the element with no value.
-    #-->
 {% endfor %}
 
 {% for open_multibody in OPENED_MULTIBODIES |reverse %}
+    <Epilogue>{{ open_multibody.epilogue |skipnull }}</Epilogue>
 </MultiBody>
 {% endfor %}
