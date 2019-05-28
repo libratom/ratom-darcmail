@@ -27,6 +27,12 @@ It is related to the lib.folder_object.FolderObject module.
     <!--# If the account is an MBOX, add <Mbox> element. #-->
     {% if not DarcMail.account.is_eml %}
     {% for mbox in [] %}
+    <!--# TODO: Work on this. Per the XSD there MUST only be one MBOX file, so this should be
+    "mbox in folder.get_files()" and then use a "break" or "loop.first" per 
+    https://stackoverflow.com/a/34887399.
+    But the issue is also that you should raise an error (or perhaps just a warning) if there's more
+    than one MBOX file.
+    Best option might be to create a new addon function to send back the first MBOX file. #-->
     <Mbox>
         <RelPath>{{ mbox }}</RelPath>
         <<Eol>{{ EAXSHelpers.get_eol(mbox) }}</Eol>

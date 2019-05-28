@@ -13,6 +13,8 @@ Todo:
     * Generator methods should start with "gen_" and list methods should start with "list_".
     * How are attachements going to be read if they aren't embedded into the EML/MBOX, i.e. are
     real, external files? Would such ad MBOX/EML even exist (legally)?
+        - See EAXS note re: <Mbox>: "Each message contained here must be use the RFC 2822 format as
+        it would exist as it was sent over the wire."
 """
 
 # import modules.
