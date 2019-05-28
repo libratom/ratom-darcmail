@@ -3,8 +3,6 @@
 """ This module contains a class that represents a Message element within the EAXS context. 
 
 Todo:
-    * Try making mock_path be a file-like string for single body messages - it's more "correct".
-        - Something like "inbox/..../4_image.gif".
     * You should look into adding @self.email.defects to @self.parse_errors if it makes sense.
     * The @write_path attribute is likely overreach. I don't think this class should be making that
     level of determination for a user. Granted, they can throw it away so maybe it's OK. Think about
