@@ -31,8 +31,9 @@ It is related to the lib.folder_object.FolderObject module.
     "mbox in folder.get_files()" and then use a "break" or "loop.first" per 
     https://stackoverflow.com/a/34887399.
     But the issue is also that you should raise an error (or perhaps just a warning) if there's more
-    than one MBOX file.
-    Best option might be to create a new addon function to send back the first MBOX file. #-->
+    than one MBOX file. GMAIL uses more than one MBOX file! So you either need to skip this
+    Best option might be to create a new addon function to send back the first MBOX file AND the
+    count of files. If more than 1, this HAS to be skipped. #-->
     <Mbox>
         <RelPath>{{ mbox }}</RelPath>
         <<Eol>{{ EAXSHelpers.get_eol(mbox) }}</Eol>

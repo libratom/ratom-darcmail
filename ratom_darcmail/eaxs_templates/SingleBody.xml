@@ -35,7 +35,8 @@ TODO:
         <Eol>{{ EAXSHelpers.get_eol(msg) }}</Eol>
         <!--# 
         The <Hash> element is not implemented.
-        It seems METS, Bagger, etc. would be better options for storing file checksums.
+        It seems METS, Bagger, etc. would be better options for storing checksums.
+        Note: you might have to implement because it's required if Message ID is supplied.
         #-->
     </ExtBodyContent>
 
