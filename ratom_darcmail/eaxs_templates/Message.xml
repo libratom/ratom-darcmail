@@ -18,7 +18,9 @@ present (valid identifiers, etc.).
     Because <MessageId> is optional and can be "supplied", I'd rather put this data there and use 
     RelPath as intended. Alternatively, just put it in an XML comment - that's probably best.
     The real issue is that EAXS doesn't have this concept because it isn't an EML-aware schema and
-    because folders take precedent over messages. 
+    because folders take precedent over messages. In fact, per the documentation MBOX is REQUIRED.
+    You need to make a note of this in external documentation.
+    
     NOTE: Actually, per the XSD if no message id is supplied, you MUST hash the message so that
     the message can be found insde the MBOX file later - BTW doesn't what defeat the point of having
     EAXS (if the MBOX still should be able to be referenced after the fact)?
