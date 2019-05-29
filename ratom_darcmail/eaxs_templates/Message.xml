@@ -32,7 +32,7 @@ present (valid identifiers, etc.).
     {% set message_id = message.get("message-id") %}
     {% set message_el = (message_id, "false") if message_id else ("{}_{}".format(
         message.account.global_id, message.local_id), "true") %}
-    <MessageId Supplied="{{ message_el[1] }}">{{ message_el[0] |cdata }}</MessageId>
+    <MessageId Supplied="{{ message_el[1] }}">{{ message_el[0] |cdata |trim }}</MessageId>
     
     <MimeVersion>{{ message.get("mime-version") }}</MimeVersion>
 
@@ -42,16 +42,16 @@ present (valid identifiers, etc.).
     TODO: Is Sender always returned? If it's xs:string does it matter since blanks are OK?
     #-->
     <OrigDate>{{ message.get("orig-date") |skipnull }}</OrigDate>
-    <From>{{ message.get("from") |cdata }}</From>
-    <Sender>{{ message.get("sender") |cdata }}</Sender>
-    <To>{{ message.get("to") |cdata }}</To>
-    <Cc>{{ message.get("cc") |skipnull |cdata }}</Cc>
-    <Bcc>{{ message.get("bcc") |skipnull |cdata }}</Bcc>
-    <InReplyTo>{{ message.get("in-reply-to") |skipnull |cdata }}</InReplyTo>
-    <References>{{ message.get("references") |skipnull |cdata }}</References>
-    <Subject>{{ message.get("subject") |cdata }}</Subject>
-    <Comments>{{ message.get("comments") |skipnull |cdata }}</Comments>
-    <Keywords>{{ message.get("keywords") |skipnull |cdata }}</Keywords> 
+    <From>{{ message.get("from") |cdata |trim }}</From>
+    <Sender>{{ message.get("sender") |cdata |trim }}</Sender>
+    <To>{{ message.get("to") |cdata |trim }}</To>
+    <Cc>{{ message.get("cc") |skipnull |cdata |trim }}</Cc>
+    <Bcc>{{ message.get("bcc") |skipnull |cdata |trim }}</Bcc>
+    <InReplyTo>{{ message.get("in-reply-to") |skipnull |cdata |trim }}</InReplyTo>
+    <References>{{ message.get("references") |skipnull |cdata |trim }}</References>
+    <Subject>{{ message.get("subject") |cdata |trim }}</Subject>
+    <Comments>{{ message.get("comments") |skipnull |cdata |trim }}</Comments>
+    <Keywords>{{ message.get("keywords") |skipnull |cdata |trim }}</Keywords> 
 
     <!--#
     TODO: What's the source for the optional <Comments> element? I can't find anything in RFC 4021
@@ -60,7 +60,7 @@ present (valid identifiers, etc.).
     {% for name, value in message.items() %}
     <Header>
         <Name>{{ name }}</Name>
-        <Value>{{ value |cdata }}</Value>
+        <Value>{{ value |cdata |trim }}</Value>
         <!--# <Comments></Comments> #-->
     </Header>
     {% endfor %}

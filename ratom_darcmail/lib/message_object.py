@@ -165,8 +165,10 @@ class MessageObject():
             ext = "att"
             write_prefix = self.folder.account.darcmail.attachment_dir
 
-        # create the "mock_path" and "write_path".
-        mock_tail = "{}_{}".format(self.local_id, self.email.get_content_type()).replace("/", "_")
+        # create the "mock_path" and "write_path"; make folder-like paths for multipart messages or
+        # file-like paths for non-multipart messages.
+        sep = "_" if self.email.is_multipart() else "."
+        mock_tail = "{}_{}".format(self.local_id, self.email.get_content_type()).replace("/", sep)
         mock_path = os.path.join(self.folder.rel_path, mock_tail)
         write_tail = "{}.{}".format(id_hash, ext)
         write_path = os.path.join(write_prefix, self.folder.rel_path, write_tail)

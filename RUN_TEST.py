@@ -3,24 +3,24 @@ from ratom_darcmail.darcmail import DarcMail
 
 # simple test ...
 logging.basicConfig(level=10)
-TEST_EAXS = "TEST_EAXS_/TEST_EAXS.XML"
+TEST_EAXS = "TEST_EAXS/TEST_EAXS.XML"
 
 
 references_account = {"href": "ref_href_", "email_address": ["foo@ref.com", "bar@ref.com"], "ref_type": "SeeAlso"}
-account_args = dict(path="../sample_files/mbox",
-                    email_addresses="email@email.com", is_eml=False,
+account_args = dict(path="tests/sample_files/single_multi_eml",
+                    email_addresses="email@email.com", is_eml=True,
                     global_id=None,
                     references_account=references_account)
 dm = DarcMail(account_args, TEST_EAXS)
 ##dm.eaxs.make(dm.eaxs_path)
-##dm.make_eaxs() # shorter way of doing the line above.
-fol = next(dm.account.get_folders())
-msg = next(fol.get_messages())
+dm.make_eaxs() # shorter way of doing the line above.
+##fol = next(dm.account.get_folders())
+##msg = next(fol.get_messages())
 ##dm.account == fol.account == msg.folder.account # True
 ##def _fail(): raise Exception("hell")
 ##msg.email.fail = _fail # should update parse_errors.
-for p in msg.get_submessages():
-    print(p.mock_path, p.write_path, sep="\t|\t")
+##for p in msg.get_submessages():
+##    print(p.mock_path, p.write_path, sep="\t|\t")
 
 ##mbox_args = account_args
 ##mbox_args["path"] = mbox_args["path"].replace("eml", "mbox")
