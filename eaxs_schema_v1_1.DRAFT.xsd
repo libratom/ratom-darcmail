@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xm="https://github.com/StateArchivesOfNorthCarolina/tomes-eaxs" targetNamespace="https://github.com/StateArchivesOfNorthCarolina/tomes-eaxs" elementFormDefault="qualified">
   <!--
-  CHANGELOG:
-    VERSION 1.1: 
-      * Removed leading/trailing whitespace from "annotation/documentation" elements; replaced line breaks with space.
-      * Removed all carriage returns.
-      * Re-indented XML.
-	  * Replaced tabs with double space.
-      * TODO: DO NOT actually use this version. Re-download Version 1.0 and redo all the line break stuff.
-        - The reason for this is I might have overwritten some stuff annotating this copy.
+  
+  NOTE:
+	This copy of the EAXS XSD was used by me to create notes and plan on how to extract email data for RATOM DarcMail.
+	As of June 2019, there are mre useful notes in the actual EAXS templates: https://github.com/libratom/ratom-darcmail/tree/dev/ratom_darcmail/eaxs_templates
+	
+	IOW, the notes in this file represent my initial planning/thoughts.
+		- Nitin, June 2019
 
   TODO: ???API STUFF:
       * You MUST read this before writing code: https://docs.python.org/3/library/email.parser.html#additional-notes
