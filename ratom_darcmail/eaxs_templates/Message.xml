@@ -12,10 +12,14 @@ present (valid identifiers, etc.).
 
 <Message>
 
-    <!--# TODO: RelPath is supposed to be the containing folder not the file. Adding a Header is a 
-    bad way of getting the filename and this is what TOMES DarcMail does.
-    Something like "inbox#1_.eml" is still a URI but not a folder per the EAXS XSD.
-    Because <MessageId> is optional and can be "supplied", I'd rather put this data there and use 
+    <!--# TODO: RelPath is supposed to be the containing folder, i.e.
+		message.folder.rel_path
+	
+	re EMLs:
+	Adding a Header is a bad way of storing the filename and this is what TOMES DarcMail does.
+    Something like "inbox#1_.eml" is still a URI but not a folder as it needs to be per the EAXS XSD.
+    
+	Because <MessageId> is optional and can be "supplied", I'd rather put this data there and use 
     RelPath as intended. Alternatively, just put it in an XML comment - that's probably best.
     The real issue is that EAXS doesn't have this concept because it isn't an EML-aware schema and
     because folders take precedent over messages. In fact, per the documentation MBOX is REQUIRED.
@@ -25,7 +29,7 @@ present (valid identifiers, etc.).
     the message can be found insde the MBOX file later - BTW doesn't what defeat the point of having
     EAXS (if the MBOX still should be able to be referenced after the fact)?
     #-->
-    <RelPath>{{ message.rel_path |normalize_path }}</RelPath>
+    <RelPath>{{ message.folder.rel_path |normalize_path }}</RelPath>
     <LocalId>{{ message.local_id }}</LocalId>
 
     <!--# If the "message-id" header doesn't exist, make an id and set @Supplied to True. #-->
