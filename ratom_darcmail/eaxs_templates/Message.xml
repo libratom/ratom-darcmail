@@ -99,7 +99,7 @@ present (valid identifiers, etc.).
     {% for error in message.parse_errors %}
     <Incomplete>
         <ErrorType>Python: {{ error["exception_object"].__str__() }}</ErrorType>
-        <ErrorLocation>{{ {{ error["traceback_lines"] }}</ErrorLocation>
+        <ErrorLocation>{{ error["traceback_lines"] }}</ErrorLocation>
     </Incomplete>
     {% endfor %}
 

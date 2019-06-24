@@ -13,18 +13,17 @@ TODO:
         {% include "xm-body-type.xml" %}
     {% endfilter %}
 
-    {% if None is not defined %}
-    <BodyContent>
     <!--# TODO: Work on this. Needs to be printable?
+    <BodyContent>
     And only work on this is you plan in writing messages inside the EAXS as an option.
     Default should be to file.
     <Content><![CDATA[{% for part in msg.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content>
-    #-->
+    
         <Content>{{ msg.as_string() |cdata }}</Content>
         <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
     </BodyContent>
-    {% else %}
-    <!--# TODO: Work on @ext_path, LocalId (isn' this OK?), EOL (how is this not OK as is?) ... #-->
+	#-->
+    <!--# TODO: Work on @ext_path, LocalId (isn't this OK?), EOL (how is this not OK as is?) ... #-->
     <ExtBodyContent>
         {% set ext_path = EAXSHelpers.write_message(msg) %}
         <RelPath>{{ ext_path |normalize_path }}</RelPath>
@@ -43,7 +42,6 @@ TODO:
     <!--# Skip. EAXS XSD does not describe this well enough to implement.
     <ChildMessage></ChildMessage>
     #-->
-    {% endif %}
 
     <!--# Skip. EAXS XSD does not describe this well enough to implement.
     TODO: I'm not sure about that: it's for "message/external-body" so research that before

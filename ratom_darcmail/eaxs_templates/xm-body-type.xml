@@ -55,7 +55,7 @@ element is about. It's optional BTW. #-->
 <DispositionComments></DispositionComments>
 
 <!--# TODO: document why is either singular or plural "params" - because there's a typo in the XSD!
-Link to the issue in GitHub.
+See: https://github.com/StateArchivesOfNorthCarolina/tomes-eaxs/issues/1
 #-->
 {% set disposition_params = EAXSHelpers.filter_params(msg.get_params(header="content-disposition"),
     ["filename"]) %}
