@@ -18,13 +18,7 @@ renderered. In other words:
 TODO: 
     * Add EAXS XSD URI back to XML header. Remember: It's still on GitHub and that's not great!
     * Put these templates in a subfolder "/eaxs_v1".
-    * Work on first-level indents in all templates since you're now using an indent filter on 
-    "include".
-    * The EAXS schema seems to explicitly say when to use CDATA; TOMES DarcMail seems to use CDATA 
-    blocks more liberally. This might be a problem that shouldn't get replicated here. So check
-    when you should/shouldn't use CDATA. The "cdata" filter can be made to export CDATA only when
-    needed.
-    * Filters notation: DO: "l |reverse" NOT: "l | reverse".
+    * For clean looking filter calls: DO "l |reverse" NOT "l | reverse".
     * It might be easier to read if all vars you create inside template are CAPS.
 #-->
 

@@ -66,11 +66,16 @@ present (valid identifiers, etc.).
     {% endfor %}
 
     <!--#
-    TODO: Put this in a Python script???
-    Document that this logic is based on
-    https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
+    TODO: Create lib.addons.get_status_flags.py so that you can just return a list of status flags a la:
+	    {% for status_flag in EAXSHelpers.get_status_flags() %}
+			<StatusFlag>{{ status_flag }}</StatusFlag>
+		{% endfor %}
+	
+    And document that this logic is based on
+		https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
 
     Also, is there support for "Draft" or "Recent" in other DarcMail packages?
+	Find out and add it to the the module or at least document as needed. 
     #-->
     {% set status = message.get("status", failobj="") + message.get("x-status", failobj="") %}
     {% set status_dict = {"R": "Seen", "A": "Answered", "F": "Flagged", "D": "Deleted"} %}
@@ -91,10 +96,10 @@ present (valid identifiers, etc.).
         {% endfilter %}
     {% endif %}
 
-    {% for type, location in message.parse_errors %}
+    {% for error in message.parse_errors %}
     <Incomplete>
-        <ErrorType>Python: {{ type }}</ErrorType>
-        <ErrorLocation>{{ location }}</ErrorLocation>
+        <ErrorType>Python: {{ error["exception_object"].__str__() }}</ErrorType>
+        <ErrorLocation>{{ {{ error["traceback_lines"] }}</ErrorLocation>
     </Incomplete>
     {% endfor %}
 

@@ -89,7 +89,7 @@ class MessageObject():
         traceback_lines = [l.strip() for l in traceback.format_tb(traceback_obj)]
         
         # create dict to return.
-        parse_error = {"error_obj": err, 
+        parse_error = {"exception_obj": err, 
             "timestamp": datetime.now().isoformat(), 
             "traceback_obj": traceback_obj,
             "traceback_lines": traceback_lines}
