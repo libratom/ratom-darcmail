@@ -13,7 +13,7 @@ present (valid identifiers, etc.).
 <Message>
 
     <!--# TODO: RelPath is supposed to be the containing folder, i.e.
-		message.folder.rel_path
+		<RelPath>{{ message.folder.rel_path |normalize_path }}</RelPath>
 	
 	re EMLs:
 	Adding a Header is a bad way of storing the filename and this is what TOMES DarcMail does.
