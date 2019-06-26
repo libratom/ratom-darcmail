@@ -4,13 +4,16 @@
 or EML account.
 
 Todo:
-    * Need to add event logging.
-    * Need to add CLI interface.
-        - Accept References Account data from CLI?
-    * Add YAML log file.
+    * Need to add CLI interface and event logging.
+        - The CLI needs to intake the source data, if it's EML/MOX, what template to render (default
+        would be eaxs_templates/Account.xml).
+        - The event logger needs to only output preservation metadata if everything appears to work
+        i.e. in the "try" block of a try/except. See TOMES DarcMail for an example of how to do
+        this.
+    * Do you want to Accept "ReferencesAccount" data from CLI? - Probably not at this time.
     * Work on docstrings: the first line is showing up as the module name.
         - This is somewhat related to Todo blocks in the docstrings.
-    * Create test data to test single and multipart emails.
+    * Create test email data to test single and multipart emails.
 """
 
 # import logging.
