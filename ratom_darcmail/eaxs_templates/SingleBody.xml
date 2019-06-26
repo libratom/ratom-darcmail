@@ -18,9 +18,8 @@ TODO:
     And only work on this is you plan in writing messages inside the EAXS as an option.
     Default should be to file.
     <Content><![CDATA[{% for part in msg.walk() %}{{ part |escape_cdata }}{% endfor %}]]></Content>
-    
-        <Content>{{ msg.as_string() |cdata }}</Content>
-        <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
+    <Content>{{ msg.as_string() |cdata }}</Content>
+    <TransferEncoding>{{ DarcMail.charset.lower() }}</TransferEncoding>
     </BodyContent>
 	#-->
     <!--# TODO: Work on @ext_path, LocalId (isn't this OK?), EOL (how is this not OK as is?) ... #-->

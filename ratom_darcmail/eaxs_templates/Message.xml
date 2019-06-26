@@ -3,7 +3,7 @@ This template represents the EAXS <Message> element.
 It is related to the lib.message_object.MessageObject module.
 
 Note: the custom "skipnull" filter is used so that elements with null values will not appear in the
-rendered EAXS file.
+rendered EAXS file. For more information, see: ../lib/eaxs_maker.py and search for "skipnull".
 
 TODO:
 * For this and all included templates you need to make sure the correct xs:type will always be
@@ -62,13 +62,14 @@ present (valid identifiers, etc.).
     {% endfor %}
 
     <!--#
-    TODO: Create lib.addons.get_status_flags.py so that you can just return a list of status flags a la:
-	    {% for status_flag in EAXSHelpers.get_status_flags() %}
-			<StatusFlag>{{ status_flag }}</StatusFlag>
-		{% endfor %}
-	
+    TODO: Create lib.addons.get_status_flags.py so that you can just return a list of status flags
+    a la:
+        {% for status_flag in EAXSHelpers.get_status_flags() %}
+            <StatusFlag>{{ status_flag }}</StatusFlag>
+        {% endfor %}
+
     And document that this logic is based on
-		https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
+        https://wingware.com/psupport/python-manual/2.5/lib/mailbox-mboxmessage.html
 
     Also, is there support for "Draft" or "Recent" in other DarcMail packages?
 	Find out and add it to the the module or at least document as needed. 
