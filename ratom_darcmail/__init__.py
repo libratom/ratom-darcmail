@@ -1,4 +1,4 @@
-__NAME__ = "NAME goes here"
+__NAME__ = "RATOM DarcMail"
 __DESCRIPTION__ = "DESCRIPTION goes here"
 __URL__ = "URL goes here"
 __VERSION__ = "dev-0.01"
